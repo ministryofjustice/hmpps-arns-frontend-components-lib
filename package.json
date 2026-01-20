@@ -83,7 +83,6 @@
     "@ministryofjustice/eslint-config-hmpps": "^1.0.2",
     "@ministryofjustice/hmpps-precommit-hooks": "^1.0.2",
     "@types/bunyan": "^1.8.11",
-    "@types/express": "^5.0.6",
     "@types/jest": "^30.0.0",
     "@types/superagent": "^8.1.9",
     "@types/supertest": "^6.0.3",
@@ -102,6 +101,9 @@
     "ts-jest": "^29.3.4"
   },
   "dependencies": {
+    "@ministryofjustice/hmpps-auth-clients": "^1.0.1",
+    "@ministryofjustice/hmpps-rest-client": "^1.0.0",
+    "@types/express": "^5.0.6",
     "@types/node": "22.19.6",
     "@types/nunjucks": "^3.2.6",
     "nunjucks": "^3.2.4",
