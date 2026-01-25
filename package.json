@@ -2,21 +2,21 @@
   "name": "hmpps-arns-frontend-components-lib",
   "version": "1.0.0",
   "description": "ARNS front-end library for risk score visualisations",
-  "main": "./dist/index.js",
+  "main": "./dist/index.cjs.js",
+  "module": "./dist/index.esm.js",
   "types": "./dist/index.d.ts",
   "files": [
     "dist/**/*"
   ],
   "scripts": {
     "prepare": "hmpps-precommit-hooks-prepare",
-    "build": "tsc && npm run copy:assets",
-    "clean": "find . -name '.eslintcache' -delete",
+    "build": "rollup -c rollup.config.ts --bundleConfigAsCjs",
+    "clean": "rm -rf ./dist/ && find . -name '.eslintcache' -delete",
     "test": "jest",
     "test:ci": "jest --runInBand --passWithNoTests",
-    "typecheck": "tsc",
+    "typecheck": "tsc --noEmit",
     "lint": "eslint . --cache --max-warnings 0",
     "lint:fix": "eslint . --cache --max-warnings 0 --fix",
-    "copy:assets": "rm -rf dist/assets && cp -r src/assets dist/assets",
     "security_audit": "npx audit-ci --config audit-ci.json",
     "precommit:secrets": "gitleaks git --pre-commit --redact --staged --verbose --config .gitleaks/config.toml",
     "precommit:lint": "node_modules/.bin/lint-staged",
@@ -82,6 +82,8 @@
   "devDependencies": {
     "@ministryofjustice/eslint-config-hmpps": "^1.0.2",
     "@ministryofjustice/hmpps-precommit-hooks": "^1.0.2",
+    "@rollup/plugin-node-resolve": "^16.0.3",
+    "@rollup/plugin-typescript": "^12.3.0",
     "@types/bunyan": "^1.8.11",
     "@types/express": "^5.0.6",
     "@types/jest": "^30.0.0",
@@ -98,8 +100,13 @@
     "jest-junit": "^16.0.0",
     "lint-staged": "^16.1.2",
     "nock": "^14.0.10",
+    "rollup": "^4.56.0",
+    "rollup-plugin-copy": "^3.5.0",
+    "rollup-plugin-dts": "^6.3.0",
     "supertest": "^7.1.1",
-    "ts-jest": "^29.3.4"
+    "ts-jest": "^29.3.4",
+    "tslib": "^2.8.1",
+    "typescript": "^5.9.3"
   },
   "dependencies": {
     "@types/node": "22.19.6",
