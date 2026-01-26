@@ -29,8 +29,7 @@ export default [
           {
             src: 'src/assets/scss/_all.scss',
             dest: 'dist',
-            transform: contents =>
-              contents.toString().replaceAll('../../components', './arns/components'),
+            transform: contents => contents.toString().replaceAll('../../components', './arns/components'),
           },
         ],
         flatten: true,
