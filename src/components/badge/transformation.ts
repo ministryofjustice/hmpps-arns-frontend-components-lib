@@ -1,5 +1,5 @@
-import { AllPredictorVersionedDto } from '../types/dtos/allPredictorVersionedDto'
-import { BadgeEntry } from '../types/badgeData'
+import { AllPredictorVersionedDto } from '../../types/dtos/allPredictorVersionedDto'
+import { BadgeEntry } from '../../types/badgeData'
 
 export function transformBadgeData(dto: AllPredictorVersionedDto[]): BadgeEntry[] {
   const badgeEntries: BadgeEntry[] = []
@@ -12,7 +12,7 @@ export function transformBadgeData(dto: AllPredictorVersionedDto[]): BadgeEntry[
       const rsr = listEntry.output.riskOfSeriousRecidivismScore
       const osp = listEntry.output.sexualPredictorScore
 
-      if (ogrs3 !== null) {
+      if (ogrs3) {
         const entry: BadgeEntry = {
           ogrs3PredictorScore: {
             level: ogrs3.scoreLevel,
@@ -25,7 +25,7 @@ export function transformBadgeData(dto: AllPredictorVersionedDto[]): BadgeEntry[
         badgeEntries.push(entry)
       }
 
-      if (ovp !== null) {
+      if (ovp) {
         const entry: BadgeEntry = {
           ovpPredictorScore: {
             level: ovp.ovpRisk,
@@ -38,7 +38,7 @@ export function transformBadgeData(dto: AllPredictorVersionedDto[]): BadgeEntry[
         badgeEntries.push(entry)
       }
 
-      if (ogp !== null) {
+      if (ogp) {
         const entry: BadgeEntry = {
           ogpPredictorScore: {
             level: ogp.ogpRisk,
@@ -51,7 +51,7 @@ export function transformBadgeData(dto: AllPredictorVersionedDto[]): BadgeEntry[
         badgeEntries.push(entry)
       }
 
-      if (rsr !== null) {
+      if (rsr) {
         const entry: BadgeEntry = {
           rsrPredictorScore: {
             level: rsr.scoreLevel,
@@ -64,7 +64,7 @@ export function transformBadgeData(dto: AllPredictorVersionedDto[]): BadgeEntry[
         badgeEntries.push(entry)
       }
 
-      if (osp !== null) {
+      if (osp) {
         const entry: BadgeEntry = {
           ospdcPredictorScore: {
             level: osp.ospIndecentScoreLevel,
@@ -77,7 +77,7 @@ export function transformBadgeData(dto: AllPredictorVersionedDto[]): BadgeEntry[
         badgeEntries.push(entry)
       }
 
-      if (osp !== null) {
+      if (osp) {
         const entry: BadgeEntry = {
           ospiicPredictorScore: {
             level: osp.ospIndecentScoreLevel,
@@ -97,7 +97,7 @@ export function transformBadgeData(dto: AllPredictorVersionedDto[]): BadgeEntry[
       const ospiic = listEntry.output.indirectImageContactSexualReoffendingPredictor
       const rsr = listEntry.output.combinedSeriousReoffendingPredictor
 
-      if (ogrs4 !== null) {
+      if (ogrs4) {
         const entry: BadgeEntry = {
           allReoffendingPredictor: {
             level: ogrs4.band,
@@ -110,7 +110,7 @@ export function transformBadgeData(dto: AllPredictorVersionedDto[]): BadgeEntry[
         badgeEntries.push(entry)
       }
 
-      if (ovp2 !== null) {
+      if (ovp2) {
         const entry: BadgeEntry = {
           violentReoffendingPredictor: {
             level: ovp2.band,
@@ -123,7 +123,7 @@ export function transformBadgeData(dto: AllPredictorVersionedDto[]): BadgeEntry[
         badgeEntries.push(entry)
       }
 
-      if (snsv !== null) {
+      if (snsv) {
         const entry: BadgeEntry = {
           seriousViolentReoffendingPredictor: {
             level: snsv.band,
@@ -136,7 +136,7 @@ export function transformBadgeData(dto: AllPredictorVersionedDto[]): BadgeEntry[
         badgeEntries.push(entry)
       }
 
-      if (ospdc !== null) {
+      if (ospdc) {
         const entry: BadgeEntry = {
           directContactSexualReoffendingPredictor: {
             level: ospdc.band,
@@ -149,7 +149,7 @@ export function transformBadgeData(dto: AllPredictorVersionedDto[]): BadgeEntry[
         badgeEntries.push(entry)
       }
 
-      if (ospiic !== null) {
+      if (ospiic) {
         const entry: BadgeEntry = {
           indirectImageContactSexualReoffendingPredictor: {
             level: ospiic.band,
@@ -162,7 +162,7 @@ export function transformBadgeData(dto: AllPredictorVersionedDto[]): BadgeEntry[
         badgeEntries.push(entry)
       }
 
-      if (rsr !== null) {
+      if (rsr) {
         const entry: BadgeEntry = {
           combinedSeriousReoffendingPredictor: {
             level: rsr.band,

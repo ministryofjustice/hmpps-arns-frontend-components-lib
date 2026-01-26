@@ -1,5 +1,5 @@
-import { transformBadgeData } from './badgeTransformations'
-import { AllPredictorVersionedDto } from '../types/dtos/allPredictorVersionedDto'
+import { transformBadgeData } from './transformation'
+import { AllPredictorVersionedDto } from '../../types/dtos/allPredictorVersionedDto'
 
 describe('Badge transformation layer', () => {
   const apiResponse: AllPredictorVersionedDto[] = [

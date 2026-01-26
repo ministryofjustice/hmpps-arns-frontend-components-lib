@@ -18,7 +18,22 @@ export default [
       nodeResolve({ preferBuiltins: true }),
       typescript({ tsconfig: './tsconfig.json', noEmitOnError: true }),
       copy({
-        targets: [{ src: 'src/assets/*', dest: 'dist/assets' }],
+        targets: [
+          { src: 'src/components/*/*.njk', dest: 'dist/arns' },
+          { src: 'src/components/*/*.scss', dest: 'dist/arns' },
+        ],
+        flatten: false,
+      }),
+      copy({
+        targets: [
+          {
+            src: 'src/assets/scss/_all.scss',
+            dest: 'dist',
+            transform: contents =>
+              contents.toString().replaceAll('../../components', './arns/components'),
+          },
+        ],
+        flatten: true,
       }),
     ],
     external: [...Object.keys(pkg.dependencies || {}), ...Object.keys(pkg.peerDependencies || {})],
