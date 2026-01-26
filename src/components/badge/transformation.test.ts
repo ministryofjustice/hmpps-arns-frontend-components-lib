@@ -82,7 +82,7 @@ describe('Badge transformation layer', () => {
     },
   ]
 
-  // Test Case 1: Standard Transformation
+  // Test Case 1: Standard transformation
   it('should map raw dto fields to badgeData type for version 1 and 2', () => {
     const result = transformBadgeData(apiResponse)
     expect(result).toEqual([
@@ -195,5 +195,18 @@ describe('Badge transformation layer', () => {
         },
       },
     ])
+  })
+
+  // Test Case 2: Error case
+  it('should error when version not 1 or 2', () => {
+    const badVersionData: AllPredictorVersionedDto[] = [
+      {
+        completedDate: '2022-06-10T18:23:20',
+        status: 'COMPLETE',
+        outputVersion: '3',
+        output: {},
+      },
+    ]
+    expect(() => transformBadgeData(badVersionData)).toThrow('unexpected version')
   })
 })
