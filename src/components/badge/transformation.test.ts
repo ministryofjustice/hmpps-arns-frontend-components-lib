@@ -1,10 +1,10 @@
 import { transformBadgeData } from './transformation'
 import { AllPredictorVersionedDto } from '../../types/dtos/allPredictorVersionedDto'
 
-describe('Badge transformation layer', () => {
-  const apiResponse: AllPredictorVersionedDto[] = [
+function getDataWithDate(v1Date: string, v2Date: string): AllPredictorVersionedDto[] {
+  return [
     {
-      completedDate: '2022-06-10T18:23:20',
+      completedDate: v1Date,
       status: 'COMPLETE',
       outputVersion: '1',
       output: {
@@ -45,7 +45,7 @@ describe('Badge transformation layer', () => {
       },
     },
     {
-      completedDate: '2022-06-12T18:23:20',
+      completedDate: v2Date,
       status: 'COMPLETE',
       outputVersion: '2',
       output: {
@@ -81,14 +81,15 @@ describe('Badge transformation layer', () => {
       },
     },
   ]
+}
 
-  // Test Case 1: Standard transformation
-  it('should map raw dto fields to badgeData type for version 1 and 2', () => {
-    const result = transformBadgeData(apiResponse)
+describe('Badge transformation layer', () => {
+  it('should map raw dto fields to badgeData type for version 1', () => {
+    const result = transformBadgeData(getDataWithDate('2025-01-01T18:23:20', '2024-01-01T18:23:20'))
     expect(result).toEqual([
       {
         ogrs3PredictorScore: {
-          completedDate: '2022-06-10T18:23:20',
+          completedDate: '2025-01-01T18:23:20',
           level: 'LOW',
           score: 5,
           staticOrDynamic: null,
@@ -97,7 +98,7 @@ describe('Badge transformation layer', () => {
       },
       {
         ovpPredictorScore: {
-          completedDate: '2022-06-10T18:23:20',
+          completedDate: '2025-01-01T18:23:20',
           level: 'LOW',
           score: 7,
           staticOrDynamic: null,
@@ -106,7 +107,7 @@ describe('Badge transformation layer', () => {
       },
       {
         ogpPredictorScore: {
-          completedDate: '2022-06-10T18:23:20',
+          completedDate: '2025-01-01T18:23:20',
           level: 'LOW',
           score: 8,
           staticOrDynamic: null,
@@ -115,7 +116,7 @@ describe('Badge transformation layer', () => {
       },
       {
         rsrPredictorScore: {
-          completedDate: '2022-06-10T18:23:20',
+          completedDate: '2025-01-01T18:23:20',
           level: 'MEDIUM',
           score: 50.1234,
           staticOrDynamic: 'DYNAMIC',
@@ -124,80 +125,85 @@ describe('Badge transformation layer', () => {
       },
       {
         ospdcPredictorScore: {
-          completedDate: '2022-06-10T18:23:20',
+          completedDate: '2025-01-01T18:23:20',
           level: 'MEDIUM',
-          score: 2.81,
+          score: 1.07,
           staticOrDynamic: null,
           type: 'OSP/DC',
         },
       },
       {
         ospiicPredictorScore: {
-          completedDate: '2022-06-10T18:23:20',
+          completedDate: '2025-01-01T18:23:20',
           level: 'MEDIUM',
           score: 2.81,
           staticOrDynamic: null,
           type: 'OSP/IIC',
         },
       },
+    ])
+  })
+
+  it('should map raw dto fields to badgeData type for version 2', () => {
+    const result = transformBadgeData(getDataWithDate('2024-01-01T18:23:20', '2025-01-01T18:23:20'))
+    expect(result).toEqual([
       {
         allReoffendingPredictor: {
-          completedDate: '2022-06-12T18:23:20',
+          completedDate: '2025-01-01T18:23:20',
           level: 'LOW',
           score: 1.23,
           staticOrDynamic: 'STATIC',
-          type: 'All reoffending predictor',
+          type: 'ARP',
         },
       },
       {
         violentReoffendingPredictor: {
-          completedDate: '2022-06-12T18:23:20',
+          completedDate: '2025-01-01T18:23:20',
           level: 'LOW',
           score: 1.23,
           staticOrDynamic: 'STATIC',
-          type: 'Violent reoffending predictor',
+          type: 'VRP',
         },
       },
       {
         seriousViolentReoffendingPredictor: {
-          completedDate: '2022-06-12T18:23:20',
+          completedDate: '2025-01-01T18:23:20',
           level: 'LOW',
           score: 1.23,
           staticOrDynamic: 'STATIC',
-          type: 'Serious violent reoffending predictor',
+          type: 'SVRP',
         },
       },
       {
         directContactSexualReoffendingPredictor: {
-          completedDate: '2022-06-12T18:23:20',
+          completedDate: '2025-01-01T18:23:20',
           level: 'MEDIUM',
           score: 2.81,
           staticOrDynamic: null,
-          type: 'Direct contact sexual reoffending predictor',
+          type: 'DC/SRP',
         },
       },
       {
         indirectImageContactSexualReoffendingPredictor: {
-          completedDate: '2022-06-12T18:23:20',
+          completedDate: '2025-01-01T18:23:20',
           level: 'MEDIUM',
           score: 1.07,
           staticOrDynamic: null,
-          type: 'Indirect image contact sexual reoffending predictor',
+          type: 'IIC/SRP',
         },
       },
       {
         combinedSeriousReoffendingPredictor: {
-          completedDate: '2022-06-12T18:23:20',
+          completedDate: '2025-01-01T18:23:20',
           level: 'LOW',
           score: 1.23,
           staticOrDynamic: 'STATIC',
-          type: 'Combined serious reoffending predictor',
+          type: 'CSRP',
         },
       },
     ])
   })
 
-  // Test Case 2: Error case
   it('should error when version not 1 or 2', () => {
     const badVersionData: AllPredictorVersionedDto[] = [
       {

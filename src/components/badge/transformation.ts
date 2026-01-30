@@ -4,178 +4,180 @@ import { BadgeEntry } from '../../types/badgeData'
 export function transformBadgeData(dto: AllPredictorVersionedDto[]): BadgeEntry[] {
   const badgeEntries: BadgeEntry[] = []
 
-  dto.forEach(listEntry => {
-    if (listEntry.outputVersion === '1') {
-      const ogrs3 = listEntry.output.groupReconvictionScore
-      const ovp = listEntry.output.violencePredictorScore
-      const ogp = listEntry.output.generalPredictorScore
-      const rsr = listEntry.output.riskOfSeriousRecidivismScore
-      const osp = listEntry.output.sexualPredictorScore
+  const latestEntry = dto.reduce((latest, current) => (current.completedDate > latest.completedDate ? current : latest))
 
-      if (ogrs3) {
-        const entry: BadgeEntry = {
-          ogrs3PredictorScore: {
-            level: ogrs3.scoreLevel,
-            score: ogrs3.twoYears,
-            type: 'OGRS3',
-            staticOrDynamic: null,
-            completedDate: listEntry.completedDate.toString(),
-          },
-        }
-        badgeEntries.push(entry)
-      }
+  if (latestEntry.outputVersion === '1') {
+    // OGRS3-gen
+    const ogrs3 = latestEntry.output.groupReconvictionScore
+    const ovp = latestEntry.output.violencePredictorScore
+    const ogp = latestEntry.output.generalPredictorScore
+    const rsr = latestEntry.output.riskOfSeriousRecidivismScore
+    const osp = latestEntry.output.sexualPredictorScore
 
-      if (ovp) {
-        const entry: BadgeEntry = {
-          ovpPredictorScore: {
-            level: ovp.ovpRisk,
-            score: ovp.twoYears,
-            type: 'OVP',
-            staticOrDynamic: null,
-            completedDate: listEntry.completedDate.toString(),
-          },
-        }
-        badgeEntries.push(entry)
+    if (ogrs3) {
+      const entry: BadgeEntry = {
+        ogrs3PredictorScore: {
+          level: ogrs3.scoreLevel,
+          score: ogrs3.twoYears,
+          type: 'OGRS3',
+          staticOrDynamic: null,
+          completedDate: latestEntry.completedDate.toString(),
+        },
       }
+      badgeEntries.push(entry)
+    }
 
-      if (ogp) {
-        const entry: BadgeEntry = {
-          ogpPredictorScore: {
-            level: ogp.ogpRisk,
-            score: ogp.ogp2Year,
-            type: 'OGP',
-            staticOrDynamic: null,
-            completedDate: listEntry.completedDate.toString(),
-          },
-        }
-        badgeEntries.push(entry)
+    if (ovp) {
+      const entry: BadgeEntry = {
+        ovpPredictorScore: {
+          level: ovp.ovpRisk,
+          score: ovp.twoYears,
+          type: 'OVP',
+          staticOrDynamic: null,
+          completedDate: latestEntry.completedDate.toString(),
+        },
       }
+      badgeEntries.push(entry)
+    }
 
-      if (rsr) {
-        const entry: BadgeEntry = {
-          rsrPredictorScore: {
-            level: rsr.scoreLevel,
-            score: rsr.percentageScore,
-            type: 'RSR',
-            staticOrDynamic: rsr.staticOrDynamic,
-            completedDate: listEntry.completedDate.toString(),
-          },
-        }
-        badgeEntries.push(entry)
+    if (ogp) {
+      const entry: BadgeEntry = {
+        ogpPredictorScore: {
+          level: ogp.ogpRisk,
+          score: ogp.ogp2Year,
+          type: 'OGP',
+          staticOrDynamic: null,
+          completedDate: latestEntry.completedDate.toString(),
+        },
       }
+      badgeEntries.push(entry)
+    }
 
-      if (osp) {
-        const entry: BadgeEntry = {
-          ospdcPredictorScore: {
-            level: osp.ospIndecentScoreLevel,
-            score: osp.ospIndecentPercentageScore,
-            type: 'OSP/DC',
-            staticOrDynamic: null,
-            completedDate: listEntry.completedDate.toString(),
-          },
-        }
-        badgeEntries.push(entry)
+    if (rsr) {
+      const entry: BadgeEntry = {
+        rsrPredictorScore: {
+          level: rsr.scoreLevel,
+          score: rsr.percentageScore,
+          type: 'RSR',
+          staticOrDynamic: rsr.staticOrDynamic,
+          completedDate: latestEntry.completedDate.toString(),
+        },
       }
+      badgeEntries.push(entry)
+    }
 
-      if (osp) {
-        const entry: BadgeEntry = {
-          ospiicPredictorScore: {
-            level: osp.ospIndecentScoreLevel,
-            score: osp.ospIndecentPercentageScore,
-            type: 'OSP/IIC',
-            staticOrDynamic: null,
-            completedDate: listEntry.completedDate.toString(),
-          },
-        }
-        badgeEntries.push(entry)
+    if (osp) {
+      const entry: BadgeEntry = {
+        ospdcPredictorScore: {
+          level: osp.ospContactScoreLevel,
+          score: osp.ospContactPercentageScore,
+          type: 'OSP/DC',
+          staticOrDynamic: null,
+          completedDate: latestEntry.completedDate.toString(),
+        },
       }
-    } else if (listEntry.outputVersion === '2') {
-      const ogrs4 = listEntry.output.allReoffendingPredictor
-      const ovp2 = listEntry.output.violentReoffendingPredictor
-      const snsv = listEntry.output.seriousViolentReoffendingPredictor
-      const ospdc = listEntry.output.directContactSexualReoffendingPredictor
-      const ospiic = listEntry.output.indirectImageContactSexualReoffendingPredictor
-      const rsr = listEntry.output.combinedSeriousReoffendingPredictor
+      badgeEntries.push(entry)
+    }
 
-      if (ogrs4) {
-        const entry: BadgeEntry = {
-          allReoffendingPredictor: {
-            level: ogrs4.band,
-            score: ogrs4.score,
-            type: 'All reoffending predictor',
-            staticOrDynamic: ogrs4.staticOrDynamic,
-            completedDate: listEntry.completedDate.toString(),
-          },
-        }
-        badgeEntries.push(entry)
+    if (osp) {
+      const entry: BadgeEntry = {
+        ospiicPredictorScore: {
+          level: osp.ospIndecentScoreLevel,
+          score: osp.ospIndecentPercentageScore,
+          type: 'OSP/IIC',
+          staticOrDynamic: null,
+          completedDate: latestEntry.completedDate.toString(),
+        },
       }
+      badgeEntries.push(entry)
+    }
+  } else if (latestEntry.outputVersion === '2') {
+    // OGRS4-gen
+    const arp = latestEntry.output.allReoffendingPredictor
+    const vrp = latestEntry.output.violentReoffendingPredictor
+    const svrp = latestEntry.output.seriousViolentReoffendingPredictor
+    const dcsrp = latestEntry.output.directContactSexualReoffendingPredictor
+    const iicsrp = latestEntry.output.indirectImageContactSexualReoffendingPredictor
+    const csrp = latestEntry.output.combinedSeriousReoffendingPredictor
 
-      if (ovp2) {
-        const entry: BadgeEntry = {
-          violentReoffendingPredictor: {
-            level: ovp2.band,
-            score: ovp2.score,
-            type: 'Violent reoffending predictor',
-            staticOrDynamic: ovp2.staticOrDynamic,
-            completedDate: listEntry.completedDate.toString(),
-          },
-        }
-        badgeEntries.push(entry)
+    if (arp) {
+      const entry: BadgeEntry = {
+        allReoffendingPredictor: {
+          level: arp.band,
+          score: arp.score,
+          type: 'ARP',
+          staticOrDynamic: arp.staticOrDynamic,
+          completedDate: latestEntry.completedDate.toString(),
+        },
       }
+      badgeEntries.push(entry)
+    }
 
-      if (snsv) {
-        const entry: BadgeEntry = {
-          seriousViolentReoffendingPredictor: {
-            level: snsv.band,
-            score: snsv.score,
-            type: 'Serious violent reoffending predictor',
-            staticOrDynamic: snsv.staticOrDynamic,
-            completedDate: listEntry.completedDate.toString(),
-          },
-        }
-        badgeEntries.push(entry)
+    if (vrp) {
+      const entry: BadgeEntry = {
+        violentReoffendingPredictor: {
+          level: vrp.band,
+          score: vrp.score,
+          type: 'VRP',
+          staticOrDynamic: vrp.staticOrDynamic,
+          completedDate: latestEntry.completedDate.toString(),
+        },
       }
+      badgeEntries.push(entry)
+    }
 
-      if (ospdc) {
-        const entry: BadgeEntry = {
-          directContactSexualReoffendingPredictor: {
-            level: ospdc.band,
-            score: ospdc.score,
-            type: 'Direct contact sexual reoffending predictor',
-            staticOrDynamic: null,
-            completedDate: listEntry.completedDate.toString(),
-          },
-        }
-        badgeEntries.push(entry)
+    if (svrp) {
+      const entry: BadgeEntry = {
+        seriousViolentReoffendingPredictor: {
+          level: svrp.band,
+          score: svrp.score,
+          type: 'SVRP',
+          staticOrDynamic: svrp.staticOrDynamic,
+          completedDate: latestEntry.completedDate.toString(),
+        },
       }
+      badgeEntries.push(entry)
+    }
 
-      if (ospiic) {
-        const entry: BadgeEntry = {
-          indirectImageContactSexualReoffendingPredictor: {
-            level: ospiic.band,
-            score: ospiic.score,
-            type: 'Indirect image contact sexual reoffending predictor',
-            staticOrDynamic: null,
-            completedDate: listEntry.completedDate.toString(),
-          },
-        }
-        badgeEntries.push(entry)
+    if (dcsrp) {
+      const entry: BadgeEntry = {
+        directContactSexualReoffendingPredictor: {
+          level: dcsrp.band,
+          score: dcsrp.score,
+          type: 'DC/SRP',
+          staticOrDynamic: null,
+          completedDate: latestEntry.completedDate.toString(),
+        },
       }
+      badgeEntries.push(entry)
+    }
 
-      if (rsr) {
-        const entry: BadgeEntry = {
-          combinedSeriousReoffendingPredictor: {
-            level: rsr.band,
-            score: rsr.score,
-            type: 'Combined serious reoffending predictor',
-            staticOrDynamic: rsr.staticOrDynamic,
-            completedDate: listEntry.completedDate.toString(),
-          },
-        }
-        badgeEntries.push(entry)
+    if (iicsrp) {
+      const entry: BadgeEntry = {
+        indirectImageContactSexualReoffendingPredictor: {
+          level: iicsrp.band,
+          score: iicsrp.score,
+          type: 'IIC/SRP',
+          staticOrDynamic: null,
+          completedDate: latestEntry.completedDate.toString(),
+        },
       }
-    } else throw new Error('unexpected version')
-  })
+      badgeEntries.push(entry)
+    }
+
+    if (csrp) {
+      const entry: BadgeEntry = {
+        combinedSeriousReoffendingPredictor: {
+          level: csrp.band,
+          score: csrp.score,
+          type: 'CSRP',
+          staticOrDynamic: csrp.staticOrDynamic,
+          completedDate: latestEntry.completedDate.toString(),
+        },
+      }
+      badgeEntries.push(entry)
+    }
+  } else throw new Error('unexpected version')
 
   return badgeEntries
 }

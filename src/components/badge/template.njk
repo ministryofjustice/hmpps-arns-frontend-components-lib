@@ -1,59 +1,90 @@
 {#
-  ARNS Predictor Badge Component
+ARNS Predictor Badge Component
 
-  Displays risk predictor score badges.
+Displays risk predictor score badges.
 
-  Usage:
-    In route handler:
-      const riskData = await arnsComponents.getRiskData(token, 'crn', 'X123456')
-      res.render('page', { riskData })
+Usage:
+  In route handler:
+    const riskData = await arnsComponents.getRiskData(token, 'crn', 'X123456')
+    res.render('page', { riskData })
 
-    In template:
-      {% from "components/badge/macro.njk" import predictorBadge %}
-      {{ predictorBadge({ data: riskData }) }}
+  In template:
+    {% from "components/badge/macro.njk" import predictorBadge %}
+    {{ predictorBadge({ data: riskData }) }}
 
-    With options:
-      {{ predictorBadge({ data: riskData, showScore: true }) }}
+  With options:
+    {{ predictorBadge({ data: riskData, showScore: true }) }}
 
-  @param {object} params
-  @param {RiskData} params.data - Risk data from ArnsComponents.getRiskData()
-  @param {boolean} [params.showScore=false] - Whether to display the percentage score
-  @param {string} [params.classes] - Additional CSS classes
+@param {object} params
+@param {RiskData} params.data - Risk data from ArnsComponents.getRiskData()
+@param {string} params.predictor - The predictor data of interest
+@param {boolean} [params.showScore=false] - Whether to display the percentage score
+@param {string} [params.classes] - Additional CSS classes
 #}
-
 {% set badges = params.data.badges if params.data else [] %}
 {% set showScore = params.showScore if params.showScore else false %}
 
 {% if badges and badges.length %}
-<div class="predictor-badges{% if params.classes %} {{ params.classes }}{% endif %}">
-  {% for entry in badges %}
-    {% for key, predictor in entry %}
-      {% if predictor %}
-        {% set badgeClass = '' %}
-        {% switch predictor.level %}
-          {% case 'VERY_HIGH' %}
-            {% set badgeClass = 'predictor-badge--very-high' %}
-          {% case 'HIGH' %}
-            {% set badgeClass = 'predictor-badge--high' %}
-          {% case 'MEDIUM' %}
-            {% set badgeClass = 'predictor-badge--medium' %}
-          {% case 'LOW' %}
-            {% set badgeClass = 'predictor-badge--low' %}
-        {% endswitch %}
+  <div class="predictor-badges{% if params.classes %} {{ params.classes }}{% endif %}">
+    {% for entry in badges %}
+      {% for key, predictor in entry %}
+        {% if predictor %}
+          {% if predictor.type == params.predictor %}
+            {% set badgeLabel = '' %}
+            {% switch key %}
+            {% case 'allReoffendingPredictor' %}
+              {% set badgeLabel = 'ALL REOFFENDING PREDICTOR' %}
+            {% case 'violentReoffendingPredictor' %}
+              {% set badgeLabel = 'VIOLENT REOFFENDING PREDICTOR' %}
+            {% case 'seriousViolentReoffendingPredictor' %}
+              {% set badgeLabel = 'SERIOUS VIOLENT REOFFENDING PREDICTOR' %}
+            {% case 'directContactSexualReoffendingPredictor' %}
+              {% set badgeLabel = 'DIRECT CONTACT - SEXUAL REOFFENDING PREDICTOR' %}
+            {% case 'indirectImageContactSexualReoffendingPredictor' %}
+              {% set badgeLabel = 'IMAGES AND INDIRECT CONTACT - SEXUAL REOFFENDING PREDICTOR' %}
+            {% case 'combinedSeriousReoffendingPredictor' %}
+              {% set badgeLabel = 'COMBINED SERIOUS REOFFENDING PREDICTOR' %}
+            {% case 'ogrs3PredictorScore' %}
+              {% set badgeLabel = 'OGRS3' %}
+            {% case 'ovpPredictorScore' %}
+              {% set badgeLabel = 'OVP' %}
+            {% case 'ogpPredictorScore' %}
+              {% set badgeLabel = 'OGP' %}
+            {% case 'rsrPredictorScore' %}
+              {% set badgeLabel = 'RSR' %}
+            {% case 'ospdcPredictorScore' %}
+              {% set badgeLabel = 'OSP-DC' %}
+            {% case 'ospiicPredictorScore' %}
+              {% set badgeLabel = 'OSP-IIC' %}
+            {% default %}
+              {% set badgeLabel = 'LABEL NOT FOUND' %}
+            {% endswitch %}
 
-        <div class="{{ badgeClass }}">
-          <span class="predictor-badge__type_and_level">{{ predictor.type | upper }} <strong>{{ predictor.level | replace('_', ' ') }}</strong></span>
+            {% set badgeClass = '' %}
+            {% switch predictor.level %}
+            {% case 'VERY_HIGH' %}
+              {% set badgeClass = 'predictor-badge--very-high' %}
+            {% case 'HIGH' %}
+              {% set badgeClass = 'predictor-badge--high' %}
+            {% case 'MEDIUM' %}
+              {% set badgeClass = 'predictor-badge--medium' %}
+            {% case 'LOW' %}
+              {% set badgeClass = 'predictor-badge--low' %}
+            {% endswitch %}
+            <div class="{{ badgeClass }}">
+              <span class="predictor-badge__type_and_level">{{ badgeLabel | upper }} <strong>{{ predictor.level | replace('_', ' ') }}</strong></span>
 
-          {% if showScore and predictor.score %}
-            <span class="predictor-badge__score">{{ predictor.score }}%</span>
+              {% if showScore and predictor.score %}
+                <span class="predictor-badge__score">{{ predictor.score }}%</span>
+              {% endif %}
+
+              {% if predictor.staticOrDynamic %}
+                <span class="predictor-badge__static_or_dynamic">{{ predictor.staticOrDynamic | capitalize }}</span>
+              {% endif %}
+            </div>
           {% endif %}
-
-          {% if predictor.staticOrDynamic %}
-            <span class="predictor-badge__static_or_dynamic">{{ predictor.staticOrDynamic | capitalize }}</span>
-          {% endif %}
-        </div>
-      {% endif %}
+        {% endif %}
+      {% endfor %}
     {% endfor %}
-  {% endfor %}
-</div>
+  </div>
 {% endif %}
