@@ -4,8 +4,8 @@ import type { AuthenticationClient } from '@ministryofjustice/hmpps-auth-clients
 import type Logger from 'bunyan'
 import type { ArnsComponentsConfig } from './types/ArnsComponentsConfig'
 import type { RiskData } from './types/RiskData'
-import type { AllPredictorVersionedDto } from './types/dtos/allPredictorVersionedDto'
-import { transformBadgeData } from './components/badge/transformation'
+import type { AllPredictorVersionedDto } from './types/dtos/AllPredictorVersionedDto'
+import { transformAllPredictorVersionedDtoToAssessments } from './transformers/AllPredictorVersionedDtoToAssessmentsTransformer'
 
 export default class ArnsComponents {
   private readonly restClient: RestClient
@@ -29,8 +29,7 @@ export default class ArnsComponents {
     )
 
     return {
-      badges: transformBadgeData(response),
-      raw: response,
+      assessments: transformAllPredictorVersionedDtoToAssessments(response),
     }
   }
 }

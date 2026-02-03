@@ -1,4 +1,4 @@
-import { BandLevel } from '../bandLevel'
+import { BandLevel } from './BandLevel'
 
 export interface OvpScoreDto {
   ovpStaticWeightedScore: number

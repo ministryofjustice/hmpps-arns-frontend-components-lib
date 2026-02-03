@@ -1,11 +1,11 @@
-import { BasePredictorDto } from './basePredictorDto'
-import { StaticOrDynamicPredictorDto } from './staticOrDynamicPredictorDto'
-import { VersionedStaticOrDynamicPredictorDto } from './versionedStaticOrDynamicPredictorDto'
-import { OgrScoreDto } from './ogrScoreDto'
-import { OvpScoreDto } from './ovpScoreDto'
-import { OgpScoreDto } from './ogpScoreDto'
-import { RsrScoreDto } from './rsrScoreDto'
-import { OspScoreDto } from './ospScoreDto'
+import { BasePredictorDto } from './BasePredictorDto'
+import { StaticOrDynamicPredictorDto } from './StaticOrDynamicPredictorDto'
+import { VersionedStaticOrDynamicPredictorDto } from './VersionedStaticOrDynamicPredictorDto'
+import { OgrScoreDto } from './OgrScoreDto'
+import { OvpScoreDto } from './OvpScoreDto'
+import { OgpScoreDto } from './OgpScoreDto'
+import { RsrScoreDto } from './RsrScoreDto'
+import { OspScoreDto } from './OspScoreDto'
 
 export interface AllPredictorDto {
   allReoffendingPredictor?: StaticOrDynamicPredictorDto

@@ -1,5 +1,5 @@
-import { AssessmentStatusDto } from './assessmentStatusDto'
-import { AllPredictorDto } from './allPredictorDto'
+import { AssessmentStatusDto } from './AssessmentStatusDto'
+import { AllPredictorDto } from './AllPredictorDto'
 
 export interface AllPredictorVersionedDto {
   completedDate: string
