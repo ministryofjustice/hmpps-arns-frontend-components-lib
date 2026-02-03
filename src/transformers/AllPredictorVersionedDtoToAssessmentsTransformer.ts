@@ -6,8 +6,8 @@ export function transformAllPredictorVersionedDtoToAssessments(dtos: AllPredicto
 
   // Sort DTOs by datetime (newest first)
   const sortedDtos = [...dtos].sort((a, b) => {
-    return new Date(b.completedDate).getTime() - new Date(a.completedDate).getTime();
-  });
+    return new Date(b.completedDate).getTime() - new Date(a.completedDate).getTime()
+  })
 
   return sortedDtos.map(dto => {
     const completedDate = dto.completedDate.toString()
