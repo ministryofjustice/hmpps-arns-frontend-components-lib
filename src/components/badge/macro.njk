@@ -1,31 +1,3 @@
-{#
-ARNS Predictor Badge Component
-
-@name predictorBadge
-
-@description Displays specified risk predictor score badges.
-It uses the latest assessment from the provided data set.
-
-@example
-In route handler:
-  const riskData = await arnsComponents.getRiskData(token, 'crn', 'X123456')
-  res.render('page', { riskData })
-
-In template:
-  {% from "components/badge/macro.njk" import predictorBadge %}
-  {{ predictorBadge({
-    data: riskData,
-    predictor: "ARP",
-    showScore: true,
-    classes: "class-name-here"
-  }) }}
-
-@param {object} params
-  @param {RiskData} params.data - Risk data object from ArnsComponents.getRiskData() containing an 'assessments' array
-  @param {string} params.predictor - The name of the specific predictor to display
-  @param {boolean} [params.showScore=false] - If true, displays the percentage score
-  @param {string} [params.classes] - Optional CSS utility classes to apply to the container
-#}
 {% macro predictorBadge(params) %}
   {%- include "./template.njk" -%}
 {% endmacro %}
