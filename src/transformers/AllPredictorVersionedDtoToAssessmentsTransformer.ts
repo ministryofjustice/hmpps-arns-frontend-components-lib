@@ -11,19 +11,24 @@ export function transformAllPredictorVersionedDtoToAssessments(dtos: AllPredicto
   )
 
   return sortedDtos.map(dto => {
-    const completedDate: string = dto.completedDate.toString()
-    const date = new Date(completedDate)
-    const dateFormatDayMonthYear: string = new Intl.DateTimeFormat('en-GB', {
-      day: '2-digit',
-      month: 'long',
-      year: 'numeric',
-    }).format(date)
-    const time: string = date.toLocaleTimeString('en-GB', {
-      hour: '2-digit',
-      minute: '2-digit',
-      hour12: false,
-    })
-    const dateFormatDayMonthYearTime = `${dateFormatDayMonthYear} at ${time}`
+    let dateFormatDayMonthYearTime: string
+    let dateFormatDayMonthYear: string
+    if (dto.completedDate) {
+      const date = new Date(dto.completedDate)
+      if (!Number.isNaN(date.getTime())) {
+        dateFormatDayMonthYear = new Intl.DateTimeFormat('en-GB', {
+          day: '2-digit',
+          month: 'long',
+          year: 'numeric',
+        }).format(date)
+        const time: string = date.toLocaleTimeString('en-GB', {
+          hour: '2-digit',
+          minute: '2-digit',
+          hour12: false,
+        })
+        dateFormatDayMonthYearTime = `${dateFormatDayMonthYear} at ${time}`
+      }
+    }
 
     const { output } = dto
 
@@ -132,7 +137,7 @@ export function transformAllPredictorVersionedDtoToAssessments(dtos: AllPredicto
 function mapPredictor(name: string, band: string, staticOrDynamic: string, score: number, date: string): Predictor {
   return {
     name,
-    band: band.replace(/_/g, ' ').toUpperCase(),
+    band: band?.replace(/_/g, ' ').toUpperCase(),
     staticOrDynamic: staticOrDynamic
       ? staticOrDynamic.charAt(0).toUpperCase() + staticOrDynamic.slice(1).toLowerCase()
       : null,
