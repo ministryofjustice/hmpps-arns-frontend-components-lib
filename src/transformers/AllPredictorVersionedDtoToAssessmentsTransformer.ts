@@ -31,42 +31,42 @@ export function transformAllPredictorVersionedDtoToAssessments(dtos: AllPredicto
       return {
         outputVersion: '1',
         completedDateTime: dateFormatDayMonthYearTime,
-        ogrs3PredictorScore: mapPredictor(
+        ogrs3: mapPredictor(
           'OGRS',
           output.groupReconvictionScore.scoreLevel,
           null,
           output.groupReconvictionScore.twoYears,
           dateFormatDayMonthYear,
         ),
-        ovpPredictorScore: mapPredictor(
+        ovp: mapPredictor(
           'OVP',
           output.violencePredictorScore.ovpRisk,
           null,
           output.violencePredictorScore.twoYears,
           dateFormatDayMonthYear,
         ),
-        ogpPredictorScore: mapPredictor(
+        ogp: mapPredictor(
           'OGP',
           output.generalPredictorScore.ogpRisk,
           null,
           output.generalPredictorScore.ogp2Year,
           dateFormatDayMonthYear,
         ),
-        rsrPredictorScore: mapPredictor(
+        rsr: mapPredictor(
           'RSR',
           output.riskOfSeriousRecidivismScore.scoreLevel,
           output.riskOfSeriousRecidivismScore.staticOrDynamic,
           output.riskOfSeriousRecidivismScore.percentageScore,
           dateFormatDayMonthYear,
         ),
-        ospdcPredictorScore: mapPredictor(
+        ospdc: mapPredictor(
           'OSP-DC',
           output.sexualPredictorScore.ospContactScoreLevel,
           null,
           output.sexualPredictorScore.ospContactPercentageScore,
           dateFormatDayMonthYear,
         ),
-        ospiicPredictorScore: mapPredictor(
+        ospiic: mapPredictor(
           'OSP-IIC',
           output.sexualPredictorScore.ospIndecentScoreLevel,
           null,

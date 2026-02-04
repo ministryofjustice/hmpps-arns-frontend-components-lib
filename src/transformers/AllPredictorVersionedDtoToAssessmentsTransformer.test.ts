@@ -136,42 +136,42 @@ describe('All Predictor Versioned DTO To Assessments Transformer', () => {
       {
         outputVersion: '1',
         completedDateTime: '02 January 2024 at 18:23',
-        ogrs3PredictorScore: {
+        ogrs3: {
           name: 'OGRS',
           band: 'LOW',
           staticOrDynamic: null,
           score: 5,
           completedDate: '02 January 2024',
         },
-        ovpPredictorScore: {
+        ovp: {
           name: 'OVP',
           band: 'LOW',
           staticOrDynamic: null,
           score: 7,
           completedDate: '02 January 2024',
         },
-        ogpPredictorScore: {
+        ogp: {
           name: 'OGP',
           band: 'MEDIUM',
           staticOrDynamic: null,
           score: 8,
           completedDate: '02 January 2024',
         },
-        ospdcPredictorScore: {
+        ospdc: {
           name: 'OSP-DC',
           band: 'VERY HIGH',
           staticOrDynamic: null,
           score: 1.07,
           completedDate: '02 January 2024',
         },
-        ospiicPredictorScore: {
+        ospiic: {
           name: 'OSP-IIC',
           band: 'HIGH',
           staticOrDynamic: null,
           score: 2.81,
           completedDate: '02 January 2024',
         },
-        rsrPredictorScore: {
+        rsr: {
           name: 'RSR',
           band: 'HIGH',
           staticOrDynamic: 'Dynamic',
