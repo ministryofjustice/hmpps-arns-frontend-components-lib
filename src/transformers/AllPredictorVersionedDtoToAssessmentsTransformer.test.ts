@@ -195,4 +195,176 @@ describe('All Predictor Versioned DTO To Assessments Transformer', () => {
       'Unsupported output version: 3',
     )
   })
+
+  it('should handle null predictor & predictor containing null fields', () => {
+    const nullPredictorsData: AllPredictorVersionedDto[] = [
+      {
+        completedDate: '2025-01-01T15:21:20',
+        status: 'COMPLETE',
+        outputVersion: '2',
+        output: {
+          allReoffendingPredictor: {
+            staticOrDynamic: null,
+            score: null,
+            band: null,
+          },
+          violentReoffendingPredictor: null,
+          seriousViolentReoffendingPredictor: null,
+          directContactSexualReoffendingPredictor: {
+            score: 2.81,
+            band: 'VERY_HIGH',
+          },
+          indirectImageContactSexualReoffendingPredictor: {
+            score: 1.07,
+            band: 'HIGH',
+          },
+          combinedSeriousReoffendingPredictor: {
+            algorithmVersion: '6',
+            staticOrDynamic: 'STATIC',
+            score: 1.23,
+            band: 'HIGH',
+          },
+        },
+      },
+    ]
+    const result = transformAllPredictorVersionedDtoToAssessments(nullPredictorsData)
+    expect(result).toEqual([
+      {
+        completedDateTime: '01 January 2025 at 15:21',
+        outputVersion: '2',
+        allReoffendingPredictor: {
+          name: 'All Reoffending Predictor',
+          band: undefined,
+          staticOrDynamic: null,
+          score: null,
+          completedDate: '01 January 2025',
+        },
+        violentReoffendingPredictor: {
+          name: 'Violent Reoffending Predictor',
+          band: undefined,
+          staticOrDynamic: null,
+          score: undefined,
+          completedDate: '01 January 2025',
+        },
+        seriousViolentReoffendingPredictor: {
+          name: 'Serious Violent Reoffending Predictor',
+          band: undefined,
+          staticOrDynamic: null,
+          score: undefined,
+          completedDate: '01 January 2025',
+        },
+        directContactSexualReoffendingPredictor: {
+          name: 'Direct Contact - Sexual Reoffending Predictor',
+          band: 'VERY HIGH',
+          staticOrDynamic: null,
+          score: 2.81,
+          completedDate: '01 January 2025',
+        },
+        indirectImageContactSexualReoffendingPredictor: {
+          name: 'Images and Indirect Contact – Sexual Reoffending Predictor',
+          band: 'HIGH',
+          staticOrDynamic: null,
+          score: 1.07,
+          completedDate: '01 January 2025',
+        },
+        combinedSeriousReoffendingPredictor: {
+          name: 'Combined Serious Reoffending Predictor',
+          band: 'HIGH',
+          staticOrDynamic: 'Static',
+          score: 1.23,
+          completedDate: '01 January 2025',
+        },
+      },
+    ])
+  })
+
+  it('should handle malformed completedDate', () => {
+    const nullPredictorsData: AllPredictorVersionedDto[] = [
+      {
+        completedDate: 'NOT_A_DATE',
+        status: 'COMPLETE',
+        outputVersion: '2',
+        output: {
+          allReoffendingPredictor: {
+            staticOrDynamic: 'STATIC',
+            score: 1.23,
+            band: 'LOW',
+          },
+          violentReoffendingPredictor: {
+            staticOrDynamic: 'STATIC',
+            score: 1.23,
+            band: 'LOW',
+          },
+          seriousViolentReoffendingPredictor: {
+            staticOrDynamic: 'STATIC',
+            score: 1.23,
+            band: 'MEDIUM',
+          },
+          directContactSexualReoffendingPredictor: {
+            score: 2.81,
+            band: 'VERY_HIGH',
+          },
+          indirectImageContactSexualReoffendingPredictor: {
+            score: 1.07,
+            band: 'HIGH',
+          },
+          combinedSeriousReoffendingPredictor: {
+            algorithmVersion: '6',
+            staticOrDynamic: 'STATIC',
+            score: 1.23,
+            band: 'HIGH',
+          },
+        },
+      },
+    ]
+    const result = transformAllPredictorVersionedDtoToAssessments(nullPredictorsData)
+    expect(result).toEqual([
+      {
+        completedDateTime: undefined,
+        outputVersion: '2',
+        allReoffendingPredictor: {
+          name: 'All Reoffending Predictor',
+          band: 'LOW',
+          staticOrDynamic: 'Static',
+          score: 1.23,
+          completedDate: undefined,
+        },
+        violentReoffendingPredictor: {
+          name: 'Violent Reoffending Predictor',
+          band: 'LOW',
+          staticOrDynamic: 'Static',
+          score: 1.23,
+          completedDate: undefined,
+        },
+        seriousViolentReoffendingPredictor: {
+          name: 'Serious Violent Reoffending Predictor',
+          band: 'MEDIUM',
+          staticOrDynamic: 'Static',
+          score: 1.23,
+          completedDate: undefined,
+        },
+        directContactSexualReoffendingPredictor: {
+          name: 'Direct Contact - Sexual Reoffending Predictor',
+          band: 'VERY HIGH',
+          staticOrDynamic: null,
+          score: 2.81,
+          completedDate: undefined,
+        },
+        indirectImageContactSexualReoffendingPredictor: {
+          name: 'Images and Indirect Contact – Sexual Reoffending Predictor',
+          band: 'HIGH',
+          staticOrDynamic: null,
+          score: 1.07,
+          completedDate: undefined,
+        },
+        combinedSeriousReoffendingPredictor: {
+          name: 'Combined Serious Reoffending Predictor',
+          band: 'HIGH',
+          staticOrDynamic: 'Static',
+          score: 1.23,
+          completedDate: undefined,
+        },
+      },
+    ])
+  })
 })
