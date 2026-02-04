@@ -1,6 +1,6 @@
-import { StaticOrDynamic } from '../staticOrDynamic'
-import { BandLevel } from '../bandLevel'
-import { RsrScoreSourceDto } from './rsrScoreSourceDto'
+import { StaticOrDynamic } from './StaticOrDynamic'
+import { BandLevel } from './BandLevel'
+import { RsrScoreSourceDto } from './RsrScoreSourceDto'
 
 export interface RsrScoreDto {
   percentageScore: number
