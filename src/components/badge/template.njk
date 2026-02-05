@@ -30,7 +30,7 @@
 {% set showScore = params.showScore if params.showScore else false %}
 
 {% if latestAssessment is defined %}
-  <div class="predictor-badges{% if params.classes %} {{ params.classes }}{% endif %}">
+  <div class="{% if params.classes %}{{ params.classes }}{% endif %}">
     {% for key, predictor in latestAssessment %}
       {% if key == params.predictor %}
 
@@ -52,7 +52,7 @@
             <span class="predictor-badge__score">{{ predictor.score }}%</span>
           {% endif %}
 
-          {% if predictor.staticOrDynamic %}
+          {% if predictor.staticOrDynamic is defined %}
             <span class="predictor-badge__static_or_dynamic">{{ predictor.staticOrDynamic }}</span>
           {% endif %}
         </div>

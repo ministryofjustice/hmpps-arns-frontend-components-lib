@@ -1,0 +1,87 @@
+{#
+ARNS Expanded Predictor Badge Component
+
+@name expandedPredictorBadge
+
+@description Displays specified risk predictor score badges in an expanded format.
+It uses the latest assessment from the provided data set.
+
+@example
+In route handler:
+  const riskData = await arnsComponents.getRiskData(token, 'crn', 'X123456')
+  res.render('page', { riskData })
+
+In template:
+  {% from "components/expanded-badge/macro.njk" import expandedPredictorBadge %}
+  {{ expandedPredictorBadge({
+    data: riskData,
+    predictor: "allReoffendingPredictor",
+    showScore: true,
+    fixedWidth: true,
+    classes: "class-name-here"
+  }) }}
+
+@param {object} params
+  @param {RiskData} params.data - Risk data object from ArnsComponents.getRiskData() containing an 'assessments' array
+  @param {string} params.predictor - The name of the specific predictor to display
+  @param {boolean} [params.showScore=false] - If true, displays the percentage score
+  @param {boolean} [params.fixedWidth=true] - If true or undefined, displays the expanded predictor badge in a fixed width format
+  @param {string} [params.classes] - Optional CSS utility classes to apply to the container
+#}
+{% set latestAssessment = params.data.assessments | first if params.data.assessments else null %}
+{% set showScore = params.showScore if params.showScore else false %}
+
+{% if latestAssessment is defined %}
+  <div class="{% if params.classes %}{{ params.classes }}{% endif %}">
+
+      {% for key, predictor in latestAssessment %}
+        {% if key == params.predictor %}
+
+          {% set badgeClass = '' %}
+          {% switch predictor.band %}
+          {% case 'VERY_HIGH' %}
+            {% set badgeClass = 'expanded-predictor-badge--very-high' %}
+          {% case 'HIGH' %}
+            {% set badgeClass = 'expanded-predictor-badge--high' %}
+          {% case 'MEDIUM' %}
+            {% set badgeClass = 'expanded-predictor-badge--medium' %}
+          {% case 'LOW' %}
+            {% set badgeClass = 'expanded-predictor-badge--low' %}
+          {% endswitch %}
+
+          {% set staticOrDynamicClass = 'predictor-badge__static_or_dynamic' %}
+          {% if showScore and predictor.band in ['VERY HIGH', 'MEDIUM'] and predictor.staticOrDynamic === 'DYNAMIC' %}
+            {% set staticOrDynamicClass = staticOrDynamicClass + ' predictor-badge__wrapped_static_or_dynamic' %}
+          {% endif %}
+
+          {% if params.fixedWidth or params.fixedWidth is undefined %}
+            {% set badgeWidthClass = 'expanded-predictor-badge__fixed-width' %}
+          {% else %}
+            {% set badgeWidthClass = 'expanded-predictor-badge__dynamic' %}
+          {% endif %}
+
+          <div class="{{ badgeClass }} {{ badgeWidthClass }}">
+            <span
+              class="predictor-badge__type">{{ predictor.name }}</span>
+
+            <div class="predictor-badge__stats">
+              <span class="predictor-badge__level">{{ predictor.band }}</span>
+
+              {% if showScore and predictor.score is defined %}
+                <span class="predictor-badge__score">{{ predictor.score }}%</span>
+              {% endif %}
+
+              {% if predictor.staticOrDynamic is defined %}
+                <span class="{{ staticOrDynamicClass }}">{{ predictor.staticOrDynamic }}</span>
+              {% endif %}
+
+            </div>
+
+            <span class="predictor-badge__last_updated">Last updated: {{ predictor.completedDate }}</span>
+
+          </div>
+        {% endif %}
+      {% endfor %}
+    {% endif %}
+  </div>
+{% endif %}
