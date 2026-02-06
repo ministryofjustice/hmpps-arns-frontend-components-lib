@@ -24,39 +24,36 @@
     @param {RiskData} params.data - Risk data object from ArnsComponents.getRiskData() containing an 'assessments' array
     @param {string} params.predictor - The name of the specific predictor to display
     @param {boolean} [params.showScore=false] - If true, displays the percentage score
-    @param {string} [params.classes] - Optional CSS utility classes to apply to the container
 #}
 {% set latestAssessment = params.data.assessments | first if params.data.assessments else null %}
 {% set showScore = params.showScore if params.showScore else false %}
 
-{% if latestAssessment is defined %}
-  <div class="{% if params.classes %}{{ params.classes }}{% endif %}">
-    {% for key, predictor in latestAssessment %}
-      {% if key == params.predictor %}
+{% if latestAssessment %}
+  {% for key, predictor in latestAssessment %}
+    {% if key == params.predictor %}
 
-        {% set badgeClass = '' %}
-        {% switch predictor.band %}
-        {% case 'VERY HIGH' %}
-          {% set badgeClass = 'predictor-badge--very-high' %}
-        {% case 'HIGH' %}
-          {% set badgeClass = 'predictor-badge--high' %}
-        {% case 'MEDIUM' %}
-          {% set badgeClass = 'predictor-badge--medium' %}
-        {% case 'LOW' %}
-          {% set badgeClass = 'predictor-badge--low' %}
-        {% endswitch %}
-        <div class="{{ badgeClass }}">
-          <span class="predictor-badge__type_and_level">{{ predictor.name | upper }} <strong>{{ predictor.band }}</strong></span>
+      {% set badgeClass = '' %}
+      {% switch predictor.band %}
+      {% case 'VERY HIGH' %}
+        {% set badgeClass = 'predictor-badge--very-high' %}
+      {% case 'HIGH' %}
+        {% set badgeClass = 'predictor-badge--high' %}
+      {% case 'MEDIUM' %}
+        {% set badgeClass = 'predictor-badge--medium' %}
+      {% case 'LOW' %}
+        {% set badgeClass = 'predictor-badge--low' %}
+      {% endswitch %}
+      <div class="{{ badgeClass }}">
+        <span class="predictor-badge__type_and_level">{{ predictor.name | upper }} <strong>{{ predictor.band }}</strong></span>
 
-          {% if showScore and predictor.score is defined %}
-            <span class="predictor-badge__score">{{ predictor.score }}%</span>
-          {% endif %}
+        {% if showScore and predictor.score %}
+          <span class="predictor-badge__score">{{ predictor.score }}%</span>
+        {% endif %}
 
-          {% if predictor.staticOrDynamic is defined %}
-            <span class="predictor-badge__static_or_dynamic">{{ predictor.staticOrDynamic }}</span>
-          {% endif %}
-        </div>
-      {% endif %}
-    {% endfor %}
-  </div>
+        {% if predictor.staticOrDynamic %}
+          <span class="predictor-badge__static_or_dynamic">{{ predictor.staticOrDynamic }}</span>
+        {% endif %}
+      </div>
+    {% endif %}
+  {% endfor %}
 {% endif %}
