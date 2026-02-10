@@ -11,7 +11,7 @@ In route handler:
   res.render('page', { riskData })
 
 In template:
-  {% from "components/scale/macro.njk" import predictorScale %}
+  {% from "components/predictor-scale/macro.njk" import predictorScale %}
   {{ predictorScale({
     data: riskData,
     predictor: "allReoffendingPredictor"
