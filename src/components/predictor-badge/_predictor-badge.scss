@@ -11,18 +11,18 @@ $low-score-colour: #85994b;
 $low-score-colour--light: #dee9bd;
 $low-score-colour__text: #485b10;
 
-@mixin predictor-badge-base($primary-colour, $secondary-colour, $text-colour) {
+@mixin arns-predictor-badge-base($primary-colour, $secondary-colour, $text-colour) {
   display: inline-flex;
   outline: 2px solid $primary-colour;
 
-  & .predictor-badge__type_and_level {
+  & .arns-predictor-badge__type_and_level {
     @include govuk-font(19, "regular");
     color: $text-colour;
 
     padding: 2px 10px;
   }
 
-  & .predictor-badge__score {
+  & .arns-predictor-badge__score {
     @include govuk-font(19, "bold");
     color: govuk-colour("black");
 
@@ -33,7 +33,7 @@ $low-score-colour__text: #485b10;
     align-content: center;
   }
 
-  & .predictor-badge__static_or_dynamic {
+  & .arns-predictor-badge__static_or_dynamic {
     @include govuk-font(19, "regular");
     color: #282D30;
 
@@ -45,22 +45,22 @@ $low-score-colour__text: #485b10;
   }
 }
 
-.predictor-badge--very-high {
-  @include predictor-badge-base(
+.arns-predictor-badge--very-high {
+  @include arns-predictor-badge-base(
       $very-high-score-colour,
       $very-high-score-colour--light,
       $very-high-score-colour__text
   );
 }
 
-.predictor-badge--high {
-  @include predictor-badge-base($high-score-colour, $high-score-colour--light, $high-score-colour__text);
+.arns-predictor-badge--high {
+  @include arns-predictor-badge-base($high-score-colour, $high-score-colour--light, $high-score-colour__text);
 }
 
-.predictor-badge--medium {
-  @include predictor-badge-base($medium-score-colour, $medium-score-colour--light, $medium-score-colour__text);
+.arns-predictor-badge--medium {
+  @include arns-predictor-badge-base($medium-score-colour, $medium-score-colour--light, $medium-score-colour__text);
 }
 
-.predictor-badge--low {
-  @include predictor-badge-base($low-score-colour, $low-score-colour--light, $low-score-colour__text);
+.arns-predictor-badge--low {
+  @include arns-predictor-badge-base($low-score-colour, $low-score-colour--light, $low-score-colour__text);
 }
