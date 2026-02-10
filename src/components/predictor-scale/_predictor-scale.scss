@@ -10,45 +10,45 @@ $medium-score-colour__text: #a34e00;
 $low-score-colour: #85994b;
 $low-score-colour--light: #dee9bd;
 $low-score-colour__text: #485b10;
-$boarder-colour: #B1B4B6;
+$border-colour: #B1B4B6;
 
-@mixin scale-marker-card-colour($primary-colour, $secondary-colour, $text-colour) {
-  & .scale-marker__card {
+@mixin arns-scale-marker-card-colour($primary-colour, $secondary-colour, $text-colour) {
+  & .arns-scale-marker__card {
     border: 2px solid $primary-colour;
 
-    & .scale-marker__card-top {
+    & .arns-scale-marker__card-top {
       & h3,
       & p {
         color: $text-colour;
       }
     }
 
-    & .scale-marker__card-bottom {
+    & .arns-scale-marker__card-bottom {
       background-color: $secondary-colour;
     }
 
-    & .scale-marker__card-pointer {
+    & .arns-scale-marker__card-pointer {
       border-top: 16px solid $primary-colour;
     }
 
-    & .scale-marker__card-pointer::after {
+    & .arns-scale-marker__card-pointer::after {
       border-top: 14px solid $secondary-colour;
     }
   }
 }
 
-@mixin scale-bar-label {
+@mixin arns-scale-bar-label {
   position: relative;
   text-align: center;
   display: block;
   color: govuk-colour("black");
 }
 
-@mixin scale-bar-base {
+@mixin arns-scale-bar-base {
   width: 100%;
 
   &::after {
-    content: "" "";
+    content: "";
     display: block;
     visibility: hidden;
     clear: both;
@@ -60,19 +60,19 @@ $boarder-colour: #B1B4B6;
   }
 }
 
-.predictor-scale-header-wrapper{
+.arns-predictor-scale-header-wrapper{
   display: flex;
   justify-content: space-between;
 }
 
-.predictor-scale {
+.arns-predictor-scale {
   width: 100%;
   padding: 30px 40px 10px;
   box-sizing: border-box;
-  border: 1px solid $boarder-colour;
+  border: 1px solid $border-colour;
 }
 
-.scale-marker__card-pointer {
+.arns-scale-marker__card-pointer {
   width: 0;
   height: 0;
   border-right: 16px solid transparent;
@@ -84,11 +84,11 @@ $boarder-colour: #B1B4B6;
   float: left;
 }
 
-.scale-marker__card-pointer--white::after {
+.arns-scale-marker__card-pointer--white::after {
   border-top: 14px solid govuk-colour("white") !important;
 }
 
-.scale-marker__card-pointer::after {
+.arns-scale-marker__card-pointer::after {
   width: 0;
   height: 0;
   border-right: 14px solid transparent;
@@ -100,73 +100,73 @@ $boarder-colour: #B1B4B6;
   content: "";
 }
 
-.scale-marker {
+.arns-scale-marker {
   margin-bottom: 22px;
   width: 100%;
 }
 
-.scale-marker-wrapper--position-one-of-three,
-.scale-marker-wrapper--position-two-of-three,
-.scale-marker-wrapper--position-three-of-three {
+.arns-scale-marker-wrapper--position-one-of-three,
+.arns-scale-marker-wrapper--position-two-of-three,
+.arns-scale-marker-wrapper--position-three-of-three {
   width: 33%;
 }
 
-.scale-marker-wrapper--position-one-of-three {
+.arns-scale-marker-wrapper--position-one-of-three {
   margin-left: 0;
 }
 
-.scale-marker-wrapper--position-two-of-three {
+.arns-scale-marker-wrapper--position-two-of-three {
   margin-left: 34%;
 }
 
-.scale-marker-wrapper--position-three-of-three {
+.arns-scale-marker-wrapper--position-three-of-three {
   margin-left: 67%;
 }
 
-.scale-marker-wrapper--position-one-of-four,
-.scale-marker-wrapper--position-two-of-four,
-.scale-marker-wrapper--position-three-of-four,
-.scale-marker-wrapper--position-four-of-four {
+.arns-scale-marker-wrapper--position-one-of-four,
+.arns-scale-marker-wrapper--position-two-of-four,
+.arns-scale-marker-wrapper--position-three-of-four,
+.arns-scale-marker-wrapper--position-four-of-four {
   width: 25%;
 }
 
-.scale-marker-wrapper--position-one-of-four {
+.arns-scale-marker-wrapper--position-one-of-four {
   margin-left: 0;
 }
 
-.scale-marker-wrapper--position-two-of-four {
+.arns-scale-marker-wrapper--position-two-of-four {
   margin-left: 25%;
 }
 
-.scale-marker-wrapper--position-three-of-four {
+.arns-scale-marker-wrapper--position-three-of-four {
   margin-left: 50%;
 }
 
-.scale-marker-wrapper--position-four-of-four {
+.arns-scale-marker-wrapper--position-four-of-four {
   margin-left: 75%;
 }
 
-.scale-marker-wrapper--very-high {
-  @include scale-marker-card-colour(
+.arns-scale-marker-wrapper--very-high {
+  @include arns-scale-marker-card-colour(
       $very-high-score-colour,
       $very-high-score-colour--light,
       $very-high-score-colour__text
   );
 }
 
-.scale-marker-wrapper--high {
-  @include scale-marker-card-colour($high-score-colour, $high-score-colour--light, $high-score-colour__text);
+.arns-scale-marker-wrapper--high {
+  @include arns-scale-marker-card-colour($high-score-colour, $high-score-colour--light, $high-score-colour__text);
 }
 
-.scale-marker-wrapper--medium {
-  @include scale-marker-card-colour($medium-score-colour, $medium-score-colour--light, $medium-score-colour__text);
+.arns-scale-marker-wrapper--medium {
+  @include arns-scale-marker-card-colour($medium-score-colour, $medium-score-colour--light, $medium-score-colour__text);
 }
 
-.scale-marker-wrapper--low {
-  @include scale-marker-card-colour($low-score-colour, $low-score-colour--light, $low-score-colour__text);
+.arns-scale-marker-wrapper--low {
+  @include arns-scale-marker-card-colour($low-score-colour, $low-score-colour--light, $low-score-colour__text);
 }
 
-.scale-marker__card {
+.arns-scale-marker__card {
   width: 78px;
   bottom: 30px;
   margin: 0 auto;
@@ -174,7 +174,7 @@ $boarder-colour: #B1B4B6;
   border: 2px solid govuk-colour("black");
 }
 
-.scale-marker__card-top {
+.arns-scale-marker__card-top {
   width: 100%;
 
   & h3,
@@ -193,21 +193,21 @@ $boarder-colour: #B1B4B6;
   }
 }
 
-.scale-marker__card-bottom p {
+.arns-scale-marker__card-bottom p {
   @include govuk-font(14, "bold");
 
   margin: 0;
 }
 
-.scale-marker__card-top,
-.scale-marker__card-bottom {
+.arns-scale-marker__card-top,
+.arns-scale-marker__card-bottom {
   padding: 3px;
   text-align: center;
   box-sizing: border-box;
 }
 
-.scale-bar--small {
-  @include scale-bar-base;
+.arns-scale-bar--small {
+  @include arns-scale-bar-base;
 
   margin-bottom: 15px;
 
@@ -222,7 +222,7 @@ $boarder-colour: #B1B4B6;
   & > div:nth-child(4n + 1) > span:first-child {
     &::after{
       @include govuk-font(16);
-      @include scale-bar-label;
+      @include arns-scale-bar-label;
 
       content:"LOW";
       bottom: -15px;
@@ -234,7 +234,7 @@ $boarder-colour: #B1B4B6;
   & > div:nth-child(4n + 2) > span:first-child {
     &::after{
       @include govuk-font(16);
-      @include scale-bar-label;
+      @include arns-scale-bar-label;
 
       content:"MEDIUM";
       bottom: -15px;
@@ -246,7 +246,7 @@ $boarder-colour: #B1B4B6;
   & > div:nth-child(4n + 3) > span:first-child {
     &::after{
       @include govuk-font(16);
-      @include scale-bar-label;
+      @include arns-scale-bar-label;
 
       content:"HIGH";
       bottom: -15px;
@@ -256,7 +256,7 @@ $boarder-colour: #B1B4B6;
   }
 }
 
-.scale-bar--small-fourths {
+.arns-scale-bar--small-fourths {
   & > div {
     width: 25%;
     padding-bottom: 20px;
@@ -265,7 +265,7 @@ $boarder-colour: #B1B4B6;
   & > div:nth-child(4n + 4) > span:first-child {
     &::after{
       @include govuk-font(16);
-      @include scale-bar-label;
+      @include arns-scale-bar-label;
 
       content:"VERY HIGH";
       bottom: -15px;
@@ -275,8 +275,8 @@ $boarder-colour: #B1B4B6;
   }
 }
 
-.scale-bar {
-  @include scale-bar-base;
+.arns-scale-bar {
+  @include arns-scale-bar-base;
   margin-bottom: 50px;
   display: block;
   clear: both;
@@ -300,7 +300,7 @@ $boarder-colour: #B1B4B6;
 
       &::after {
         @include govuk-font(16);
-        @include scale-bar-label;
+        @include arns-scale-bar-label;
         position: absolute;
         bottom: -20px;
         left: 50%;
@@ -312,7 +312,7 @@ $boarder-colour: #B1B4B6;
 
     &::after {
       @include govuk-font(16);
-      @include scale-bar-label;
+      @include arns-scale-bar-label;
       content: attr(data-band-percentage);
       position: absolute;
       bottom: -25px;
@@ -323,7 +323,7 @@ $boarder-colour: #B1B4B6;
 
     &:first-child::before {
       @include govuk-font(16);
-      @include scale-bar-label;
+      @include arns-scale-bar-label;
       content: attr(data-band-percentage-start);
       position: absolute;
       bottom: -25px;
@@ -344,7 +344,7 @@ $boarder-colour: #B1B4B6;
   }
 }
 
-.scale-bar--fourths {
+.arns-scale-bar--fourths {
   & > div {
     width: 25% !important;
   }

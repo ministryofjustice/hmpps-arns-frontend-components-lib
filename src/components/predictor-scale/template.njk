@@ -25,17 +25,17 @@ In template:
 {% set latestAssessment = params.data.assessments | first if params.data.assessments else null %}
 
 {% macro predictorScaleMarker(predictor, showScore) %}
-  <div class="scale-marker__card">
-    <div class="scale-marker__card-top">
+  <div class="arns-scale-marker__card">
+    <div class="arns-scale-marker__card-top">
       <h3>{{ predictor.band }}</h3>
     </div>
     {% if showScore and predictor.score %}
-      <div class="scale-marker__card-bottom">
+      <div class="arns-scale-marker__card-bottom">
         <p>{{ predictor.score }}%</p>
       </div>
-      <div class="scale-marker__card-pointer"></div>
+      <div class="arns-scale-marker__card-pointer"></div>
     {% else %}
-      <div class="scale-marker__card-pointer scale-marker__card-pointer--white"></div>
+      <div class="arns-scale-marker__card-pointer arns-scale-marker__card-pointer--white"></div>
     {% endif %}
   </div>
 {% endmacro %}
@@ -78,45 +78,45 @@ In template:
       {% if includeVeryHigh !== true %}
         {% switch predictor.band %}
         {% case 'LOW' %}
-          {% set scaleMarkerClass = 'scale-marker-wrapper--low scale-marker-wrapper--position-one-of-three' %}
+          {% set scaleMarkerClass = 'arns-scale-marker-wrapper--low arns-scale-marker-wrapper--position-one-of-three' %}
         {% case 'MEDIUM' %}
-          {% set scaleMarkerClass = 'scale-marker-wrapper--medium scale-marker-wrapper--position-two-of-three' %}
+          {% set scaleMarkerClass = 'arns-scale-marker-wrapper--medium arns-scale-marker-wrapper--position-two-of-three' %}
         {% case 'HIGH' %}
-          {% set scaleMarkerClass = 'scale-marker-wrapper--high scale-marker-wrapper--position-three-of-three' %}
+          {% set scaleMarkerClass = 'arns-scale-marker-wrapper--high arns-scale-marker-wrapper--position-three-of-three' %}
         {% endswitch %}
         {% else %}
         {% switch predictor.band %}
         {% case 'LOW' %}
-          {% set scaleMarkerClass = 'scale-marker-wrapper--low scale-marker-wrapper--position-one-of-four' %}
+          {% set scaleMarkerClass = 'arns-scale-marker-wrapper--low arns-scale-marker-wrapper--position-one-of-four' %}
         {% case 'MEDIUM' %}
-          {% set scaleMarkerClass = 'scale-marker-wrapper--medium scale-marker-wrapper--position-two-of-four' %}
+          {% set scaleMarkerClass = 'arns-scale-marker-wrapper--medium arns-scale-marker-wrapper--position-two-of-four' %}
         {% case 'HIGH' %}
-          {% set scaleMarkerClass = 'scale-marker-wrapper--high scale-marker-wrapper--position-three-of-four' %}
+          {% set scaleMarkerClass = 'arns-scale-marker-wrapper--high arns-scale-marker-wrapper--position-three-of-four' %}
         {% case 'VERY HIGH' %}
-          {% set scaleMarkerClass = 'scale-marker-wrapper--very-high scale-marker-wrapper--position-four-of-four' %}
+          {% set scaleMarkerClass = 'arns-scale-marker-wrapper--very-high arns-scale-marker-wrapper--position-four-of-four' %}
         {% endswitch %}
       {% endif %}
 
       {% set barTypeClass = '' %}
 
       {% if includeVeryHigh !== true and includePercentage !== true %}
-        {% set barTypeClass = 'scale-bar--small' %}
+        {% set barTypeClass = 'arns-scale-bar--small' %}
       {% elif includeVeryHigh === true and includePercentage !== true %}
-        {% set barTypeClass = 'scale-bar--small scale-bar--small-fourths' %}
+        {% set barTypeClass = 'arns-scale-bar--small arns-scale-bar--small-fourths' %}
       {% elif includeVeryHigh === true and includePercentage === true %}
-        {% set barTypeClass = 'scale-bar scale-bar--fourths' %}
+        {% set barTypeClass = 'arns-scale-bar arns-scale-bar--fourths' %}
       {% elif includeVeryHigh !== true and includePercentage === true %}
-        {% set barTypeClass = 'scale-bar' %}
+        {% set barTypeClass = 'arns-scale-bar' %}
       {% endif %}
 
       {% if predictor.band === 'NOT APPLICABLE' %}
-        <div class="predictor-scale govuk-body">
+        <div class="arns-predictor-scale govuk-body">
           <h2 class="govuk-heading-m">{{ predictor.name }}</h2>
           <p class="govuk-body">Not applicable</p>
         </div>
       {% else %}
-        <div class="predictor-scale govuk-body">
-          <div class="predictor-scale-header-wrapper">
+        <div class="arns-predictor-scale govuk-body">
+          <div class="arns-predictor-scale-header-wrapper">
             <div>
               <h2 class="govuk-heading-m">{{ predictor.name }}</h2>
               <p class="govuk-hint">Last updated: {{ predictor.completedDate }}</p>
@@ -126,7 +126,7 @@ In template:
             {%  endif %}
           </div>
 
-          <div class="scale-marker">
+          <div class="arns-scale-marker">
             <div class="{{ scaleMarkerClass }}">
               {{ predictorScaleMarker(predictor, showScore) }}
             </div>
