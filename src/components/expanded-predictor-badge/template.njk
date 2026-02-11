@@ -12,7 +12,7 @@ In route handler:
   res.render('page', { riskData })
 
 In template:
-  {% from "components/expanded-badge/macro.njk" import expandedPredictorBadge %}
+  {% from "components/expanded-predictor-badge/macro.njk" import expandedPredictorBadge %}
   {{ expandedPredictorBadge({
     data: riskData,
     predictor: "allReoffendingPredictor",
@@ -36,35 +36,35 @@ In template:
       {% set badgeClass = '' %}
       {% switch predictor.band %}
       {% case 'VERY HIGH' %}
-        {% set badgeClass = 'expanded-predictor-badge--very-high' %}
+        {% set badgeClass = 'arns-expanded-predictor-badge--very-high' %}
       {% case 'HIGH' %}
-        {% set badgeClass = 'expanded-predictor-badge--high' %}
+        {% set badgeClass = 'arns-expanded-predictor-badge--high' %}
       {% case 'MEDIUM' %}
-        {% set badgeClass = 'expanded-predictor-badge--medium' %}
+        {% set badgeClass = 'arns-expanded-predictor-badge--medium' %}
       {% case 'LOW' %}
-        {% set badgeClass = 'expanded-predictor-badge--low' %}
+        {% set badgeClass = 'arns-expanded-predictor-badge--low' %}
       {% endswitch %}
 
-      {% set staticOrDynamicClass = 'predictor-badge__static_or_dynamic' %}
+      {% set staticOrDynamicClass = 'arns-predictor-badge__static_or_dynamic' %}
       {% if showScore and predictor.band in ['VERY HIGH', 'MEDIUM'] and predictor.staticOrDynamic === 'DYNAMIC' %}
-        {% set staticOrDynamicClass = staticOrDynamicClass + ' predictor-badge__wrapped_static_or_dynamic' %}
+        {% set staticOrDynamicClass = staticOrDynamicClass + ' arns-predictor-badge__wrapped_static_or_dynamic' %}
       {% endif %}
 
       {% if params.fixedWidth or params.fixedWidth is undefined %}
-        {% set badgeWidthClass = 'expanded-predictor-badge__fixed-width' %}
+        {% set badgeWidthClass = 'arns-expanded-predictor-badge__fixed-width' %}
       {% else %}
-        {% set badgeWidthClass = 'expanded-predictor-badge__dynamic' %}
+        {% set badgeWidthClass = 'arns-expanded-predictor-badge__dynamic' %}
       {% endif %}
 
       <div class="{{ badgeClass }} {{ badgeWidthClass }}">
         <span
-          class="predictor-badge__type">{{ predictor.name }}</span>
+          class="arns-predictor-badge__type">{{ predictor.name }}</span>
 
-        <div class="predictor-badge__stats">
-          <span class="predictor-badge__level">{{ predictor.band }}</span>
+        <div class="arns-predictor-badge__stats">
+          <span class="arns-predictor-badge__level">{{ predictor.band }}</span>
 
           {% if showScore and predictor.score %}
-            <span class="predictor-badge__score">{{ predictor.score }}%</span>
+            <span class="arns-predictor-badge__score">{{ predictor.score }}%</span>
           {% endif %}
 
           {% if predictor.staticOrDynamic %}
@@ -73,7 +73,7 @@ In template:
 
         </div>
 
-        <span class="predictor-badge__last_updated">Last updated: {{ predictor.completedDate }}</span>
+        <span class="arns-predictor-badge__last_updated">Last updated: {{ predictor.completedDate }}</span>
 
       </div>
     {% endif %}
