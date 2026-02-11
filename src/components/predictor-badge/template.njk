@@ -3,7 +3,7 @@
 
   @name predictorBadge
 
-  @description Displays specified risk predictor score badges.
+  @description Displays a specified risk predictor score badge.
   It uses the latest assessment from the provided data set.
 
   @example
@@ -16,8 +16,7 @@
     {{ predictorBadge({
       data: riskData,
       predictor: "allReoffendingPredictor",
-      showScore: true,
-      classes: "class-name-here"
+      showScore: true
     }) }}
 
   @param {object} params
