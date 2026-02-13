@@ -41,15 +41,25 @@
         {% set badgeClass = 'arns-predictor-badge--medium' %}
       {% case 'LOW' %}
         {% set badgeClass = 'arns-predictor-badge--low' %}
+      {% default %}
+          {% set badgeClass = 'arns-predictor-badge--default' %}
       {% endswitch %}
-      <div class="{{ badgeClass }}">
-        <span class="arns-predictor-badge__type_and_level">{{ predictor.name | upper }} <strong>{{ predictor.band }}</strong></span>
 
-        {% if showScore and predictor.score %}
+      {% if predictor.band is undefined or (showScore == true and predictor.score is undefined) %}
+        {% set band = 'UNKNOWN' %}
+        {% set badgeClass = 'arns-predictor-badge--default' %}
+      {% else %}
+        {% set band = predictor.band | replace('_', ' ') %}
+      {% endif %}
+
+      <div class="{{ badgeClass }}">
+        <span class="arns-predictor-badge__type_and_level">{{ predictor.name | upper }} <strong>{{ band }}</strong></span>
+
+        {% if showScore and predictor.score and badgeClass != 'arns-predictor-badge--default' %}
           <span class="arns-predictor-badge__score">{{ predictor.score }}%</span>
         {% endif %}
 
-        {% if predictor.staticOrDynamic %}
+        {% if predictor.staticOrDynamic and badgeClass != 'arns-predictor-badge--default' %}
           <span class="arns-predictor-badge__static_or_dynamic">{{ predictor.staticOrDynamic }}</span>
         {% endif %}
       </div>
