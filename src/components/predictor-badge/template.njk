@@ -22,14 +22,16 @@
   @param {object} params
     @param {RiskData} params.data - Risk data object from ArnsComponents.getRiskData() containing an 'assessments' array
     @param {string} params.predictor - The name of the specific predictor to display
-    @param {boolean} [params.showScore=false] - If true, displays the percentage score
+    @param {boolean} [params.showScore] - Optional config override - If true, displays the percentage score
 #}
 {% set latestAssessment = params.data.assessments | first if params.data.assessments else null %}
-{% set showScore = params.showScore if params.showScore else false %}
 
 {% if latestAssessment %}
   {% for key, predictor in latestAssessment %}
     {% if key == params.predictor %}
+
+      {% set config = predictorConfig[key] %}
+      {% set shouldShowScore = showScore if showScore is defined else config.showScore %}
 
       {% set badgeClass = '' %}
       {% switch predictor.band %}
@@ -45,7 +47,7 @@
           {% set badgeClass = 'arns-predictor-badge--default' %}
       {% endswitch %}
 
-      {% if predictor.band is undefined or (showScore == true and predictor.score is undefined) %}
+      {% if predictor.band is undefined or (shouldShowScore == true and predictor.score is undefined) %}
         {% set band = 'UNKNOWN' %}
         {% set badgeClass = 'arns-predictor-badge--default' %}
       {% else %}
@@ -55,7 +57,7 @@
       <div class="{{ badgeClass }}">
         <span class="arns-predictor-badge__type_and_level">{{ predictor.name | upper }} <strong>{{ band }}</strong></span>
 
-        {% if showScore and predictor.score and badgeClass != 'arns-predictor-badge--default' %}
+        {% if shouldShowScore and badgeClass != 'arns-predictor-badge--default' %}
           <span class="arns-predictor-badge__score">{{ predictor.score }}%</span>
         {% endif %}
 
