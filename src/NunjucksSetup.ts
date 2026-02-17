@@ -1,7 +1,6 @@
 import { Environment } from 'nunjucks'
 
 export const arnsNunjucksSetup = (env: Environment) => {
-
   const predictorConfig = {
     ogrs3: {
       showScore: true,
