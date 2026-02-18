@@ -14,18 +14,19 @@ import {
 import { BandLevel } from '../../types/dtos/BandLevel'
 
 // allReoffendingPredictor, directContactSexualReoffendingPredictor showScore from config
-const inputCombinationsTemplateLogic: Record<keyof PredictorBadgeTestCase, any[]> = {
+const inputCombinationsTemplateLogic: Record<keyof ExpandedPredictorBadgeTestCase, any[]> = {
   predictor: ['allReoffendingPredictor', 'directContactSexualReoffendingPredictor'],
-  level: [BandLevel.VERY_HIGH, BandLevel.NOT_APPLICABLE, null],
+  level: [BandLevel.MEDIUM, BandLevel.VERY_HIGH, BandLevel.NOT_APPLICABLE, null],
   score: ['12.34', undefined],
   staticOrDynamic: ['Static', 'Dynamic'],
   showScore: [true, false, undefined],
+  fixedWidth: [true, false, undefined],
 }
 
 // Reuse same JSDOM object to improve performance
 let dom: JSDOM = null
 
-describe('predictor-badge', () => {
+describe('expanded-predictor-badge', () => {
   beforeAll(() => {
     dom = getInitialDom()
   })
@@ -37,11 +38,11 @@ describe('predictor-badge', () => {
         const predictor = 'allReoffendingPredictor'
         const renderedHtml = getRenderedHtml(
           dom,
-          'PREDICTOR_BADGE',
+          'EXPANDED_PREDICTOR_BADGE',
           `predictor: "${predictor}"`,
           getRiskTestData([{ predictor, level, score: 12.34, staticOrDynamic: 'Static' }]),
         )
-        validateBadge(renderedHtml, predictor, level, 12.34, 'Static', undefined)
+        validateBadge(renderedHtml, predictor, level, 12.34, 'Static', undefined, undefined)
       },
     )
   })
@@ -51,25 +52,25 @@ describe('predictor-badge', () => {
     it.each(predictors)('should render correct name for: %s', predictor => {
       const renderedHtml = getRenderedHtml(
         dom,
-        'PREDICTOR_BADGE',
+        'EXPANDED_PREDICTOR_BADGE',
         `predictor: "${predictor}"`,
         getRiskTestData([{ predictor, level: BandLevel.LOW, score: 12.34, staticOrDynamic: 'Static' }]),
       )
-      const name = renderedHtml.document.querySelector('[data-test-id="nameAndBand"]')
-      expect(name.innerHTML).toBe(`${expectedPredictorNameMappings[predictor].badgeContent} <strong>LOW</strong>`)
+      const name = renderedHtml.document.querySelector('[data-test-id="name"]')
+      expect(name.innerHTML).toBe(expectedPredictorNameMappings[predictor].name)
     })
   })
 
   it.each(getCombinations(inputCombinationsTemplateLogic))(
-    'should render correct html/css - {predictor: $predictor, level: $level, score: $score, staticOrDynamic: $staticOrDynamic, showScore: $showScore}',
-    ({ predictor, level, score, staticOrDynamic, showScore }) => {
+    'should render correct html/css template logic - {predictor: $predictor, level: $level, score: $score, staticOrDynamic: $staticOrDynamic, showScore: $showScore, fixedWidth: $fixedWidth}',
+    ({ predictor, level, score, staticOrDynamic, showScore, fixedWidth }) => {
       const renderedHtml = getRenderedHtml(
         dom,
-        'PREDICTOR_BADGE',
-        `predictor: "${predictor}", showScore: ${showScore}`,
+        'EXPANDED_PREDICTOR_BADGE',
+        `predictor: "${predictor}", showScore: ${showScore}, fixedWidth: ${fixedWidth}`,
         getRiskTestData([{ predictor, level, score, staticOrDynamic }]),
       )
-      validateBadge(renderedHtml, predictor, level, score, staticOrDynamic, showScore)
+      validateBadge(renderedHtml, predictor, level, score, staticOrDynamic, showScore, fixedWidth)
     },
   )
 })
@@ -81,6 +82,7 @@ const validateBadge = (
   score: number | undefined,
   staticOrDynamic: StaticOrDynamicContent,
   showScore: boolean | undefined,
+  fixedWidth: boolean | undefined,
 ) => {
   const { document } = renderedHtml
 
@@ -95,7 +97,7 @@ const validateBadge = (
   // Reconstruct the dynamic attribute used .njk template
   const displayBand = shouldBeUnkownBand ? 'UNKNOWN' : band?.replace('_', ' ')
   const predictorName = expectedPredictorNameMappings[predictor].name
-  const badgeSelector = `[data-predictor-badge="${predictorName} ${displayBand}"]`
+  const badgeSelector = `[data-expanded-predictor-badge="${predictorName} ${displayBand}"]`
 
   const badgeContainer = document.querySelector(badgeSelector)
   if (!badgeContainer) {
@@ -105,22 +107,38 @@ const validateBadge = (
   // A badge is "default" visually if band is null/N.A. or explicitly 'UNKNOWN'
   const isDefaultBadge = band === BandLevel.NOT_APPLICABLE || displayBand === 'UNKNOWN' || shouldBeUnkownBand
 
+  // fixedWidth style logic
+  const expectedWidth = fixedWidth === true || fixedWidth === undefined ? `259px` : `100%`
+
   // Validate Main Container Styles
   expectStyleToBe(renderedHtml, badgeContainer, [
     { tag: 'display', value: 'inline-flex' },
     { tag: 'outline', value: `2px solid ${properties.borderColour}` },
+    { tag: 'width', value: `${expectedWidth}` },
   ])
 
-  // Validate Name and Band (Scoped search using data-test-id)
-  const nameAndBand = badgeContainer.querySelector('[data-test-id="nameAndBand"]')
+  // Validate Name (Scoped search using data-test-id)
+  const name = badgeContainer.querySelector('[data-test-id="name"]')
   expectStyleToBe(
     renderedHtml,
-    nameAndBand,
+    name,
     [
-      { tag: 'color', value: properties.typeAndLevelColour },
+      { tag: 'color', value: properties.typeColour },
       { tag: 'backgroundColor', value: 'rgba(0, 0, 0, 0)' },
     ],
-    `${expectedPredictorNameMappings[predictor].badgeContent} <strong>${displayBand}</strong>`,
+    `${expectedPredictorNameMappings[predictor].name}`,
+  )
+
+  // Validate Band (Scoped search using data-test-id)
+  const bandEl = badgeContainer.querySelector('[data-test-id="band"]')
+  expectStyleToBe(
+    renderedHtml,
+    bandEl,
+    [
+      { tag: 'color', value: properties.levelColour },
+      { tag: 'backgroundColor', value: 'rgba(0, 0, 0, 0)' },
+    ],
+    `${displayBand}`,
   )
 
   // Validate Score (Scoped search using data-test-id)
@@ -140,6 +158,13 @@ const validateBadge = (
     expectElementMissing(badgeContainer, '[data-test-id="score"]')
   }
 
+  const hasSDWrapperStyles =
+    expectedShouldShowScore &&
+    (band === BandLevel.VERY_HIGH || band === BandLevel.MEDIUM) &&
+    staticOrDynamic === 'Dynamic'
+  const displayCss = hasSDWrapperStyles ? 'inline-block' : 'inline'
+  const marginTopCss = hasSDWrapperStyles ? '3px' : ''
+
   // Validate Static/Dynamic (Scoped search using data-test-id)
   const sdEl = badgeContainer.querySelector('[data-test-id="staticOrDynamic"]')
   if (expectedPredictorNameMappings[predictor].showStaticDynamic && staticOrDynamic && !isDefaultBadge) {
@@ -149,58 +174,80 @@ const validateBadge = (
       [
         { tag: 'color', value: 'rgb(40, 45, 48)' },
         { tag: 'backgroundColor', value: 'rgb(229, 230, 231)' },
+        { tag: 'display', value: displayCss },
+        { tag: 'marginTop', value: marginTopCss },
       ],
       staticOrDynamic,
     )
   } else {
     expectElementMissing(badgeContainer, '[data-test-id="staticOrDynamic"]')
   }
+
+  // Validate completeDate (Scoped search using data-test-id)
+  const completedDateEl = badgeContainer.querySelector('[data-test-id="completedDate"]')
+  expectStyleToBe(
+    renderedHtml,
+    completedDateEl,
+    [
+      { tag: 'color', value: 'rgb(110, 119, 122)' },
+      { tag: 'backgroundColor', value: 'rgba(0, 0, 0, 0)' },
+    ],
+    `Last updated: ${expectedPredictorNameMappings[predictor].completedDate}`,
+  )
 }
 
 const expectedBandMappings: Record<BandLevel, PredictorProperties> = {
   LOW: {
     borderColour: '#85994b',
-    typeAndLevelColour: 'rgb(72, 91, 16)',
+    typeColour: 'rgb(11, 12, 12)',
+    levelColour: 'rgb(72, 91, 16)',
     scoreBackgroundColour: 'rgb(222, 233, 189)',
   },
   MEDIUM: {
     borderColour: '#f47738',
-    typeAndLevelColour: 'rgb(163, 78, 0)',
+    typeColour: 'rgb(11, 12, 12)',
+    levelColour: 'rgb(163, 78, 0)',
     scoreBackgroundColour: 'rgb(249, 232, 189)',
   },
   HIGH: {
     borderColour: '#d4351c',
-    typeAndLevelColour: 'rgb(148, 37, 20)',
+    typeColour: 'rgb(11, 12, 12)',
+    levelColour: 'rgb(148, 37, 20)',
     scoreBackgroundColour: 'rgb(246, 215, 210)',
   },
   VERY_HIGH: {
     borderColour: '#942514',
-    typeAndLevelColour: 'rgb(113, 26, 13)',
+    typeColour: 'rgb(11, 12, 12)',
+    levelColour: 'rgb(113, 26, 13)',
     scoreBackgroundColour: 'rgb(255, 172, 159)',
   },
   NOT_APPLICABLE: {
     borderColour: '#b1b4b6',
-    typeAndLevelColour: 'rgb(11, 12, 12)',
+    typeColour: 'rgb(11, 12, 12)',
+    levelColour: 'rgb(11, 12, 12)',
     scoreBackgroundColour: null,
   },
 }
 
 const nullBandMapping: PredictorProperties = {
   borderColour: '#b1b4b6',
-  typeAndLevelColour: 'rgb(11, 12, 12)',
+  typeColour: 'rgb(11, 12, 12)',
+  levelColour: 'rgb(11, 12, 12)',
   scoreBackgroundColour: null,
 }
 
 type PredictorProperties = {
   borderColour: string
-  typeAndLevelColour: string
+  typeColour: string
+  levelColour: string
   scoreBackgroundColour: string
 }
 
-interface PredictorBadgeTestCase {
+interface ExpandedPredictorBadgeTestCase {
   predictor: PredictorOption
   level: BandLevel
   score: number
   staticOrDynamic: StaticOrDynamicContent
   showScore: boolean
+  fixedWidth: boolean
 }

@@ -50,7 +50,7 @@ In template:
       {% endswitch %}
 
       {% set staticOrDynamicClass = 'arns-predictor-badge__static_or_dynamic' %}
-      {% if shouldShowScore and predictor.band in ['VERY HIGH', 'MEDIUM'] and predictor.staticOrDynamic === 'DYNAMIC' %}
+      {% if shouldShowScore and predictor.band in ['VERY HIGH', 'MEDIUM'] and predictor.staticOrDynamic | upper === 'DYNAMIC' %}
         {% set staticOrDynamicClass = staticOrDynamicClass + ' arns-predictor-badge__wrapped_static_or_dynamic' %}
       {% endif %}
 
@@ -67,24 +67,26 @@ In template:
         {% set band = predictor.band | replace('_', ' ') %}
       {% endif %}
 
-      <div class="{{ badgeClass }} {{ badgeWidthClass }}">
+      <div class="{{ badgeClass }} {{ badgeWidthClass }}"
+           data-expanded-predictor-badge="{{ predictor.name }} {{ band }}">
+
         <span
-          class="arns-predictor-badge__type">{{ predictor.name }}</span>
+          class="arns-predictor-badge__type" data-test-id="name">{{ predictor.name }}</span>
 
         <div class="arns-predictor-badge__stats">
-          <span class="arns-predictor-badge__level">{{ band }}</span>
+          <span class="arns-predictor-badge__level" data-test-id="band">{{ band }}</span>
 
           {% if shouldShowScore and badgeClass != 'arns-expanded-predictor-badge--default' %}
-            <span class="arns-predictor-badge__score">{{ predictor.score }}%</span>
+            <span class="arns-predictor-badge__score" data-test-id="score">{{ predictor.score }}%</span>
           {% endif %}
 
           {% if predictor.staticOrDynamic and badgeClass != 'arns-expanded-predictor-badge--default' %}
-            <span class="{{ staticOrDynamicClass }}">{{ predictor.staticOrDynamic }}</span>
+            <span class="{{ staticOrDynamicClass }}" data-test-id="staticOrDynamic">{{ predictor.staticOrDynamic }}</span>
           {% endif %}
 
         </div>
 
-        <span class="arns-predictor-badge__last_updated">Last updated: {{ predictor.completedDate }}</span>
+        <span class="arns-predictor-badge__last_updated" data-test-id="completedDate">Last updated: {{ predictor.completedDate }}</span>
 
       </div>
     {% endif %}
