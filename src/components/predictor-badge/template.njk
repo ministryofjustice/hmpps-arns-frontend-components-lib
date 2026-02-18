@@ -31,7 +31,7 @@
     {% if key == params.predictor %}
 
       {% set config = predictorConfig[key] %}
-      {% set shouldShowScore = showScore if showScore is defined else config.showScore %}
+      {% set shouldShowScore = params.showScore if params.showScore is defined else config.showScore %}
 
       {% set badgeClass = '' %}
       {% switch predictor.band %}
@@ -54,15 +54,17 @@
         {% set band = predictor.band | replace('_', ' ') %}
       {% endif %}
 
-      <div class="{{ badgeClass }}">
-        <span class="arns-predictor-badge__type_and_level">{{ predictor.name | upper }} <strong>{{ band }}</strong></span>
+      <div class="{{ badgeClass }}"
+           data-predictor-badge="{{ predictor.name }} {{ band }}">
+
+        <span class="arns-predictor-badge__type_and_level" data-test-id="nameAndBand">{{ predictor.name | upper }} <strong>{{ band }}</strong></span>
 
         {% if shouldShowScore and badgeClass != 'arns-predictor-badge--default' %}
-          <span class="arns-predictor-badge__score">{{ predictor.score }}%</span>
+          <span class="arns-predictor-badge__score" data-test-id="score">{{ predictor.score }}%</span>
         {% endif %}
 
         {% if predictor.staticOrDynamic and badgeClass != 'arns-predictor-badge--default' %}
-          <span class="arns-predictor-badge__static_or_dynamic">{{ predictor.staticOrDynamic }}</span>
+          <span class="arns-predictor-badge__static_or_dynamic" data-test-id="staticOrDynamic">{{ predictor.staticOrDynamic }}</span>
         {% endif %}
       </div>
     {% endif %}

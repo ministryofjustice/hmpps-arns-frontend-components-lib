@@ -33,7 +33,7 @@ In template:
     {% if key == params.predictor %}
 
       {% set config = predictorConfig[key] %}
-      {% set shouldShowScore = showScore if showScore is defined else config.showScore %}
+      {% set shouldShowScore = params.showScore if params.showScore is defined else config.showScore %}
 
       {% set badgeClass = '' %}
       {% switch predictor.band %}
