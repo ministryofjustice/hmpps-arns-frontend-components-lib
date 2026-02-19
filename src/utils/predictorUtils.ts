@@ -7,7 +7,7 @@ export const convertScoreToScaleMarkerPosition = (score: number, thresholds: (nu
     const sanitised = t.replace(/[^0-9.]/g, '')
     const parsed = parseFloat(sanitised)
 
-    if (isNaN(parsed)) {
+    if (Number.isNaN(parsed)) {
       throw new Error(`Invalid threshold value: ${t}`)
     }
     return parsed

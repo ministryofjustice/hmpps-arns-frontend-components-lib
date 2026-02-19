@@ -7,19 +7,25 @@ describe('predictorUtils', () => {
       [78, [0], 'Thresholds must contain at least two values'],
       [9, [17, 51, 100], 'The lowest threshold must be 0'],
       [0, ['NaN'], 'Invalid threshold value: NaN'],
-    ])('Error cases - convertScoreToScaleMarkerPosition(%s, %s) - %s', (score: number, thresholds: (number | string)[], errorMessage: string) => {
-      expect(() => {
-        convertScoreToScaleMarkerPosition(score, thresholds)
-      }).toThrow(Error(errorMessage))
-    })
+    ])(
+      'Error cases - convertScoreToScaleMarkerPosition(%s, %s) - %s',
+      (score: number, thresholds: (number | string)[], errorMessage: string) => {
+        expect(() => {
+          convertScoreToScaleMarkerPosition(score, thresholds)
+        }).toThrow(Error(errorMessage))
+      },
+    )
 
     it.each([
       [60, ['0%', '30%', '60%', '80%', '100%'], '50.00'],
       [6.9, ['0%', '1%', '3%', '6.9%', '25%+'], '75.00'],
       [25, ['0d%', '2bx5%@', '50%_', '7}5%', '100%()'], '25.00'],
-    ])('Sanitise & parse threshold strings - convertScoreToScalePosition(%s, %s) -> %s', (score: number, thresholds: string[], expectedPosition: string) => {
-      expect(convertScoreToScaleMarkerPosition(score, thresholds)).toBe(expectedPosition)
-    })
+    ])(
+      'Sanitise & parse threshold strings - convertScoreToScalePosition(%s, %s) -> %s',
+      (score: number, thresholds: string[], expectedPosition: string) => {
+        expect(convertScoreToScaleMarkerPosition(score, thresholds)).toBe(expectedPosition)
+      },
+    )
 
     it.each([
       [0, [0, 100], '0.00'],
@@ -68,11 +74,14 @@ describe('predictorUtils', () => {
       [88.12, [0, 10, 25, 80], '100.00'],
       [100, [0, 10, 25, 80], '100.00'],
       [134, [0, 10, 25, 80], '100.00'],
-    ])('Happy path cases - convertScoreToScalePosition(%s, %s) -> %s', (score: number, thresholds: number[], expectedPosition: string) => {
-      expect(convertScoreToScaleMarkerPosition(score, thresholds)).toBe(expectedPosition)
-      // Uncomment the below to see a visualisation of the calculated position
-      // visualiseTestResult(score, thresholds, expectedPosition)
-    })
+    ])(
+      'Happy path cases - convertScoreToScalePosition(%s, %s) -> %s',
+      (score: number, thresholds: number[], expectedPosition: string) => {
+        expect(convertScoreToScaleMarkerPosition(score, thresholds)).toBe(expectedPosition)
+        // Uncomment the below to see a visualisation of the calculated position
+        // visualiseTestResult(score, thresholds, expectedPosition)
+      },
+    )
   })
 
   describe('convertBandToScaleMarkerPosition', () => {
@@ -93,11 +102,14 @@ describe('predictorUtils', () => {
       ['HIGH', false, 83.33],
       ['HIGH', true, 62.5],
       ['VERY HIGH', true, 87.5],
-    ])('Happy path cases - convertBandToScaleMarkerPosition(%s, %s) -> %s', (band: string, includeVeryHigh: boolean, expectedPosition: number) => {
-      expect(convertBandToScaleMarkerPosition(band as Band, includeVeryHigh)).toBe(expectedPosition)
-      // Uncomment the below to see a visualisation of the calculated position
-      // visualiseTestResult(0, includeVeryHigh ? [0, 25, 50, 75, 100] : [0, 33, 67, 100], expectedPosition)
-    })
+    ])(
+      'Happy path cases - convertBandToScaleMarkerPosition(%s, %s) -> %s',
+      (band: string, includeVeryHigh: boolean, expectedPosition: number) => {
+        expect(convertBandToScaleMarkerPosition(band as Band, includeVeryHigh)).toBe(expectedPosition)
+        // Uncomment the below to see a visualisation of the calculated position
+        // visualiseTestResult(0, includeVeryHigh ? [0, 25, 50, 75, 100] : [0, 33, 67, 100], expectedPosition)
+      },
+    )
   })
 })
 
