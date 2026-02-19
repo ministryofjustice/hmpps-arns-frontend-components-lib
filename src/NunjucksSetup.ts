@@ -1,4 +1,5 @@
 import { Environment } from 'nunjucks'
+import { convertScoreToScaleMarkerPosition, convertBandToScaleMarkerPosition } from './utils/predictorUtils'
 
 export const arnsNunjucksSetup = (env: Environment) => {
   const predictorConfig = {
@@ -34,7 +35,7 @@ export const arnsNunjucksSetup = (env: Environment) => {
       showScore: true,
       hasVeryHighBand: false,
       showBandThresholdPercentages: true,
-      bandThresholdPercentages: ['0%', '1%', '3%', '6.9%', '25%+'],
+      bandThresholdPercentages: ['0%', '3%', '6.9%', '25%+'],
     },
     allReoffendingPredictor: {
       showScore: true,
@@ -74,8 +75,6 @@ export const arnsNunjucksSetup = (env: Environment) => {
 
   env.addGlobal('predictorConfig', predictorConfig)
 
-  // TODO update with required filters
-  env.addFilter('testFilter', (inputString: string) => {
-    return inputString.toUpperCase()
-  })
+  env.addFilter('scoreToScaleMarkerPosition', convertScoreToScaleMarkerPosition)
+  env.addFilter('bandToScaleMarkerPosition', convertBandToScaleMarkerPosition)
 }
