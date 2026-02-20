@@ -105,45 +105,13 @@ $border-colour: #B1B4B6;
   width: 100%;
 }
 
-.arns-scale-marker-wrapper--position-one-of-three,
-.arns-scale-marker-wrapper--position-two-of-three,
-.arns-scale-marker-wrapper--position-three-of-three {
-  width: 33%;
+.arns-scale-marker-wrapper {
+  position: relative;
+  left: calc(-40px + (var(--margin) / 100) * (100% - 1px));
 }
 
-.arns-scale-marker-wrapper--position-one-of-three {
-  margin-left: 0;
-}
-
-.arns-scale-marker-wrapper--position-two-of-three {
-  margin-left: 34%;
-}
-
-.arns-scale-marker-wrapper--position-three-of-three {
-  margin-left: 67%;
-}
-
-.arns-scale-marker-wrapper--position-one-of-four,
-.arns-scale-marker-wrapper--position-two-of-four,
-.arns-scale-marker-wrapper--position-three-of-four,
-.arns-scale-marker-wrapper--position-four-of-four {
-  width: 25%;
-}
-
-.arns-scale-marker-wrapper--position-one-of-four {
-  margin-left: 0;
-}
-
-.arns-scale-marker-wrapper--position-two-of-four {
-  margin-left: 25%;
-}
-
-.arns-scale-marker-wrapper--position-three-of-four {
-  margin-left: 50%;
-}
-
-.arns-scale-marker-wrapper--position-four-of-four {
-  margin-left: 75%;
+.arns-scale-marker-wrapper[data-margin] {
+  --margin: attr(data-margin number);
 }
 
 .arns-scale-marker-wrapper--very-high {
@@ -169,7 +137,6 @@ $border-colour: #B1B4B6;
 .arns-scale-marker__card {
   width: 78px;
   bottom: 30px;
-  margin: 0 auto;
   background-color: govuk-colour("white");
   border: 2px solid govuk-colour("black");
 }
@@ -212,10 +179,11 @@ $border-colour: #B1B4B6;
   margin-bottom: 15px;
 
   & > div {
-    width: 33%;
+    width: calc(100%/3);
+    padding-left: 1px;
+    padding-right: 1px;
     display: inline;
     float: left;
-    border-right: 1px solid transparent;
     box-sizing: border-box;
   }
 
@@ -258,7 +226,7 @@ $border-colour: #B1B4B6;
 
 .arns-scale-bar--small-fourths {
   & > div {
-    width: 25%;
+    width: calc(100%/4);
     padding-bottom: 20px;
   }
 
@@ -282,16 +250,12 @@ $border-colour: #B1B4B6;
   clear: both;
 
   & > div {
-    width: 33.33%;
+    width: calc(100%/3);
     height: 30px;
     float: left;
-    border-right: 1px solid govuk-colour("black");
+    border-left: 1px solid govuk-colour("black");
     box-sizing: border-box;
     position: relative;
-
-    &:first-child {
-      border-left: 1px solid govuk-colour("black");
-    }
 
     & > span:first-child {
       display: block;
@@ -346,12 +310,19 @@ $border-colour: #B1B4B6;
 
 .arns-scale-bar--fourths {
   & > div {
-    width: 25% !important;
+    width: calc(100%/4) !important;
   }
   & > div:nth-child(4) {
+    border-right: 1px solid govuk-colour("black");
     & > span:first-child {
       background-color: $very-high-score-colour;
       &::after { content: "VERY HIGH"; }
     }
+  }
+}
+
+.arns-scale-bar--thirds {
+  & > div:nth-child(3) {
+    border-right: 1px solid govuk-colour("black");
   }
 }
