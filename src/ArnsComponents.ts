@@ -23,13 +23,21 @@ export default class ArnsComponents {
     identifierType: string,
     identifierValue: string,
   ): Promise<RiskData> {
-    const response = await this.restClient.get<AllPredictorVersionedDto[]>(
-      { path: `/risks/predictors/all/${identifierType}/${identifierValue}` },
-      authOptions,
-    )
+    try {
+      const response = await this.restClient.get<AllPredictorVersionedDto[]>(
+        { path: `/risks/predictors/all/${identifierType}/${identifierValue}` },
+        authOptions,
+      )
 
-    return {
-      assessments: transformAllPredictorVersionedDtoToAssessments(response),
+      return {
+        assessments: transformAllPredictorVersionedDtoToAssessments(response),
+        httpStatus: 200,
+      }
+    } catch (error) {
+      return {
+        assessments: [],
+        httpStatus: error.status ?? 500,
+      }
     }
   }
 }
