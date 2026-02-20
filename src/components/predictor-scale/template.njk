@@ -48,30 +48,18 @@ In template:
 
       {% set scaleMarkerClass = '' %}
 
-      {% if config.hasVeryHighBand !== true %}
-        {% switch predictor.band %}
-        {% case 'LOW' %}
-          {% set scaleMarkerClass = 'arns-scale-marker-wrapper--low arns-scale-marker-wrapper--position-one-of-three' %}
-        {% case 'MEDIUM' %}
-          {% set scaleMarkerClass = 'arns-scale-marker-wrapper--medium arns-scale-marker-wrapper--position-two-of-three' %}
-        {% case 'HIGH' %}
-          {% set scaleMarkerClass = 'arns-scale-marker-wrapper--high arns-scale-marker-wrapper--position-three-of-three' %}
-        {% endswitch %}
-        {% else %}
-        {% switch predictor.band %}
-        {% case 'LOW' %}
-          {% set scaleMarkerClass = 'arns-scale-marker-wrapper--low arns-scale-marker-wrapper--position-one-of-four' %}
-        {% case 'MEDIUM' %}
-          {% set scaleMarkerClass = 'arns-scale-marker-wrapper--medium arns-scale-marker-wrapper--position-two-of-four' %}
-        {% case 'HIGH' %}
-          {% set scaleMarkerClass = 'arns-scale-marker-wrapper--high arns-scale-marker-wrapper--position-three-of-four' %}
-        {% case 'VERY HIGH' %}
-          {% set scaleMarkerClass = 'arns-scale-marker-wrapper--very-high arns-scale-marker-wrapper--position-four-of-four' %}
-        {% endswitch %}
-      {% endif %}
+      {% switch predictor.band %}
+      {% case 'LOW' %}
+        {% set scaleMarkerClass = 'arns-scale-marker-wrapper--low' %}
+      {% case 'MEDIUM' %}
+        {% set scaleMarkerClass = 'arns-scale-marker-wrapper--medium' %}
+      {% case 'HIGH' %}
+        {% set scaleMarkerClass = 'arns-scale-marker-wrapper--high' %}
+      {% case 'VERY HIGH' %}
+        {% set scaleMarkerClass = 'arns-scale-marker-wrapper--very-high' %}
+      {% endswitch %}
 
       {% set barTypeClass = '' %}
-
       {% if config.hasVeryHighBand !== true and config.showBandThresholdPercentages !== true %}
         {% set barTypeClass = 'arns-scale-bar--small' %}
       {% elif config.hasVeryHighBand === true and config.showBandThresholdPercentages !== true %}
@@ -79,7 +67,14 @@ In template:
       {% elif config.hasVeryHighBand === true and config.showBandThresholdPercentages === true %}
         {% set barTypeClass = 'arns-scale-bar arns-scale-bar--fourths' %}
       {% elif config.hasVeryHighBand !== true and config.showBandThresholdPercentages === true %}
-        {% set barTypeClass = 'arns-scale-bar' %}
+        {% set barTypeClass = 'arns-scale-bar arns-scale-bar--thirds' %}
+      {% endif %}
+
+      {% set scalePosition = '' %}
+      {% if config.showBandThresholdPercentages == true %}
+        {% set scalePosition = predictor.score | scoreToScaleMarkerPosition(config.bandThresholdPercentages) %}
+      {% else %}
+        {% set scalePosition = predictor.band | bandToScaleMarkerPosition(config.hasVeryHighBand) %}
       {% endif %}
 
       {% if predictor.band === 'NOT APPLICABLE' %}
@@ -100,7 +95,7 @@ In template:
           </div>
 
           <div class="arns-scale-marker">
-            <div class="{{ scaleMarkerClass }}">
+            <div class="{{ scaleMarkerClass }} arns-scale-marker-wrapper" data-margin="{{ scalePosition }}">
               {{ predictorScaleMarker(predictor, config.showScore) }}
             </div>
           </div>
