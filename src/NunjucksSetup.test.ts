@@ -21,17 +21,22 @@ describe('arnsNunjucksSetup', () => {
     expect(globals.predictorConfig.ospdc.showScore).toBe(false)
   })
 
-  it('should register the testFilter filter', () => {
+  it('should register the scoreToScaleMarkerPosition filter', () => {
     arnsNunjucksSetup(env)
 
     // Check if filter exists
-    const testFilter = env.getFilter('testFilter')
-    expect(testFilter).toBeDefined()
-    expect(typeof testFilter).toBe('function')
+    const scoreToScaleMarkerPositionFilter = env.getFilter('scoreToScaleMarkerPosition')
+    expect(scoreToScaleMarkerPositionFilter).toBeDefined()
+    expect(typeof scoreToScaleMarkerPositionFilter).toBe('function')
+  })
 
-    // Test the filter functionality
-    const result = env.renderString('{{ "hello world" | testFilter }}', {})
-    expect(result).toBe('HELLO WORLD')
+  it('should register the bandToScaleMarkerPosition filter', () => {
+    arnsNunjucksSetup(env)
+
+    // Check if filter exists
+    const bandToScaleMarkerPositionFilter = env.getFilter('bandToScaleMarkerPosition')
+    expect(bandToScaleMarkerPositionFilter).toBeDefined()
+    expect(typeof bandToScaleMarkerPositionFilter).toBe('function')
   })
 
   it('should handle bandThresholdPercentages correctly in the config', () => {
