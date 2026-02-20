@@ -87,6 +87,10 @@ export const components: Record<string, ComponentDetail> = {
     directory: 'predictor-badge',
     macro: 'predictorBadge',
   },
+  EXPANDED_PREDICTOR_BADGE: {
+    directory: 'expanded-predictor-badge',
+    macro: 'expandedPredictorBadge',
+  },
 }
 
 export type Component = keyof typeof components
@@ -96,61 +100,73 @@ export const expectedPredictorNameMappings: Record<string, PredictorNameProperti
     name: 'All Reoffending Predictor',
     badgeContent: 'ALL REOFFENDING PREDICTOR',
     showStaticDynamic: true,
+    completedDate: '02 January 2024',
   },
   violentReoffendingPredictor: {
     name: 'Violent Reoffending Predictor',
     badgeContent: 'VIOLENT REOFFENDING PREDICTOR',
     showStaticDynamic: true,
+    completedDate: '02 January 2024',
   },
   seriousViolentReoffendingPredictor: {
     name: 'Serious Violent Reoffending Predictor',
     badgeContent: 'SERIOUS VIOLENT REOFFENDING PREDICTOR',
     showStaticDynamic: true,
+    completedDate: '02 January 2024',
   },
   directContactSexualReoffendingPredictor: {
     name: 'Direct Contact - Sexual Reoffending Predictor',
     badgeContent: 'DIRECT CONTACT - SEXUAL REOFFENDING PREDICTOR',
     showStaticDynamic: false,
+    completedDate: '02 January 2024',
   },
   indirectImageContactSexualReoffendingPredictor: {
     name: 'Images and Indirect Contact – Sexual Reoffending Predictor',
     badgeContent: 'IMAGES AND INDIRECT CONTACT – SEXUAL REOFFENDING PREDICTOR',
     showStaticDynamic: false,
+    completedDate: '02 January 2024',
   },
   combinedSeriousReoffendingPredictor: {
     name: 'Combined Serious Reoffending Predictor',
     badgeContent: 'COMBINED SERIOUS REOFFENDING PREDICTOR',
     showStaticDynamic: true,
+    completedDate: '02 January 2024',
   },
   ogrs3: {
     name: 'OGRS',
     badgeContent: 'OGRS',
     showStaticDynamic: false,
+    completedDate: '02 January 2024',
   },
   ovp: {
     name: 'OVP',
     badgeContent: 'OVP',
     showStaticDynamic: false,
+    completedDate: '02 January 2024',
   },
   ogp: {
     name: 'OGP',
     badgeContent: 'OGP',
     showStaticDynamic: false,
+    completedDate: '02 January 2024',
   },
   ospdc: {
     name: 'OSP-DC',
     badgeContent: 'OSP-DC',
     showStaticDynamic: false,
+    completedDate: '02 January 2024',
   },
   ospiic: {
     name: 'OSP-IIC',
     badgeContent: 'OSP-IIC',
     showStaticDynamic: false,
+    completedDate: '02 January 2024',
   },
   rsr: {
     name: 'RSR',
     badgeContent: 'RSR',
     showStaticDynamic: true,
+    completedDate: '02 January 2024',
   },
 }
 
@@ -160,6 +176,7 @@ type PredictorNameProperties = {
   name: string
   badgeContent: string
   showStaticDynamic: boolean
+  completedDate?: string
 }
 
 export type StaticOrDynamicContent = 'Static' | 'Dynamic'
