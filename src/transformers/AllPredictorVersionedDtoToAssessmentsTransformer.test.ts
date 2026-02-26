@@ -7,6 +7,7 @@ function getRawInputData(): AllPredictorVersionedDto[] {
       completedDate: '2024-01-02T18:23:20',
       status: 'COMPLETE',
       outputVersion: '1',
+      assessmentType: 'LAYER1',
       output: {
         groupReconvictionScore: {
           oneYear: 3,
@@ -48,6 +49,7 @@ function getRawInputData(): AllPredictorVersionedDto[] {
       completedDate: '2025-01-01T15:21:20',
       status: 'COMPLETE',
       outputVersion: '2',
+      assessmentType: 'LAYER3',
       output: {
         allReoffendingPredictor: {
           staticOrDynamic: 'STATIC',
@@ -88,8 +90,10 @@ describe('All Predictor Versioned DTO To Assessments Transformer', () => {
     const result = transformAllPredictorVersionedDtoToAssessments(getRawInputData())
     expect(result).toEqual([
       {
+        completedDate: '01 January 2025',
         completedDateTime: '01 January 2025 at 15:21',
         outputVersion: '2',
+        assessmentType: 'layer 3',
         allReoffendingPredictor: {
           name: 'All Reoffending Predictor',
           band: 'LOW',
@@ -135,7 +139,9 @@ describe('All Predictor Versioned DTO To Assessments Transformer', () => {
       },
       {
         outputVersion: '1',
+        completedDate: '02 January 2024',
         completedDateTime: '02 January 2024 at 18:23',
+        assessmentType: 'layer 1',
         ogrs3: {
           name: 'OGRS',
           band: 'LOW',
@@ -188,6 +194,7 @@ describe('All Predictor Versioned DTO To Assessments Transformer', () => {
         completedDate: '2022-06-10T18:23:20',
         status: 'COMPLETE',
         outputVersion: '3',
+        assessmentType: 'LAYER3',
         output: {},
       },
     ]
@@ -202,6 +209,7 @@ describe('All Predictor Versioned DTO To Assessments Transformer', () => {
         completedDate: '2025-01-01T15:21:20',
         status: 'COMPLETE',
         outputVersion: '2',
+        assessmentType: 'LAYER3',
         output: {
           allReoffendingPredictor: {
             staticOrDynamic: null,
@@ -230,8 +238,10 @@ describe('All Predictor Versioned DTO To Assessments Transformer', () => {
     const result = transformAllPredictorVersionedDtoToAssessments(nullPredictorsData)
     expect(result).toEqual([
       {
+        completedDate: '01 January 2025',
         completedDateTime: '01 January 2025 at 15:21',
         outputVersion: '2',
+        assessmentType: 'layer 3',
         allReoffendingPredictor: {
           name: 'All Reoffending Predictor',
           band: undefined,
@@ -284,6 +294,7 @@ describe('All Predictor Versioned DTO To Assessments Transformer', () => {
         completedDate: 'NOT_A_DATE',
         status: 'COMPLETE',
         outputVersion: '2',
+        assessmentType: 'LAYER3',
         output: {
           allReoffendingPredictor: {
             staticOrDynamic: 'STATIC',
@@ -320,8 +331,10 @@ describe('All Predictor Versioned DTO To Assessments Transformer', () => {
     const result = transformAllPredictorVersionedDtoToAssessments(nullPredictorsData)
     expect(result).toEqual([
       {
+        completedDate: undefined,
         completedDateTime: undefined,
         outputVersion: '2',
+        assessmentType: 'layer 3',
         allReoffendingPredictor: {
           name: 'All Reoffending Predictor',
           band: 'LOW',

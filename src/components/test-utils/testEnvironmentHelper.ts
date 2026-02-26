@@ -47,7 +47,8 @@ export const getDomFromNjks = (dom: JSDOM, njks: string, context: object) => {
 }
 
 export const getRenderedHtml = (dom: JSDOM, component: Component, options: string, riskData: RiskData) => {
-  const njks = `{% from "${components[component].directory}/macro.njk" import ${components[component].macro} as macro %}{{ macro({data: riskData, ${options}}) }}`
+  const optionsString = options ? `, ${options}` : ''
+  const njks = `{% from "${components[component].directory}/macro.njk" import ${components[component].macro} as macro %}{{ macro({data: riskData${optionsString}}) }}`
   return getDomFromNjks(dom, njks, { riskData })
 }
 
@@ -90,6 +91,10 @@ export const components: Record<string, ComponentDetail> = {
   EXPANDED_PREDICTOR_BADGE: {
     directory: 'expanded-predictor-badge',
     macro: 'expandedPredictorBadge',
+  },
+  PREDICTOR_SCORES_ACCORDION: {
+    directory: 'predictor-scores-accordion',
+    macro: 'predictorScoresAccordion',
   },
 }
 
@@ -193,6 +198,8 @@ export const getRiskTestData = (predictors: RiskTestDataOptions[]): RiskData => 
   const v1assessment: AssessmentV1 = {
     outputVersion: '1',
     completedDateTime: '02 January 2024 at 18:23',
+    completedDate: '02 January 2024',
+    assessmentType: 'layer 3',
     ogrs3: {
       name: 'OGRS',
       band: 'LOW',
@@ -238,8 +245,10 @@ export const getRiskTestData = (predictors: RiskTestDataOptions[]): RiskData => 
   }
 
   const v2assessment: AssessmentV2 = {
-    completedDateTime: '01 January 2025 at 15:21',
     outputVersion: '2',
+    completedDateTime: '01 January 2025 at 15:21',
+    completedDate: '01 January 2025',
+    assessmentType: 'layer 3',
     allReoffendingPredictor: {
       name: 'All Reoffending Predictor',
       band: 'LOW',
@@ -284,6 +293,13 @@ export const getRiskTestData = (predictors: RiskTestDataOptions[]): RiskData => 
     },
   }
 
+  if (predictors === null || predictors.length === 0) {
+    return {
+      httpStatus: 200,
+      assessments: [v2assessment, v1assessment],
+    }
+  }
+
   // Assume the first predictor will tell us the version of the assessment required
   const assessmentToUpdate = predictors[0].predictor in v1assessment ? v1assessment : v2assessment
 
@@ -298,7 +314,7 @@ export const getRiskTestData = (predictors: RiskTestDataOptions[]): RiskData => 
     predictor.completedDate = options.completedDate || '02 January 2024'
   })
 
-  return { assessments: [assessmentToUpdate, v1assessment, v2assessment] }
+  return { httpStatus: 200, assessments: [assessmentToUpdate, v1assessment, v2assessment] }
 }
 
 type Inputs = Record<string, any[]>

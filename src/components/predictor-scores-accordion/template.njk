@@ -1,0 +1,114 @@
+{% from "govuk/components/inset-text/macro.njk" import govukInsetText %}
+{% from "govuk/components/accordion/macro.njk" import govukAccordion %}
+
+{% set latestAssessment = params.data.assessments | first if params.data.assessments else null %}
+
+{% if latestAssessment %}
+
+    {{ govukInsetText({
+        text: "Source: " + latestAssessment.assessmentType + " assessment, completed on " + latestAssessment.completedDate
+    }) }}
+
+    {#  All reoffending predictor  #}
+    {% set allReoffendingPredictorSummaryHtml %}
+        <p>All reoffending predictor summary text</p>
+    {% endset %}
+
+    {% set allReoffendingPredictorContentHtml %}
+        <p>This is the content for the all reoffending predictor.</p>
+    {% endset %}
+
+
+    {#  Violent reoffending predictor  #}
+    {% set violentReoffendingPredictorSummaryHtml %}
+        <p>Violent reoffending predictor summary text</p>
+    {% endset %}
+
+    {% set violentReoffendingPredictorContentHtml %}
+        <p>This is the content for the violent reoffending predictor.</p>
+    {% endset %}
+
+
+    {#  All reoffending predictor  #}
+    {% set combinedSeriousReoffendingPredictorSummaryHtml %}
+        <p>Combined serious reoffending predictor summary text</p>
+    {% endset %}
+
+    {% set combinedSeriousReoffendingPredictorContentHtml %}
+        <p>This is the content for the combined serious reoffending predictor.</p>
+    {% endset %}
+
+
+    {#  All reoffending predictor  #}
+    {% set seriousViolentReoffendingPredictorSummaryHtml %}
+        <p>Serious violent reoffending predictor summary text</p>
+    {% endset %}
+
+    {% set seriousViolentReoffendingPredictorContentHtml %}
+        <p>This is the content for the serious violent reoffending predictor.</p>
+    {% endset %}
+
+
+    {#  All reoffending predictor  #}
+    {% set directContactSexualReoffendingPredictorSummaryHtml %}
+        <p>Direct contact - Sexual reoffending predictor summary text</p>
+    {% endset %}
+
+    {% set directContactSexualReoffendingPredictorContentHtml %}
+        <p>This is the content for the direct contact - Sexual reoffending predictor.</p>
+    {% endset %}
+
+
+    {#  All reoffending predictor  #}
+    {% set imagesAndIndirectContactSexualReoffendingPredictorSummaryHtml %}
+        <p>Images and indirect contact - Sexual reoffending predictor summary text</p>
+    {% endset %}
+
+    {% set imagesAndIndirectContactSexualReoffendingPredictorContentHtml %}
+        <p>This is the content for the images and indirect contact - Sexual reoffending predictor.</p>
+    {% endset %}
+
+
+    {{ govukAccordion({
+        id: "predictor-scores-accordion",
+        showSectionText: "Show details",
+        hideSectionText: "Hide details",
+        showSectionAriaLabelText: "Show this details section",
+        hideSectionAriaLabelText: "Hide this details section",
+        showAllSectionsText: "Show all details sections",
+        hideAllSectionsText: "Hide all details sections",
+        items: [
+            {
+                heading: { text: "All reoffending predictor" },
+                summary: { html: allReoffendingPredictorSummaryHtml },
+                content: { html: allReoffendingPredictorContentHtml }
+            },
+            {
+                heading: { text: "Violent reoffending predictor" },
+                summary: { html: violentReoffendingPredictorSummaryHtml },
+                content: { html: violentReoffendingPredictorContentHtml }
+            },
+            {
+                heading: { text: "Combined serious reoffending predictor" },
+                summary: { html: combinedSeriousReoffendingPredictorSummaryHtml },
+                content: { html: combinedSeriousReoffendingPredictorContentHtml }
+            },
+            {
+                heading: { text: "Serious violent reoffending predictor" },
+                summary: { html: seriousViolentReoffendingPredictorSummaryHtml },
+                content: { html: seriousViolentReoffendingPredictorContentHtml }
+            },
+            {
+                heading: { text: "Direct contact - Sexual reoffending predictor" },
+                summary: { html: directContactSexualReoffendingPredictorSummaryHtml },
+                content: { html: directContactSexualReoffendingPredictorContentHtml }
+            },
+            {
+                heading: { text: "Images and indirect contact - Sexual reoffending predictor" },
+                summary: { html: imagesAndIndirectContactSexualReoffendingPredictorSummaryHtml },
+                content: { html: imagesAndIndirectContactSexualReoffendingPredictorContentHtml }
+            }
+        ]
+    }) }}
+
+{% endif %}
