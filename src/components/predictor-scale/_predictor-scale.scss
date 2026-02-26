@@ -105,40 +105,52 @@ $border-colour: #B1B4B6;
   width: 100%;
 }
 
-.arns-scale-marker-wrapper {
-  position: relative;
-  left: calc(-40px + (var(--margin) / 100) * (100% - 1px));
-}
-
-.arns-scale-marker-wrapper[data-margin] {
-  --margin: attr(data-margin number);
-}
-
-.arns-scale-marker-wrapper--very-high {
-  @include arns-scale-marker-card-colour(
-      $very-high-score-colour,
-      $very-high-score-colour--light,
-      $very-high-score-colour__text
-  );
-}
-
-.arns-scale-marker-wrapper--high {
-  @include arns-scale-marker-card-colour($high-score-colour, $high-score-colour--light, $high-score-colour__text);
-}
-
-.arns-scale-marker-wrapper--medium {
-  @include arns-scale-marker-card-colour($medium-score-colour, $medium-score-colour--light, $medium-score-colour__text);
-}
-
-.arns-scale-marker-wrapper--low {
-  @include arns-scale-marker-card-colour($low-score-colour, $low-score-colour--light, $low-score-colour__text);
-}
-
 .arns-scale-marker__card {
   width: 78px;
   bottom: 30px;
   background-color: govuk-colour("white");
   border: 2px solid govuk-colour("black");
+}
+
+.arns-scale-marker-wrapper {
+  position: relative;
+  left: calc(-40px + (var(--margin) / 100) * (100% - 1px));
+
+  &.arns-scale-marker-wrapper--very-high {
+    @include arns-scale-marker-card-colour(
+                    $very-high-score-colour,
+                    $very-high-score-colour--light,
+                    $very-high-score-colour__text
+    );
+  }
+
+  &.arns-scale-marker-wrapper--high {
+    @include arns-scale-marker-card-colour(
+                    $high-score-colour,
+                    $high-score-colour--light,
+                    $high-score-colour__text
+    );
+  }
+
+  &.arns-scale-marker-wrapper--medium {
+    @include arns-scale-marker-card-colour(
+                    $medium-score-colour,
+                    $medium-score-colour--light,
+                    $medium-score-colour__text
+    );
+  }
+
+  &.arns-scale-marker-wrapper--low {
+    @include arns-scale-marker-card-colour(
+                    $low-score-colour,
+                    $low-score-colour--light,
+                    $low-score-colour__text
+    );
+  }
+}
+
+.arns-scale-marker-wrapper[data-margin] {
+  --margin: attr(data-margin number);
 }
 
 .arns-scale-marker__card-top {
