@@ -2,6 +2,7 @@
 {% from "govuk/components/accordion/macro.njk" import govukAccordion %}
 
 {% set latestAssessment = params.data.assessments | first if params.data.assessments else null %}
+{% set forename = params.forename | default('This individual') %}
 
 {% if latestAssessment %}
 
@@ -10,8 +11,12 @@
     }) }}
 
     {#  All reoffending predictor  #}
+    {% set allReoffendingPredictorHeadingHtml %}
+        <span>All reoffending predictor</span>
+    {% endset %}
+
     {% set allReoffendingPredictorSummaryHtml %}
-        <p>All reoffending predictor summary text</p>
+        <span>All reoffending predictor summary text</span>
     {% endset %}
 
     {% set allReoffendingPredictorContentHtml %}
@@ -20,6 +25,10 @@
 
 
     {#  Violent reoffending predictor  #}
+    {% set violentReoffendingPredictorHeadingHtml %}
+        <span>Violent reoffending predictor</span>
+    {% endset %}
+
     {% set violentReoffendingPredictorSummaryHtml %}
         <p>Violent reoffending predictor summary text</p>
     {% endset %}
@@ -29,7 +38,11 @@
     {% endset %}
 
 
-    {#  All reoffending predictor  #}
+    {#  Combined serious reoffending predictor  #}
+    {% set combinedSeriousReoffendingPredictorHeadingHtml %}
+        <span>Combined serious reoffending predictor</span>
+    {% endset %}
+
     {% set combinedSeriousReoffendingPredictorSummaryHtml %}
         <p>Combined serious reoffending predictor summary text</p>
     {% endset %}
@@ -39,7 +52,11 @@
     {% endset %}
 
 
-    {#  All reoffending predictor  #}
+    {#  Serious violent reoffending predictor  #}
+    {% set seriousViolentReoffendingPredictorHeadingHtml %}
+        <span>Serious violent reoffending predictor</span>
+    {% endset %}
+
     {% set seriousViolentReoffendingPredictorSummaryHtml %}
         <p>Serious violent reoffending predictor summary text</p>
     {% endset %}
@@ -49,7 +66,11 @@
     {% endset %}
 
 
-    {#  All reoffending predictor  #}
+    {#  Direct contact - Sexual reoffending predictor  #}
+    {% set directContactSexualReoffendingPredictorHeadingHtml %}
+        <span>Direct contact - Sexual reoffending predictor</span>
+    {% endset %}
+
     {% set directContactSexualReoffendingPredictorSummaryHtml %}
         <p>Direct contact - Sexual reoffending predictor summary text</p>
     {% endset %}
@@ -59,7 +80,11 @@
     {% endset %}
 
 
-    {#  All reoffending predictor  #}
+    {#  Images and indirect contact - Sexual reoffending predictor  #}
+    {% set imagesAndIndirectContactSexualReoffendingPredictorHeadingHtml %}
+        <span>Images and indirect contact - Sexual reoffending predictor</span>
+    {% endset %}
+
     {% set imagesAndIndirectContactSexualReoffendingPredictorSummaryHtml %}
         <p>Images and indirect contact - Sexual reoffending predictor summary text</p>
     {% endset %}
@@ -79,32 +104,32 @@
         hideAllSectionsText: "Hide all details sections",
         items: [
             {
-                heading: { text: "All reoffending predictor" },
+                heading: { html: allReoffendingPredictorHeadingHtml },
                 summary: { html: allReoffendingPredictorSummaryHtml },
                 content: { html: allReoffendingPredictorContentHtml }
             },
             {
-                heading: { text: "Violent reoffending predictor" },
+                heading: { html: violentReoffendingPredictorHeadingHtml },
                 summary: { html: violentReoffendingPredictorSummaryHtml },
                 content: { html: violentReoffendingPredictorContentHtml }
             },
             {
-                heading: { text: "Combined serious reoffending predictor" },
+                heading: { html: combinedSeriousReoffendingPredictorHeadingHtml },
                 summary: { html: combinedSeriousReoffendingPredictorSummaryHtml },
                 content: { html: combinedSeriousReoffendingPredictorContentHtml }
             },
             {
-                heading: { text: "Serious violent reoffending predictor" },
+                heading: { html: seriousViolentReoffendingPredictorHeadingHtml },
                 summary: { html: seriousViolentReoffendingPredictorSummaryHtml },
                 content: { html: seriousViolentReoffendingPredictorContentHtml }
             },
             {
-                heading: { text: "Direct contact - Sexual reoffending predictor" },
+                heading: { html: directContactSexualReoffendingPredictorHeadingHtml },
                 summary: { html: directContactSexualReoffendingPredictorSummaryHtml },
                 content: { html: directContactSexualReoffendingPredictorContentHtml }
             },
             {
-                heading: { text: "Images and indirect contact - Sexual reoffending predictor" },
+                heading: { html: imagesAndIndirectContactSexualReoffendingPredictorHeadingHtml },
                 summary: { html: imagesAndIndirectContactSexualReoffendingPredictorSummaryHtml },
                 content: { html: imagesAndIndirectContactSexualReoffendingPredictorContentHtml }
             }
