@@ -1,6 +1,7 @@
 import { AllPredictorVersionedDto } from '../types/dtos/AllPredictorVersionedDto'
 import { Assessments } from '../types/Assessments'
 import { Predictor } from '../types/Predictor'
+import { AssessmentType } from '../types/dtos/AssessmentType'
 
 export function transformAllPredictorVersionedDtoToAssessments(dtos: AllPredictorVersionedDto[]): Assessments[] {
   // Sort DTOs by datetime (newest first)
@@ -35,7 +36,9 @@ export function transformAllPredictorVersionedDtoToAssessments(dtos: AllPredicto
     if (dto.outputVersion === '1') {
       return {
         outputVersion: '1',
+        completedDate: dateFormatDayMonthYear,
         completedDateTime: dateFormatDayMonthYearTime,
+        assessmentType: convertAssessmentType(dto.assessmentType),
         ogrs3: mapPredictor(
           'OGRS',
           output.groupReconvictionScore?.scoreLevel,
@@ -84,7 +87,9 @@ export function transformAllPredictorVersionedDtoToAssessments(dtos: AllPredicto
     if (dto.outputVersion === '2') {
       return {
         outputVersion: '2',
+        completedDate: dateFormatDayMonthYear,
         completedDateTime: dateFormatDayMonthYearTime,
+        assessmentType: convertAssessmentType(dto.assessmentType),
         allReoffendingPredictor: mapPredictor(
           'All Reoffending Predictor',
           output.allReoffendingPredictor?.band,
@@ -143,5 +148,16 @@ function mapPredictor(name: string, band: string, staticOrDynamic: string, score
       : null,
     score,
     completedDate: date,
+  }
+}
+
+function convertAssessmentType(assessmentType: `${AssessmentType}`): string {
+  switch (assessmentType) {
+    case 'LAYER1':
+      return 'layer 1'
+    case 'LAYER3':
+      return 'layer 3'
+    default:
+      return assessmentType
   }
 }
