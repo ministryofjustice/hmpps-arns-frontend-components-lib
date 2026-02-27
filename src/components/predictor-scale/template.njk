@@ -22,103 +22,31 @@ In template:
   @param {string} params.predictor - The name of the specific predictor to display
 #}
 {%- from "govuk/components/tag/macro.njk" import govukTag -%}
-{% set latestAssessment = params.data.assessments | first if params.data.assessments else null %}
+{%- from "../predictor-scale-bar/macro.njk" import predictorScaleBar -%}
 
-{% macro predictorScaleMarker(predictor, showScore) %}
-  <div class="arns-scale-marker__card">
-    <div class="arns-scale-marker__card-top">
-      <h3>{{ predictor.band }}</h3>
-    </div>
-    {% if showScore and predictor.score %}
-      <div class="arns-scale-marker__card-bottom">
-        <p>{{ predictor.score }}%</p>
-      </div>
-      <div class="arns-scale-marker__card-pointer"></div>
-    {% else %}
-      <div class="arns-scale-marker__card-pointer arns-scale-marker__card-pointer--white"></div>
-    {% endif %}
-  </div>
-{% endmacro %}
+{% set latestAssessment = params.data.assessments | first if params.data.assessments else null %}
 
 {% if latestAssessment %}
   {% for key, predictor in latestAssessment %}
     {% if key == params.predictor %}
 
-      {% set config = predictorConfig[key] %}
-
-      {% set scaleMarkerClass = '' %}
-
-      {% switch predictor.band %}
-      {% case 'LOW' %}
-        {% set scaleMarkerClass = 'arns-scale-marker-wrapper--low' %}
-      {% case 'MEDIUM' %}
-        {% set scaleMarkerClass = 'arns-scale-marker-wrapper--medium' %}
-      {% case 'HIGH' %}
-        {% set scaleMarkerClass = 'arns-scale-marker-wrapper--high' %}
-      {% case 'VERY HIGH' %}
-        {% set scaleMarkerClass = 'arns-scale-marker-wrapper--very-high' %}
-      {% endswitch %}
-
-      {% set barTypeClass = '' %}
-      {% if config.hasVeryHighBand !== true and config.showBandThresholdPercentages !== true %}
-        {% set barTypeClass = 'arns-scale-bar--small' %}
-      {% elif config.hasVeryHighBand === true and config.showBandThresholdPercentages !== true %}
-        {% set barTypeClass = 'arns-scale-bar--small arns-scale-bar--small-fourths' %}
-      {% elif config.hasVeryHighBand === true and config.showBandThresholdPercentages === true %}
-        {% set barTypeClass = 'arns-scale-bar arns-scale-bar--fourths' %}
-      {% elif config.hasVeryHighBand !== true and config.showBandThresholdPercentages === true %}
-        {% set barTypeClass = 'arns-scale-bar arns-scale-bar--thirds' %}
-      {% endif %}
-
-      {% set scalePosition = '' %}
-      {% if config.showBandThresholdPercentages == true %}
-        {% set scalePosition = predictor.score | scoreToScaleMarkerPosition(config.bandThresholdPercentages) %}
-      {% else %}
-        {% set scalePosition = predictor.band | bandToScaleMarkerPosition(config.hasVeryHighBand) %}
-      {% endif %}
-
-      {% if predictor.band === 'NOT APPLICABLE' %}
-        <div class="arns-predictor-scale govuk-body">
-          <h2 class="govuk-heading-m">{{ predictor.name }}</h2>
-          <p class="govuk-body">Not applicable</p>
-        </div>
-      {% else %}
-        <div class="arns-predictor-scale govuk-body">
+      <div class="arns-predictor-scale govuk-body" data-predictor-scale="{{ predictor.name }}">
+        {% if predictor.band === 'NOT APPLICABLE' %}
+          <h2 class="govuk-heading-m" data-test-id="name">{{ predictor.name }}</h2>
+          <p class="govuk-body" data-test-id="notApplicable">Not applicable</p>
+        {% else %}
           <div class="arns-predictor-scale-header-wrapper">
             <div>
-              <h2 class="govuk-heading-m">{{ predictor.name }}</h2>
-              <p class="govuk-hint">Last updated: {{ predictor.completedDate }}</p>
+              <h2 class="govuk-heading-m" data-test-id="name">{{ predictor.name }}</h2>
+              <p class="govuk-hint" data-test-id="LastUpdatedDate">Last updated: {{ predictor.completedDate }}</p>
             </div>
             {% if predictor.staticOrDynamic %}
-            <div>{{ govukTag({ text: predictor.staticOrDynamic, classes: "govuk-tag--grey"}) }}</div>
+              <div data-test-id="staticOrDynamic">{{ govukTag({ text: predictor.staticOrDynamic, classes: "govuk-tag--grey"}) }}</div>
             {%  endif %}
           </div>
-
-          <div class="arns-scale-marker">
-            <div class="{{ scaleMarkerClass }} arns-scale-marker-wrapper" data-margin="{{ scalePosition }}">
-              {{ predictorScaleMarker(predictor, config.showScore) }}
-            </div>
-          </div>
-
-          <div class="{{ barTypeClass }}">
-            <div data-band-percentage-start="{{ config.bandThresholdPercentages[0] }}"
-                 data-band-percentage="{{ config.bandThresholdPercentages[1] }}">
-              <span></span>
-            </div>
-            <div data-band-percentage="{{ config.bandThresholdPercentages[2] }}">
-              <span></span>
-            </div>
-            <div data-band-percentage="{{ config.bandThresholdPercentages[3] }}">
-              <span></span>
-            </div>
-            {% if config.hasVeryHighBand === true %}
-              <div data-band-percentage="{{ config.bandThresholdPercentages[4] }}">
-                <span></span>
-              </div>
-            {% endif %}
-          </div>
-        </div>
-      {% endif %}
+          {{ predictorScaleBar(predictor, key) }}
+        {% endif %}
+      </div>
 
     {% endif %}
   {% endfor %}

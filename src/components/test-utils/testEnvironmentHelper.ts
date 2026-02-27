@@ -7,7 +7,7 @@ import { AssessmentV1 } from '../../types/AssessmentV1'
 import { AssessmentV2 } from '../../types/AssessmentV2'
 import { Predictor } from '../../types/Predictor'
 import { BandLevel } from '../../types/dtos/BandLevel'
-import { predictorConfig } from '../../NunjucksSetup'
+import { arnsNunjucksSetup, predictorConfig } from '../../NunjucksSetup'
 
 const cachedCss = sass.compileString(
   `
@@ -28,7 +28,7 @@ const njksEnv = new nunjucks.Environment(
   ]),
   { autoescape: true },
 )
-njksEnv.addGlobal('predictorConfig', predictorConfig)
+arnsNunjucksSetup(njksEnv)
 
 export const getInitialDom = () => {
   const dom = new JSDOM('<!DOCTYPE html><html><body><div id="container"></div></body></html>')
@@ -91,6 +91,14 @@ export const components: Record<string, ComponentDetail> = {
   EXPANDED_PREDICTOR_BADGE: {
     directory: 'expanded-predictor-badge',
     macro: 'expandedPredictorBadge',
+  },
+  PREDICTOR_SCALE: {
+    directory: 'predictor-scale',
+    macro: 'predictorScale',
+  },
+  PREDICTOR_SCALE_BAR: {
+    directory: 'predictor-scale-bar',
+    macro: 'predictorScaleBar',
   },
   PREDICTOR_SCORES_ACCORDION: {
     directory: 'predictor-scores-accordion',
@@ -314,7 +322,7 @@ export const getRiskTestData = (predictors: RiskTestDataOptions[]): RiskData => 
     predictor.completedDate = options.completedDate || '02 January 2024'
   })
 
-  return { httpStatus: 200, assessments: [assessmentToUpdate, v1assessment, v2assessment] }
+  return { assessments: [assessmentToUpdate, v1assessment, v2assessment], httpStatus: 200 }
 }
 
 type Inputs = Record<string, any[]>
