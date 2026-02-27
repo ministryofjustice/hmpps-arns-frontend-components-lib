@@ -95,6 +95,10 @@ export const components: Record<string, ComponentDetail> = {
     directory: 'predictor-scale',
     macro: 'predictorScale',
   },
+  PREDICTOR_SCALE_BAR: {
+    directory: 'predictor-scale-bar',
+    macro: 'predictorScaleBar',
+  },
 }
 
 export type Component = keyof typeof components
