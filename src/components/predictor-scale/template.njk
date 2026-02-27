@@ -25,17 +25,17 @@ In template:
 {% set latestAssessment = params.data.assessments | first if params.data.assessments else null %}
 
 {% macro predictorScaleMarker(predictor, showScore) %}
-  <div class="arns-scale-marker__card">
+  <div class="arns-scale-marker__card" data-test-id="scaleMarkerCard">
     <div class="arns-scale-marker__card-top">
-      <h3>{{ predictor.band }}</h3>
+      <h3 data-test-id="scaleMarkerCardContent">{{ predictor.band }}</h3>
     </div>
     {% if showScore and predictor.score %}
-      <div class="arns-scale-marker__card-bottom">
+      <div class="arns-scale-marker__card-bottom" data-test-id="scaleMarkerCardBottom">
         <p>{{ predictor.score }}%</p>
       </div>
-      <div class="arns-scale-marker__card-pointer"></div>
+      <div class="arns-scale-marker__card-pointer" data-test-id="scaleMarkerCardPointer"></div>
     {% else %}
-      <div class="arns-scale-marker__card-pointer arns-scale-marker__card-pointer--white"></div>
+      <div class="arns-scale-marker__card-pointer arns-scale-marker__card-pointer--white" data-test-id="scaleMarkerNoScore"></div>
     {% endif %}
   </div>
 {% endmacro %}
@@ -78,41 +78,41 @@ In template:
       {% endif %}
 
       {% if predictor.band === 'NOT APPLICABLE' %}
-        <div class="arns-predictor-scale govuk-body">
-          <h2 class="govuk-heading-m">{{ predictor.name }}</h2>
-          <p class="govuk-body">Not applicable</p>
+        <div class="arns-predictor-scale govuk-body" data-predictor-scale="{{ predictor.name }}">
+          <h2 class="govuk-heading-m" data-test-id="name">{{ predictor.name }}</h2>
+          <p class="govuk-body" data-test-id="notApplicable">Not applicable</p>
         </div>
       {% else %}
-        <div class="arns-predictor-scale govuk-body">
+        <div class="arns-predictor-scale govuk-body" data-predictor-scale="{{ predictor.name }}">
           <div class="arns-predictor-scale-header-wrapper">
             <div>
-              <h2 class="govuk-heading-m">{{ predictor.name }}</h2>
-              <p class="govuk-hint">Last updated: {{ predictor.completedDate }}</p>
+              <h2 class="govuk-heading-m" data-test-id="name">{{ predictor.name }}</h2>
+              <p class="govuk-hint" data-test-id="LastUpdatedDate">Last updated: {{ predictor.completedDate }}</p>
             </div>
             {% if predictor.staticOrDynamic %}
-            <div>{{ govukTag({ text: predictor.staticOrDynamic, classes: "govuk-tag--grey"}) }}</div>
+            <div data-test-id="staticOrDynamic">{{ govukTag({ text: predictor.staticOrDynamic, classes: "govuk-tag--grey"}) }}</div>
             {%  endif %}
           </div>
 
-          <div class="arns-scale-marker">
-            <div class="{{ scaleMarkerClass }} arns-scale-marker-wrapper" data-margin="{{ scalePosition }}">
+          <div class="arns-scale-marker" data-test-id='scaleMarker'>
+            <div class="{{ scaleMarkerClass }} arns-scale-marker-wrapper" data-margin="{{ scalePosition }}" data-test-id='scaleMarkerPosition'>
               {{ predictorScaleMarker(predictor, config.showScore) }}
             </div>
           </div>
 
-          <div class="{{ barTypeClass }}">
+          <div class="{{ barTypeClass }}" data-test-id='barType'>
             <div data-band-percentage-start="{{ config.bandThresholdPercentages[0] }}"
-                 data-band-percentage="{{ config.bandThresholdPercentages[1] }}">
+                 data-band-percentage="{{ config.bandThresholdPercentages[1] }}" data-test-id='lowBand'>
               <span></span>
             </div>
-            <div data-band-percentage="{{ config.bandThresholdPercentages[2] }}">
+            <div data-band-percentage="{{ config.bandThresholdPercentages[2] }}" data-test-id='mediumBand'>
               <span></span>
             </div>
-            <div data-band-percentage="{{ config.bandThresholdPercentages[3] }}">
+            <div data-band-percentage="{{ config.bandThresholdPercentages[3] }}" data-test-id='highBand'>
               <span></span>
             </div>
             {% if config.hasVeryHighBand === true %}
-              <div data-band-percentage="{{ config.bandThresholdPercentages[4] }}">
+              <div data-band-percentage="{{ config.bandThresholdPercentages[4] }}" data-test-id='veryHighBand'>
                 <span></span>
               </div>
             {% endif %}
