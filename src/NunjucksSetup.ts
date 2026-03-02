@@ -55,9 +55,10 @@ export const predictorConfig = {
     bandThresholdPercentages: ['0%', '1%', '3%', '6.9%', '25%+'],
   },
   directContactSexualReoffendingPredictor: {
-    showScore: false,
+    showScore: true,
     hasVeryHighBand: true,
-    showBandThresholdPercentages: false,
+    showBandThresholdPercentages: true,
+    bandThresholdPercentages: ['0%', '0.6%', '2.1%', '5.3%', '83.1%'],
   },
   indirectImageContactSexualReoffendingPredictor: {
     showScore: false,
