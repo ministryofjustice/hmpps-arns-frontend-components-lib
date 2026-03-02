@@ -107,10 +107,18 @@ describe('predictor-scale-bar', () => {
 
   describe('Bar Type Class Logic', () => {
     const barTypeCases = [
-      { predictor: 'ospiic', expectedClass: 'arns-scale-bar--small' },
-      { predictor: 'ospdc', expectedClass: 'arns-scale-bar--small-fourths' },
       { predictor: 'ogrs3', expectedClass: 'arns-scale-bar--fourths' },
+      { predictor: 'ovp', expectedClass: 'arns-scale-bar--fourths' },
+      { predictor: 'ogp', expectedClass: 'arns-scale-bar--fourths' },
+      { predictor: 'ospdc', expectedClass: 'arns-scale-bar--small-fourths' },
+      { predictor: 'ospiic', expectedClass: 'arns-scale-bar--small' },
       { predictor: 'rsr', expectedClass: 'arns-scale-bar--thirds' },
+      { predictor: 'allReoffendingPredictor', expectedClass: 'arns-scale-bar--fourths' },
+      { predictor: 'violentReoffendingPredictor', expectedClass: 'arns-scale-bar--fourths' },
+      { predictor: 'seriousViolentReoffendingPredictor', expectedClass: 'arns-scale-bar--fourths' },
+      { predictor: 'directContactSexualReoffendingPredictor', expectedClass: 'arns-scale-bar--fourths' },
+      { predictor: 'indirectImageContactSexualReoffendingPredictor', expectedClass: 'arns-scale-bar--small' },
+      { predictor: 'combinedSeriousReoffendingPredictor', expectedClass: 'arns-scale-bar--fourths' },
     ]
 
     it.each(barTypeCases)('should apply class $expectedClass for $predictor', ({ predictor, expectedClass }) => {
@@ -134,7 +142,7 @@ describe('predictor-scale-bar', () => {
   })
 
   it('should hide the score and show "No Score" pointer when config.showScore is false', () => {
-    const predictorType: PredictorOption = 'directContactSexualReoffendingPredictor'
+    const predictorType: PredictorOption = 'ospdc'
     const riskData = getRiskTestData([
       { predictor: predictorType, level: BandLevel.VERY_HIGH, score: 1.07, staticOrDynamic: 'Static' },
     ])
