@@ -1,0 +1,75 @@
+{% from "govuk/components/inset-text/macro.njk" import govukInsetText %}
+{% from "../details-chevron/macro.njk" import detailsChevron %}
+
+{% set latestAssessment = params.data.assessments | first if params.data.assessments else null %}
+{% set forename = params.forename | default('This individual') %}
+
+{% if latestAssessment %}
+
+  <div class="bottom-border">
+    {{ govukInsetText({
+      text: "Source: " + latestAssessment.assessmentType + " assessment, completed on " + latestAssessment.completedDate
+    }) }}
+  </div>
+
+  {#  All reoffending predictor  #}
+  <h3>All reoffending predictor</h3>
+  <p>All reoffending predictor summary text</p>
+
+  {% set allReoffendingPredictorContentHtml %}
+    <p>This is the content for the all reoffending predictor.</p>
+  {% endset %}
+
+  {{ detailsChevron({ html: allReoffendingPredictorContentHtml }) }}
+
+  {#  Violent reoffending predictor  #}
+  <h3>Violent reoffending predictor</h3>
+  <p>Violent reoffending predictor summary text</p>
+
+  {% set violentReoffendingPredictorContentHtml %}
+    <p>This is the content for the violent reoffending predictor.</p>
+  {% endset %}
+
+  {{ detailsChevron({ html: violentReoffendingPredictorContentHtml }) }}
+
+  {#  Combined serious reoffending predictor  #}
+  <h3>Combined serious reoffending predictor</h3>
+  <p>Combined serious reoffending predictor summary text</p>
+
+  {% set combinedSeriousReoffendingPredictorContentHtml %}
+    <p>This is the content for the combined serious reoffending predictor.</p>
+  {% endset %}
+
+  {{ detailsChevron({ html: combinedSeriousReoffendingPredictorContentHtml }) }}
+
+  {#  Serious violent reoffending predictor  #}
+  <h3>Serious violent reoffending predictor</h3>
+  <p>Serious violent reoffending predictor summary text</p>
+
+  {% set seriousViolentReoffendingPredictorContentHtml %}
+    <p>This is the content for the serious violent reoffending predictor.</p>
+  {% endset %}
+
+  {{ detailsChevron({ html: seriousViolentReoffendingPredictorContentHtml }) }}
+
+  {#  Direct contact - Sexual reoffending predictor  #}
+  <h3>Direct contact - Sexual reoffending predictor</h3>
+  <p>Direct contact - Sexual reoffending predictor summary text</p>
+
+  {% set directContactSexualReoffendingPredictorContentHtml %}
+    <p>This is the content for the direct contact - Sexual reoffending predictor.</p>
+  {% endset %}
+
+  {{ detailsChevron({ html: directContactSexualReoffendingPredictorContentHtml }) }}
+
+  {#  Images and indirect contact - Sexual reoffending predictor  #}
+  <h3>Images and indirect contact - Sexual reoffending predictor</h3>
+  <p>Images and indirect contact - Sexual reoffending predictor summary text</p>
+
+  {% set imagesAndIndirectContactSexualReoffendingPredictorContentHtml %}
+    <p>This is the content for the images and indirect contact - Sexual reoffending predictor.</p>
+  {% endset %}
+
+  {{ detailsChevron({html: imagesAndIndirectContactSexualReoffendingPredictorContentHtml}) }}
+
+{% endif %}

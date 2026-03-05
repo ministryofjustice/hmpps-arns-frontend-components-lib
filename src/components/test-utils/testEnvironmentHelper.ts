@@ -100,9 +100,9 @@ export const components: Record<string, ComponentDetail> = {
     directory: 'predictor-scale-bar',
     macro: 'predictorScaleBar',
   },
-  PREDICTOR_SCORES_ACCORDION: {
-    directory: 'predictor-scores-accordion',
-    macro: 'predictorScoresAccordion',
+  RISK_PREDICTOR_SCORES_CONTENT: {
+    directory: 'risk-predictor-scores-content',
+    macro: 'riskPredictorScoresContent',
   },
 }
 
