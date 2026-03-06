@@ -86,8 +86,9 @@ describe('predictor-scale-bar', () => {
           { tag: 'borderWidth', value: '2px' },
         ])
 
-        // Validate Marker Card Content (LOW, MEDIUM, HIGH, VERY HIGH color)
-        const expectedText = level.replace('_', ' ')
+        // Validate Marker Card Content (Low, Medium, High, Very high)
+        const formattedText = level.replace('_', ' ').toLowerCase()
+        const expectedText = formattedText.charAt(0).toUpperCase() + formattedText.slice(1)
         const markerContent = document.querySelector('[data-test-id="scaleMarkerCardContent"]')
         expect(markerContent?.textContent?.trim()).toBe(expectedText)
         expectStyleToBe(renderedHtml, markerContent, [{ tag: 'color', value: textColor }])
@@ -166,5 +167,51 @@ describe('predictor-scale-bar', () => {
     const noScorePointer = document.querySelector('[data-test-id="scaleMarkerNoScore"]')
     expect(noScorePointer).not.toBeNull()
     expect(noScorePointer?.className).toContain('arns-scale-marker__card-pointer--white')
+  })
+
+  describe('Accessibility Striped Patterns', () => {
+    it('should apply striped pattern to the MEDIUM band', () => {
+      const predictorType: PredictorOption = 'allReoffendingPredictor'
+      const riskData = getRiskTestData([
+        { predictor: predictorType, level: BandLevel.MEDIUM, score: 50, staticOrDynamic: 'Static' },
+      ])
+      const predictorObj = (riskData.assessments[0] as any)[predictorType]
+
+      const renderedHtml = getDomFromNjks(
+        dom,
+        `{% from "predictor-scale-bar/macro.njk" import predictorScaleBar as macro %}
+        {{ macro(predictor, key) }}`,
+        { predictor: predictorObj, key: predictorType },
+      )
+
+      const mediumBandSpan = renderedHtml.document.querySelector('[data-test-id="mediumBand"] span')
+      expectStyleToBe(renderedHtml, mediumBandSpan, [{ tag: 'backgroundColor', value: 'rgb(244, 119, 56)' }])
+
+      const computedStyle = renderedHtml.window.getComputedStyle(mediumBandSpan!)
+      expect(computedStyle.backgroundImage).toContain('repeating-linear-gradient')
+      expect(computedStyle.backgroundImage).toContain('rgba(255, 255, 255, 0.25)')
+    })
+
+    it('should apply striped pattern to the VERY HIGH band', () => {
+      const predictorType: PredictorOption = 'allReoffendingPredictor'
+      const riskData = getRiskTestData([
+        { predictor: predictorType, level: BandLevel.VERY_HIGH, score: 95, staticOrDynamic: 'Static' },
+      ])
+      const predictorObj = (riskData.assessments[0] as any)[predictorType]
+
+      const renderedHtml = getDomFromNjks(
+        dom,
+        `{% from "predictor-scale-bar/macro.njk" import predictorScaleBar as macro %}
+        {{ macro(predictor, key) }}`,
+        { predictor: predictorObj, key: predictorType },
+      )
+
+      const veryHighBandSpan = renderedHtml.document.querySelector('[data-test-id="veryHighBand"] span')
+      expectStyleToBe(renderedHtml, veryHighBandSpan, [{ tag: 'backgroundColor', value: 'rgb(148, 37, 20)' }])
+
+      const computedStyle = renderedHtml.window.getComputedStyle(veryHighBandSpan!)
+      expect(computedStyle.backgroundImage).toContain('repeating-linear-gradient')
+      expect(computedStyle.backgroundImage).toContain('rgba(0, 0, 0, 0.15)')
+    })
   })
 })
