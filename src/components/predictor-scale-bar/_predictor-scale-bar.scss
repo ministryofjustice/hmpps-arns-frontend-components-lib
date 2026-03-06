@@ -151,71 +151,67 @@ $low-score-colour__text: #485b10;
 
 .arns-scale-bar--small {
   @include arns-scale-bar-base;
-
-  margin-bottom: 15px;
+  margin-bottom: 30px;
+  display: block;
+  clear: both;
 
   & > div {
-    width: calc(100%/3);
-    padding-left: 1px;
-    padding-right: 1px;
+    width: calc(100% / 3);
+    padding: 0 1px;
     display: inline;
     float: left;
     box-sizing: border-box;
+
+    & > span:first-child {
+      display: block;
+      width: 100%;
+      position: relative;
+
+      &::after {
+        @include govuk-font(16);
+        @include arns-scale-bar-label;
+        position: absolute;
+        bottom: -20px;
+        left: 0;
+        width: 100%;
+        text-align: center;
+        color: $govuk-secondary-text-colour;
+        white-space: pre;
+      }
+    }
   }
 
-  & > div:nth-child(4n + 1) > span:first-child {
-    &::after{
-      @include govuk-font(16);
-      @include arns-scale-bar-label;
+  & > div:nth-child(4n + 1) > span:first-child { background-color: $low-score-colour; }
+  & > div:nth-child(4n + 2) > span:first-child { background-color: $medium-score-colour; }
+  & > div:nth-child(4n + 3) > span:first-child { background-color: $high-score-colour; }
 
-      content:"LOW";
-      bottom: -15px;
-      color: $govuk-secondary-text-colour;
-    }
-    background-color: $low-score-colour;
+  &:not(.arns-scale-bar--small-sanctions) {
+    & > div:nth-child(4n + 1) > span:first-child::after { content: "LOW"; }
+    & > div:nth-child(4n + 2) > span:first-child::after { content: "MEDIUM"; }
+    & > div:nth-child(4n + 3) > span:first-child::after { content: "HIGH"; }
   }
 
-  & > div:nth-child(4n + 2) > span:first-child {
-    &::after{
-      @include govuk-font(16);
-      @include arns-scale-bar-label;
+  &.arns-scale-bar--small-sanctions {
+    margin-bottom: 50px;
 
-      content:"MEDIUM";
-      bottom: -15px;
-      color: $govuk-secondary-text-colour;
+    & > div > span:first-child::after {
+      bottom: -40px;
+      line-height: 1.1;
     }
-    background-color: $medium-score-colour;
-  }
 
-  & > div:nth-child(4n + 3) > span:first-child {
-    &::after{
-      @include govuk-font(16);
-      @include arns-scale-bar-label;
-
-      content:"HIGH";
-      bottom: -15px;
-      color: $govuk-secondary-text-colour;
-    }
-    background-color: $high-score-colour;
+    & > div:nth-child(4n + 1) > span:first-child::after { content: "LOW \A (0 sanctions)"; }
+    & > div:nth-child(4n + 2) > span:first-child::after { content: "MEDIUM \A (1 sanction)"; }
+    & > div:nth-child(4n + 3) > span:first-child::after { content: "HIGH \A (2+ sanctions)"; }
   }
 }
 
 .arns-scale-bar--small-fourths {
   & > div {
-    width: calc(100%/4);
-    padding-bottom: 20px;
-  }
-
-  & > div:nth-child(4n + 4) > span:first-child {
-    &::after{
-      @include govuk-font(16);
-      @include arns-scale-bar-label;
-
-      content:"VERY HIGH";
-      bottom: -15px;
-      color: $govuk-secondary-text-colour;
+    width: 25%;
+    &:nth-child(4n + 4) > span:first-child {
+      background-color: $very-high-score-colour;
+      &::after { content: "VERY HIGH"; }
     }
-    background-color: $very-high-score-colour;
   }
 }
 
