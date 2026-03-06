@@ -1,8 +1,16 @@
 {% from "govuk/components/inset-text/macro.njk" import govukInsetText %}
 {% from "../details-chevron/macro.njk" import detailsChevron %}
+{% from "../predictor-scale-bar/macro.njk" import predictorScaleBar %}
+{%- from "govuk/components/tag/macro.njk" import govukTag -%}
 
 {% set latestAssessment = params.data.assessments | first if params.data.assessments else null %}
 {% set forename = params.forename | default('This individual') %}
+{% set ARP = latestAssessment.allReoffendingPredictor %}
+{% set VRP = latestAssessment.violentReoffendingPredictor %}
+{% set CSRP = latestAssessment.combinedSeriousReoffendingPredictor %}
+{% set SVRP = latestAssessment.seriousViolentReoffendingPredictor %}
+{% set DCSRP = latestAssessment.directContactSexualReoffendingPredictor %}
+{% set IICSRP = latestAssessment.indirectImageContactSexualReoffendingPredictor %}
 
 {% if latestAssessment %}
 
@@ -13,18 +21,74 @@
   </div>
 
   {#  All reoffending predictor  #}
-  <h3>All reoffending predictor</h3>
-  <p>All reoffending predictor summary text</p>
+  <div class="predictor-header-wrapper">
+    <h3>All reoffending predictor</h3>
+    {% if ARP.staticOrDynamic %}
+      <div class="staticOrDynamicTag" data-test-id="arp-staticOrDynamic">{{ govukTag({ text: ARP.staticOrDynamic, classes: "govuk-tag--grey"}) }}</div>
+    {% endif %}
+  </div>
+  <div class="govuk-!-margin-bottom-4">
+    <span>{{ ARP.score }}% of people with a similar profile to {{ forename }} will get a sanction for an offence they commit within two years. This puts {{ forename }} in the {{ ARP.band }} risk band.</span>
+  </div>
+  <div class="scale-wrapper">
+    {{ predictorScaleBar(ARP, 'allReoffendingPredictor') }}
+  </div>
 
   {% set allReoffendingPredictorContentHtml %}
-    <p>This is the content for the all reoffending predictor.</p>
+    <h3>What this score predicts</h3>
+    <p>The All reoffending predictor predicts the likelihood of someone getting a sanction for any recordable
+      offence.</p>
+    <p>It includes all sexual and all violent offences, but there are other risk predictors that are specifically
+      designed to predict serious, violent and sexual offences.</p>
+    <h3>How we calculate the score</h3>
+    <p>We calculate the score using:</p>
+    <ul>
+      <li>static factors only, when we have limited information (a static score)</li>
+      <li>dynamic and static factors, when we have more detailed information (a dynamic score)</li>
+    </ul>
+    {% if ARP.staticOrDynamic | upper === 'STATIC' %}
+      <p>This score has been calculated using static factors only.</p>
+    {% elseif ARP.staticOrDynamic | upper === 'DYNAMIC' %}
+      <p>This score has been calculated using both dynamic and static factors.</p>
+    {% endif %}
+
+    <p>Static factors are things which cannot be deliberately changed, and include the person's:</p>
+    <ul>
+      <li>age when they enter the community caseload</li>
+      <li>sex at birth</li>
+      <li>current offence</li>
+      <li>total number of sanctions</li>
+      <li>length of offending history</li>
+    </ul>
+    <p>Dynamic factors are things that can change, and include their:</p>
+    <ul>
+      <li>accommodation status</li>
+      <li>employment status</li>
+      <li>relationship status</li>
+      <li>history of domestic abuse</li>
+      <li>regular activities that encourage offending</li>
+      <li>drug use and motivation to tackle drug use</li>
+      <li>alcohol use</li>
+      <li>impulsivity</li>
+      <li>pro-criminal attitudes</li>
+    </ul>
   {% endset %}
 
   {{ detailsChevron({ html: allReoffendingPredictorContentHtml }) }}
 
   {#  Violent reoffending predictor  #}
-  <h3>Violent reoffending predictor</h3>
-  <p>Violent reoffending predictor summary text</p>
+  <div class="predictor-header-wrapper">
+    <h3>Violent reoffending predictor</h3>
+    {% if VRP.staticOrDynamic %}
+      <div class="staticOrDynamicTag" data-test-id="vrp-staticOrDynamic">{{ govukTag({ text: VRP.staticOrDynamic, classes: "govuk-tag--grey"}) }}</div>
+    {% endif %}
+  </div>
+  <div class="govuk-!-margin-bottom-4">
+    <span>{{ VRP.score }}% of people with a similar profile to {{ forename }} will get a sanction for an offence they commit within two years. This puts {{ forename }} in the {{ VRP.band }} risk band.</span>
+  </div>
+  <div class="scale-wrapper">
+    {{ predictorScaleBar(VRP, 'violentReoffendingPredictor') }}
+  </div>
 
   {% set violentReoffendingPredictorContentHtml %}
     <p>This is the content for the violent reoffending predictor.</p>
@@ -33,8 +97,18 @@
   {{ detailsChevron({ html: violentReoffendingPredictorContentHtml }) }}
 
   {#  Combined serious reoffending predictor  #}
-  <h3>Combined serious reoffending predictor</h3>
-  <p>Combined serious reoffending predictor summary text</p>
+  <div class="predictor-header-wrapper">
+    <h3>Combined serious reoffending predictor</h3>
+    {% if CSRP.staticOrDynamic %}
+      <div class="staticOrDynamicTag" data-test-id="csrp-staticOrDynamic">{{ govukTag({ text: CSRP.staticOrDynamic, classes: "govuk-tag--grey"}) }}</div>
+    {% endif %}
+  </div>
+  <div class="govuk-!-margin-bottom-4">
+    <span>{{ CSRP.score }}% of people with a similar profile to {{ forename }} will get a sanction for an offence they commit within two years. This puts {{ forename }} in the {{ CSRP.band }} risk band.</span>
+  </div>
+  <div class="scale-wrapper">
+    {{ predictorScaleBar(CSRP, 'combinedSeriousReoffendingPredictor') }}
+  </div>
 
   {% set combinedSeriousReoffendingPredictorContentHtml %}
     <p>This is the content for the combined serious reoffending predictor.</p>
@@ -43,8 +117,18 @@
   {{ detailsChevron({ html: combinedSeriousReoffendingPredictorContentHtml }) }}
 
   {#  Serious violent reoffending predictor  #}
-  <h3>Serious violent reoffending predictor</h3>
-  <p>Serious violent reoffending predictor summary text</p>
+  <div class="predictor-header-wrapper">
+    <h3>Serious violent reoffending predictor</h3>
+    {% if SVRP.staticOrDynamic %}
+      <div class="staticOrDynamicTag" data-test-id="svrp-staticOrDynamic">{{ govukTag({ text: SVRP.staticOrDynamic, classes: "govuk-tag--grey"}) }}</div>
+    {% endif %}
+  </div>
+  <div class="govuk-!-margin-bottom-4">
+    <span>{{ SVRP.score }}% of people with a similar profile to {{ forename }} will get a sanction for an offence they commit within two years. This puts {{ forename }} in the {{ SVRP.band }} risk band.</span>
+  </div>
+  <div class="scale-wrapper">
+    {{ predictorScaleBar(SVRP, 'seriousViolentReoffendingPredictor') }}
+  </div>
 
   {% set seriousViolentReoffendingPredictorContentHtml %}
     <p>This is the content for the serious violent reoffending predictor.</p>
@@ -53,8 +137,18 @@
   {{ detailsChevron({ html: seriousViolentReoffendingPredictorContentHtml }) }}
 
   {#  Direct contact - Sexual reoffending predictor  #}
-  <h3>Direct contact - Sexual reoffending predictor</h3>
-  <p>Direct contact - Sexual reoffending predictor summary text</p>
+  <div class="predictor-header-wrapper">
+    <h3>Direct contact - Sexual reoffending predictor</h3>
+    {% if DCSRP.staticOrDynamic %}
+      <div class="staticOrDynamicTag" data-test-id="dcsrp-staticOrDynamic">{{ govukTag({ text: DCSRP.staticOrDynamic, classes: "govuk-tag--grey"}) }}</div>
+    {% endif %}
+  </div>
+  <div class="govuk-!-margin-bottom-4">
+    <span>{{ DCSRP.score }}% of people with a similar profile to {{ forename }} will get a sanction for an offence they commit within two years. This puts {{ forename }} in the {{ DCSRP.band }} risk band.</span>
+  </div>
+  <div class="scale-wrapper">
+    {{ predictorScaleBar(DCSRP, 'directContactSexualReoffendingPredictor') }}
+  </div>
 
   {% set directContactSexualReoffendingPredictorContentHtml %}
     <p>This is the content for the direct contact - Sexual reoffending predictor.</p>
@@ -63,13 +157,25 @@
   {{ detailsChevron({ html: directContactSexualReoffendingPredictorContentHtml }) }}
 
   {#  Images and indirect contact - Sexual reoffending predictor  #}
-  <h3>Images and indirect contact - Sexual reoffending predictor</h3>
-  <p>Images and indirect contact - Sexual reoffending predictor summary text</p>
+  <div class="predictor-header-wrapper">
+    <h3>Images and indirect contact - Sexual reoffending predictor</h3>
+    {% if IICSRP.staticOrDynamic %}
+      <div class="staticOrDynamicTag" data-test-id="iicsrp-staticOrDynamic">{{ govukTag({ text: IICSRP.staticOrDynamic, classes: "govuk-tag--grey"}) }}</div>
+    {% endif %}
+  </div>
+  <div class="govuk-!-margin-bottom-4">
+    <span>{{ IICSRP.score }}% of people with a similar profile to {{ forename }} will get a sanction for an offence they commit within two years. This puts {{ forename }} in the {{ IICSRP.band }} risk band.</span>
+  </div>
+  <div class="scale-wrapper">
+    {{ predictorScaleBar(IICSRP, 'imagesAndIndirectContactSexualReoffendingPredictor') }}
+  </div>
 
   {% set imagesAndIndirectContactSexualReoffendingPredictorContentHtml %}
     <p>This is the content for the images and indirect contact - Sexual reoffending predictor.</p>
   {% endset %}
 
-  {{ detailsChevron({html: imagesAndIndirectContactSexualReoffendingPredictorContentHtml}) }}
+  <div class="noThresholdScaleBuffer">
+    {{ detailsChevron({html: imagesAndIndirectContactSexualReoffendingPredictorContentHtml}) }}
+  </div>
 
 {% endif %}
