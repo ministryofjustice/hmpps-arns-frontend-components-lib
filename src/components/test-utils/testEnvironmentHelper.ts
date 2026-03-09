@@ -104,6 +104,10 @@ export const components: Record<string, ComponentDetail> = {
     directory: 'risk-predictor-scores-content',
     macro: 'riskPredictorScoresContent',
   },
+  PREDICTOR_TIMELINE: {
+    directory: 'predictor-timeline',
+    macro: 'predictorTimeline',
+  },
 }
 
 export type Component = keyof typeof components
