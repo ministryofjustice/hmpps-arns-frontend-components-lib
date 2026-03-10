@@ -11,6 +11,28 @@ $low-score-colour: #85994b;
 $low-score-colour--light: #dee9bd;
 $low-score-colour__text: #485b10;
 
+@mixin striped-medium {
+  background-color: $medium-score-colour;
+  background-image: repeating-linear-gradient(
+                  -45deg,
+                  transparent,
+                  transparent 5px,
+                  rgba(255, 255, 255, 0.25) 5px,
+                  rgba(255, 255, 255, 0.25) 10px
+  );
+}
+
+@mixin striped-very-high {
+  background-color: $very-high-score-colour;
+  background-image: repeating-linear-gradient(
+                  45deg,
+                  transparent,
+                  transparent 5px,
+                  rgba(0, 0, 0, 0.15) 5px,
+                  rgba(0, 0, 0, 0.15) 10px
+  );
+}
+
 @mixin arns-scale-marker-card-colour($primary-colour, $secondary-colour, $text-colour) {
   & .arns-scale-marker__card {
     border: 2px solid $primary-colour;
@@ -65,7 +87,7 @@ $low-score-colour__text: #485b10;
 }
 
 .arns-scale-marker {
-  margin-bottom: 22px;
+  margin-bottom: 14px;
   width: 100%;
 }
 
@@ -124,27 +146,25 @@ $low-score-colour__text: #485b10;
   & p {
     margin: 0;
     text-align: center;
-    text-transform: uppercase;
   }
 
   & h3 {
-    @include govuk-font(14, "bold");
+    @include govuk-font(16, "bold");
   }
 
   & p {
-    @include govuk-font(14, "regular");
+    @include govuk-font(16, "regular");
   }
 }
 
 .arns-scale-marker__card-bottom p {
-  @include govuk-font(14, "bold");
+  @include govuk-font(19, "bold");
 
   margin: 0;
 }
 
 .arns-scale-marker__card-top,
 .arns-scale-marker__card-bottom {
-  padding: 3px;
   text-align: center;
   box-sizing: border-box;
 }
@@ -182,13 +202,13 @@ $low-score-colour__text: #485b10;
   }
 
   & > div:nth-child(4n + 1) > span:first-child { background-color: $low-score-colour; }
-  & > div:nth-child(4n + 2) > span:first-child { background-color: $medium-score-colour; }
+  & > div:nth-child(4n + 2) > span:first-child { @include striped-medium; }
   & > div:nth-child(4n + 3) > span:first-child { background-color: $high-score-colour; }
 
   &:not(.arns-scale-bar--small-sanctions) {
-    & > div:nth-child(4n + 1) > span:first-child::after { content: "LOW"; }
-    & > div:nth-child(4n + 2) > span:first-child::after { content: "MEDIUM"; }
-    & > div:nth-child(4n + 3) > span:first-child::after { content: "HIGH"; }
+    & > div:nth-child(4n + 1) > span:first-child::after { content: "Low"; }
+    & > div:nth-child(4n + 2) > span:first-child::after { content: "Medium"; }
+    & > div:nth-child(4n + 3) > span:first-child::after { content: "High"; }
   }
 
   &.arns-scale-bar--small-sanctions {
@@ -199,9 +219,9 @@ $low-score-colour__text: #485b10;
       line-height: 1.1;
     }
 
-    & > div:nth-child(4n + 1) > span:first-child::after { content: "LOW \A (0 sanctions)"; }
-    & > div:nth-child(4n + 2) > span:first-child::after { content: "MEDIUM \A (1 sanction)"; }
-    & > div:nth-child(4n + 3) > span:first-child::after { content: "HIGH \A (2+ sanctions)"; }
+    & > div:nth-child(4n + 1) > span:first-child::after { content: "Low \A (0 sanctions)"; }
+    & > div:nth-child(4n + 2) > span:first-child::after { content: "Medium \A (1 sanction)"; }
+    & > div:nth-child(4n + 3) > span:first-child::after { content: "High \A (2+ sanctions)"; }
   }
 }
 
@@ -209,8 +229,8 @@ $low-score-colour__text: #485b10;
   & > div {
     width: 25%;
     &:nth-child(4n + 4) > span:first-child {
-      background-color: $very-high-score-colour;
-      &::after { content: "VERY HIGH"; }
+      @include striped-very-high;
+      &::after { content: "Very high"; }
     }
   }
 }
@@ -270,13 +290,13 @@ $low-score-colour__text: #485b10;
   }
 
   & > div:nth-child(1) {
-    & > span:first-child { background-color: $low-score-colour; &::after { content: "LOW"; } }
+    & > span:first-child { background-color: $low-score-colour; &::after { content: "Low"; } }
   }
   & > div:nth-child(2) {
-    & > span:first-child { background-color: $medium-score-colour; &::after { content: "MEDIUM"; } }
+    & > span:first-child { @include striped-medium; &::after { content: "Medium"; } }
   }
   & > div:nth-child(3) {
-    & > span:first-child { background-color: $high-score-colour; &::after { content: "HIGH"; } }
+    & > span:first-child { background-color: $high-score-colour; &::after { content: "High"; } }
   }
 }
 
@@ -287,8 +307,8 @@ $low-score-colour__text: #485b10;
   & > div:nth-child(4) {
     border-right: 1px solid govuk-colour("black");
     & > span:first-child {
-      background-color: $very-high-score-colour;
-      &::after { content: "VERY HIGH"; }
+      @include striped-very-high;
+      &::after { content: "Very high"; }
     }
   }
 }
