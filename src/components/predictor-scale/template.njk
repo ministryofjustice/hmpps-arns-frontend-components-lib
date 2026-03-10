@@ -33,7 +33,7 @@ In template:
       <div class="arns-predictor-scale govuk-body" data-predictor-scale="{{ predictor.name }}">
         {% if predictor.band === 'NOT APPLICABLE' %}
           <h2 class="govuk-heading-m" data-test-id="name">{{ predictor.name }}</h2>
-          <p class="govuk-body" data-test-id="notApplicable">Not applicable</p>
+          <p class="govuk-body" data-test-id="notApplicableSummary">We only calculate sexual reoffending predictor scores for men with a known history of sexual or sexually motivated offending. This individual does not have a score for this predictor.</p>
         {% else %}
           <div class="arns-predictor-scale-header-wrapper">
             <div>
