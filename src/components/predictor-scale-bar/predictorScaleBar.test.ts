@@ -136,7 +136,7 @@ describe('predictor-scale-bar', () => {
         { predictor: predictorObj, key: predictorType },
       )
 
-      const bar = renderedHtml.document.querySelector('[data-test-id="barType"]')
+      const bar = renderedHtml.document.querySelector(`[data-test-id="${predictor}-scale"]`)
       expect(bar?.className).toContain(expectedClass)
     })
   })
