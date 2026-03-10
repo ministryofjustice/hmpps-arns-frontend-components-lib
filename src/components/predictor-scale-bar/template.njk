@@ -52,6 +52,9 @@ In template:
 {% set barTypeClass = '' %}
 {% if config.hasVeryHighBand !== true and config.showBandThresholdPercentages !== true %}
   {% set barTypeClass = 'arns-scale-bar--small' %}
+  {% if key === 'indirectImageContactSexualReoffendingPredictor' %}
+    {% set barTypeClass = 'arns-scale-bar--small arns-scale-bar--small-sanctions' %}
+  {% endif %}
 {% elif config.hasVeryHighBand === true and config.showBandThresholdPercentages !== true %}
   {% set barTypeClass = 'arns-scale-bar--small arns-scale-bar--small-fourths' %}
 {% elif config.hasVeryHighBand === true and config.showBandThresholdPercentages === true %}
