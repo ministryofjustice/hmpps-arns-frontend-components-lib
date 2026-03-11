@@ -6,6 +6,7 @@ import {
   getRenderedHtml,
   getRiskTestData,
   PredictorOption,
+  RiskTestDataOptions,
 } from '../test-utils/testEnvironmentHelper'
 import { BandLevel } from '../../types/dtos/BandLevel'
 
@@ -32,7 +33,7 @@ describe('predictor-scale', () => {
       )
 
       // assert scale bar exists
-      expect(document.querySelector('[data-test-id="barType"]')).toBeDefined()
+      expect(document.querySelector(`[data-test-id="${predictor}-scale"]`)).not.toBeNull()
     })
   })
 
@@ -54,6 +55,89 @@ describe('predictor-scale', () => {
     // Ensure standard scale elements are HIDDEN
     expect(document.querySelector('[data-test-id="scaleMarker"]')).toBeNull()
     expect(document.querySelector('[data-test-id="barType"]')).toBeNull()
+  })
+
+  const unknownScenarios: RiskTestDataOptions[] = [
+    {
+      predictor: 'rsr',
+      level: null,
+      score: 0,
+      staticOrDynamic: 'Static',
+      completedDate: '02 January 2026',
+    },
+    {
+      predictor: 'rsr',
+      level: BandLevel.LOW,
+      score: null,
+      staticOrDynamic: 'Static',
+      completedDate: '02 January 2026',
+    },
+    {
+      predictor: 'rsr',
+      level: BandLevel.LOW,
+      score: 0,
+      staticOrDynamic: null,
+      completedDate: '02 January 2026',
+    },
+    {
+      predictor: 'rsr',
+      level: BandLevel.LOW,
+      score: 0,
+      staticOrDynamic: 'Static',
+      completedDate: undefined,
+      allowNullCompletedDate: true,
+    },
+  ]
+
+  it.each(unknownScenarios)(
+    'should render only the Unknown message when either the band, score, staticOrDynamic or completedDate is missing',
+    ({ predictor, level, score, staticOrDynamic, completedDate, allowNullCompletedDate }) => {
+      const renderedHtml = getRenderedHtml(
+        dom,
+        'PREDICTOR_SCALE',
+        `predictor: "${predictor}"`,
+        getRiskTestData([
+          {
+            predictor,
+            level,
+            score,
+            staticOrDynamic,
+            completedDate,
+            allowNullCompletedDate,
+          },
+        ]),
+      )
+
+      const { document } = renderedHtml
+
+      expect(document.querySelector('[data-test-id="unknownSummary"]')?.innerHTML).toBe(
+        'The score cannot be calculated due to missing information (e.g. no assessment, completed, or required data not present).',
+      )
+
+      // Ensure standard scale elements are HIDDEN
+      expect(document.querySelector('[data-test-id="scaleMarker"]')).toBeNull()
+      expect(document.querySelector('[data-test-id="barType"]')).toBeNull()
+    },
+  )
+
+  it('should render scale when staticOrDynamic is null, but the predictor does not have a static/dynamic type', () => {
+    const predictor: PredictorOption = 'ogrs3'
+    const renderedHtml = getRenderedHtml(
+      dom,
+      'PREDICTOR_SCALE',
+      `predictor: "ogrs3"`,
+      getRiskTestData([{ predictor, level: BandLevel.LOW, score: 0, staticOrDynamic: null }]),
+    )
+
+    const { document } = renderedHtml
+
+    // Validate Header Name
+    expect(document.querySelector('[data-test-id="name"]')?.textContent).toBe(
+      expectedPredictorNameMappings[predictor].name,
+    )
+
+    // assert scale bar exists
+    expect(document.querySelector('[data-test-id="ogrs3-scale"]')).not.toBeNull()
   })
 
   it('should render the border box, staticOrDynamic and lastUpdated content and styles', () => {
