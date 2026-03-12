@@ -6,6 +6,8 @@ import {
   getRenderedHtml,
   getRiskTestData,
   PredictorOption,
+  RiskTestDataOptions,
+  StaticOrDynamicContent,
 } from '../test-utils/testEnvironmentHelper'
 import { BandLevel } from '../../types/dtos/BandLevel'
 
@@ -32,7 +34,7 @@ describe('predictor-scale', () => {
       )
 
       // assert scale bar exists
-      expect(document.querySelector('[data-test-id="barType"]')).toBeDefined()
+      expect(document.querySelector(`[data-test-id="${predictor}-scale"]`)).not.toBeNull()
     })
   })
 
@@ -55,6 +57,130 @@ describe('predictor-scale', () => {
     expect(document.querySelector('[data-test-id="scaleMarker"]')).toBeNull()
     expect(document.querySelector('[data-test-id="barType"]')).toBeNull()
   })
+
+  const unknownScenarios: RiskTestDataOptions[] = [
+    {
+      predictor: 'rsr',
+      level: null,
+      score: 0,
+    },
+    {
+      predictor: 'rsr',
+      level: undefined,
+      score: 0,
+    },
+    {
+      predictor: 'rsr',
+      level: BandLevel.LOW,
+      score: null,
+    },
+    {
+      predictor: 'rsr',
+      level: BandLevel.LOW,
+      score: undefined,
+    },
+  ]
+
+  it.each(unknownScenarios)(
+    'should render only the Unknown message when either the band or score is missing',
+    ({ predictor, level, score }) => {
+      const renderedHtml = getRenderedHtml(
+        dom,
+        'PREDICTOR_SCALE',
+        `predictor: "${predictor}"`,
+        getRiskTestData([
+          {
+            predictor,
+            level,
+            score,
+            staticOrDynamic: 'Static',
+          },
+        ]),
+      )
+
+      const { document } = renderedHtml
+
+      expect(document.querySelector('[data-test-id="unknownSummary"]')?.innerHTML).toBe(
+        'The score cannot be calculated due to missing information (e.g. no assessment, completed, or required data not present).',
+      )
+
+      // Ensure standard scale elements are HIDDEN
+      expect(document.querySelector('[data-test-id="scaleMarker"]')).toBeNull()
+      expect(document.querySelector('[data-test-id="barType"]')).toBeNull()
+    },
+  )
+
+  const missingStaticOrDynamicScenarios: StaticOrDynamicContent[] = [null, undefined]
+
+  it.each(missingStaticOrDynamicScenarios)(
+    'should render scale excluding staticOrDynamic when staticOrDynamic is missing',
+    staticOrDynamic => {
+      const predictor: PredictorOption = 'ogrs3'
+      const renderedHtml = getRenderedHtml(
+        dom,
+        'PREDICTOR_SCALE',
+        `predictor: "ogrs3"`,
+        getRiskTestData([
+          {
+            predictor,
+            level: BandLevel.LOW,
+            score: 0,
+            staticOrDynamic,
+          },
+        ]),
+      )
+
+      const { document } = renderedHtml
+
+      // Validate Header Name
+      expect(document.querySelector('[data-test-id="name"]')?.textContent).toBe(
+        expectedPredictorNameMappings[predictor].name,
+      )
+
+      // assert scale bar exists
+      expect(document.querySelector('[data-test-id="ogrs3-scale"]')).not.toBeNull()
+
+      // assert static or dynamic is excluded
+      expect(document.querySelector('[data-test-id="staticOrDynamic"]')).toBeNull()
+    },
+  )
+
+  const missingCompletedDateScenarios: string[] = [null, undefined, '']
+
+  it.each(missingCompletedDateScenarios)(
+    'should render scale with unknown last updated date when completedDate is missing',
+    completedDate => {
+      const predictor: PredictorOption = 'ogrs3'
+      const renderedHtml = getRenderedHtml(
+        dom,
+        'PREDICTOR_SCALE',
+        `predictor: "ogrs3"`,
+        getRiskTestData([
+          {
+            predictor,
+            level: BandLevel.LOW,
+            score: 0,
+            staticOrDynamic: 'Static',
+            completedDate,
+            allowFalseyCompletedDate: true,
+          },
+        ]),
+      )
+
+      const { document } = renderedHtml
+
+      // Validate Header Name
+      expect(document.querySelector('[data-test-id="name"]')?.textContent).toBe(
+        expectedPredictorNameMappings[predictor].name,
+      )
+
+      // assert scale bar exists
+      expect(document.querySelector('[data-test-id="ogrs3-scale"]')).not.toBeNull()
+
+      // assert last updated date is unknown
+      expect(document.querySelector('[data-test-id="LastUpdatedDate"]')?.textContent).toBe('Last updated: unknown')
+    },
+  )
 
   it('should render the border box, staticOrDynamic and lastUpdated content and styles', () => {
     const predictor: PredictorOption = 'rsr'

@@ -60,7 +60,7 @@ In template:
         {% set badgeWidthClass = 'arns-expanded-predictor-badge__dynamic' %}
       {% endif %}
 
-      {% if predictor.band is undefined or (shouldShowScore == true and predictor.score is undefined) %}
+      {% if predictor.band == null or (shouldShowScore == true and predictor.score == null) %}
         {% set band = 'UNKNOWN' %}
         {% set badgeClass = 'arns-expanded-predictor-badge--default' %}
       {% else %}

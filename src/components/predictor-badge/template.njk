@@ -57,7 +57,7 @@
           {% set badgeClass = 'arns-predictor-badge--default' %}
       {% endswitch %}
 
-      {% if predictor.band is undefined or (shouldShowScore == true and predictor.score is undefined) %}
+      {% if predictor.band == null or (shouldShowScore == true and predictor.score == null) %}
         {% set band = 'UNKNOWN' %}
         {% set badgeClass = 'arns-predictor-badge--default' %}
       {% else %}
