@@ -200,7 +200,7 @@ export type RiskTestDataOptions = {
   score?: number
   staticOrDynamic?: StaticOrDynamicContent
   completedDate?: string
-  allowNullCompletedDate?: boolean
+  allowFalseyCompletedDate?: boolean
 }
 
 export const getRiskTestData = (predictors: RiskTestDataOptions[]): RiskData => {
@@ -321,7 +321,7 @@ export const getRiskTestData = (predictors: RiskTestDataOptions[]): RiskData => 
       ? options.staticOrDynamic
       : null
     predictor.completedDate =
-      options.completedDate || (options.allowNullCompletedDate ? options.completedDate : '02 January 2024')
+      options.completedDate || (options.allowFalseyCompletedDate ? options.completedDate : '02 January 2024')
   })
 
   return { assessments: [assessmentToUpdate, v1assessment, v2assessment], httpStatus: 200 }

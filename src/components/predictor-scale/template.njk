@@ -30,10 +30,8 @@ In template:
   {% for key, predictor in latestAssessment %}
     {% if key == params.predictor %}
 
-      {% set config = predictorConfig[key] %}
-
       <div class="arns-predictor-scale govuk-body" data-predictor-scale="{{ predictor.name }}">
-        {% if predictor.band == null or predictor.score == null or (config.hasStaticOrDynamic and predictor.staticOrDynamic == null) or predictor.completedDate == null %}
+        {% if predictor.band == null or predictor.score == null %}
           <h2 class="govuk-heading-m" data-test-id="name">{{ predictor.name }}</h2>
           <p class="govuk-body" data-test-id="unknownSummary">The score cannot be calculated due to missing information (e.g. no assessment, completed, or required data not present).</p>
         {% elif predictor.band === 'NOT APPLICABLE' %}
@@ -43,7 +41,7 @@ In template:
           <div class="arns-predictor-scale-header-wrapper">
             <div>
               <h2 class="govuk-heading-m" data-test-id="name">{{ predictor.name }}</h2>
-              <p class="govuk-hint" data-test-id="LastUpdatedDate">Last updated: {{ predictor.completedDate }}</p>
+              <p class="govuk-hint" data-test-id="LastUpdatedDate">Last updated: {{ predictor.completedDate if predictor.completedDate else 'unknown' }}</p>
             </div>
             {% if predictor.staticOrDynamic %}
               <div data-test-id="staticOrDynamic">{{ govukTag({ text: predictor.staticOrDynamic, classes: "govuk-tag--grey"}) }}</div>
