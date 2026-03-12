@@ -20,6 +20,7 @@ In template:
 @param {object} params
   @param {RiskData} params.data - Risk data object from ArnsComponents.getRiskData() containing an 'assessments' array
   @param {string} params.predictor - The name of the specific predictor to display
+  @param {boolean} [params.legacyFallback] - Optional (default false) - If true and predictor requested is OGRS4-gen, fallback to showing the OGRS3-gen predictor if the latest assessment is OGRS3-gen.
 #}
 {%- from "govuk/components/tag/macro.njk" import govukTag -%}
 {%- from "../predictor-scale-bar/macro.njk" import predictorScaleBar -%}
@@ -27,8 +28,17 @@ In template:
 {% set latestAssessment = params.data.assessments | first if params.data.assessments else null %}
 
 {% if latestAssessment %}
+
+  {% set config = predictorConfig[params.predictor] %}
+
+  {% if params.legacyFallback and config.fallbackPredictor and latestAssessment.outputVersion == '1' %}
+      {% set predictorToRender = config.fallbackPredictor %}
+  {% else %}
+      {% set predictorToRender = params.predictor %}
+  {% endif %}
+
   {% for key, predictor in latestAssessment %}
-    {% if key == params.predictor %}
+    {% if key == predictorToRender %}
 
       <div class="arns-predictor-scale govuk-body" data-predictor-scale="{{ predictor.name }}">
         {% if predictor.band == null or predictor.score == null %}

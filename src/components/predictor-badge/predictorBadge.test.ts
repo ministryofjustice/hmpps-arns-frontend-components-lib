@@ -7,6 +7,7 @@ import {
   getInitialDom,
   getRenderedHtml,
   getRiskTestData,
+  legacyFallbackTestCases,
   predictorConfig,
   PredictorOption,
   StaticOrDynamicContent,
@@ -74,52 +75,7 @@ describe('predictor-badge', () => {
   )
 
   describe('legacy fallback', () => {
-    it.each([
-      // When legacy predictor in assessment and requested, return legacy predictor
-      ['ogrs3', 'ogrs3', 'ogrs3'],
-      ['ovp', 'ovp', 'ovp'],
-      ['ogp', 'ogp', 'ogp'],
-      ['ospdc', 'ospdc', 'ospdc'],
-      ['ospiic', 'ospiic', 'ospiic'],
-      ['rsr', 'rsr', 'rsr'],
-      // When legacy predictor in assessment and new predictor is requested, return legacy predictor, apart from CSRP which has no fallback
-      ['ogrs3', 'allReoffendingPredictor', 'ogrs3'],
-      ['ovp', 'violentReoffendingPredictor', 'ovp'],
-      ['rsr', 'seriousViolentReoffendingPredictor', null],
-      ['ospdc', 'directContactSexualReoffendingPredictor', 'ospdc'],
-      ['ospiic', 'indirectImageContactSexualReoffendingPredictor', 'ospiic'],
-      ['rsr', 'combinedSeriousReoffendingPredictor', 'rsr'],
-      // When new predictor in assessment and requested, return new predictor
-      ['allReoffendingPredictor', 'allReoffendingPredictor', 'allReoffendingPredictor'],
-      ['violentReoffendingPredictor', 'violentReoffendingPredictor', 'violentReoffendingPredictor'],
-      [
-        'seriousViolentReoffendingPredictor',
-        'seriousViolentReoffendingPredictor',
-        'seriousViolentReoffendingPredictor',
-      ],
-      [
-        'directContactSexualReoffendingPredictor',
-        'directContactSexualReoffendingPredictor',
-        'directContactSexualReoffendingPredictor',
-      ],
-      [
-        'indirectImageContactSexualReoffendingPredictor',
-        'indirectImageContactSexualReoffendingPredictor',
-        'indirectImageContactSexualReoffendingPredictor',
-      ],
-      [
-        'combinedSeriousReoffendingPredictor',
-        'combinedSeriousReoffendingPredictor',
-        'combinedSeriousReoffendingPredictor',
-      ],
-      // When new predictor in assessment and legacy predictor requested, nothing is displayed
-      ['allReoffendingPredictor', 'ogrs3', null],
-      ['violentReoffendingPredictor', 'ovp', null],
-      ['seriousViolentReoffendingPredictor', 'rsr', null],
-      ['directContactSexualReoffendingPredictor', 'ospdc', null],
-      ['indirectImageContactSexualReoffendingPredictor', 'ospiic', null],
-      ['combinedSeriousReoffendingPredictor', 'rsr', null],
-    ])(
+    it.each(legacyFallbackTestCases)(
       'Legacy fallback, assessmentPredictor: %s, predictorInMacro: %s, predictorRendered: %s',
       (assessmentPredictor: PredictorOption, predictorInMacro: PredictorOption, predictorRendered: PredictorOption) => {
         const renderedHtml = getRenderedHtml(
