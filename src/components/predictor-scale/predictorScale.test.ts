@@ -145,7 +145,7 @@ describe('predictor-scale', () => {
     },
   )
 
-  const missingCompletedDateScenarios: string[] = [null, undefined, ""]
+  const missingCompletedDateScenarios: string[] = [null, undefined, '']
 
   it.each(missingCompletedDateScenarios)(
     'should render scale with unknown last updated date when completedDate is missing',
