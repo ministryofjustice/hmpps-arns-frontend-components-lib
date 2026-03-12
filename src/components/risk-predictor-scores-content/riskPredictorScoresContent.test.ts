@@ -35,7 +35,7 @@ export const validatePredictorScoresSource = (renderedHtml: DOMWindow, riskData:
     renderedHtml.document.querySelector('[data-test-id="violentReoffendingPredictor-scale"]'),
     renderedHtml.document.querySelector('[data-test-id="seriousViolentReoffendingPredictor-scale"]'),
     renderedHtml.document.querySelector('[data-test-id="directContactSexualReoffendingPredictor-scale"]'),
-    renderedHtml.document.querySelector('[data-test-id="imagesAndIndirectContactSexualReoffendingPredictor-scale"]'),
+    renderedHtml.document.querySelector('[data-test-id="indirectImageContactSexualReoffendingPredictor-scale"]'),
     renderedHtml.document.querySelector('[data-test-id="combinedSeriousReoffendingPredictor-scale"]'),
   ]
 
