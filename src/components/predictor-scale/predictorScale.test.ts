@@ -50,7 +50,7 @@ describe('predictor-scale', () => {
     const { document } = renderedHtml
 
     expect(document.querySelector('[data-test-id="notApplicableSummary"]')?.innerHTML).toBe(
-      'We only calculate sexual reoffending predictor scores for men with a known history of sexual or sexually motivated offending. This individual does not have a score for this predictor.',
+      'We only calculate sexual reoffending predictor scores for men with a known history of sexual or sexually motivated offending. This person does not have a score for this predictor.',
     )
 
     // Ensure standard scale elements are HIDDEN

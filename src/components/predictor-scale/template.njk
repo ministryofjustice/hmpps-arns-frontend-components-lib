@@ -36,7 +36,7 @@ In template:
           <p class="govuk-body" data-test-id="unknownSummary">The score cannot be calculated due to missing information (e.g. no assessment, completed, or required data not present).</p>
         {% elif predictor.band === 'NOT APPLICABLE' %}
           <h2 class="govuk-heading-m" data-test-id="name">{{ predictor.name }}</h2>
-          <p class="govuk-body" data-test-id="notApplicableSummary">We only calculate sexual reoffending predictor scores for men with a known history of sexual or sexually motivated offending. This individual does not have a score for this predictor.</p>
+          <p class="govuk-body" data-test-id="notApplicableSummary">We only calculate sexual reoffending predictor scores for men with a known history of sexual or sexually motivated offending. This person does not have a score for this predictor.</p>
         {% else %}
           <div class="arns-predictor-scale-header-wrapper">
             <div>
