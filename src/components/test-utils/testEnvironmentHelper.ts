@@ -198,12 +198,13 @@ type PredictorNameProperties = {
 
 export type StaticOrDynamicContent = 'Static' | 'Dynamic'
 
-type RiskTestDataOptions = {
+export type RiskTestDataOptions = {
   predictor: PredictorOption
-  level: BandLevel
-  score: number
-  staticOrDynamic: StaticOrDynamicContent
+  level?: BandLevel
+  score?: number
+  staticOrDynamic?: StaticOrDynamicContent
   completedDate?: string
+  allowFalseyCompletedDate?: boolean
 }
 
 export const getRiskTestData = (predictors: RiskTestDataOptions[]): RiskData => {
@@ -323,7 +324,8 @@ export const getRiskTestData = (predictors: RiskTestDataOptions[]): RiskData => 
     predictor.staticOrDynamic = expectedPredictorNameMappings[options.predictor].showStaticDynamic
       ? options.staticOrDynamic
       : null
-    predictor.completedDate = options.completedDate || '02 January 2024'
+    predictor.completedDate =
+      options.completedDate || (options.allowFalseyCompletedDate ? options.completedDate : '02 January 2024')
   })
 
   return { assessments: [assessmentToUpdate, v1assessment, v2assessment], httpStatus: 200 }

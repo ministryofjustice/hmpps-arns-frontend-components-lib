@@ -41,12 +41,14 @@ export const predictorConfig = {
     hasVeryHighBand: true,
     showBandThresholdPercentages: true,
     bandThresholdPercentages: ['0%', '50%', '75%', '90%', '100%'],
+    fallbackPredictor: 'ogrs3',
   },
   violentReoffendingPredictor: {
     showScore: true,
     hasVeryHighBand: true,
     showBandThresholdPercentages: true,
     bandThresholdPercentages: ['0%', '30%', '60%', '80%', '100%'],
+    fallbackPredictor: 'ovp',
   },
   seriousViolentReoffendingPredictor: {
     showScore: true,
@@ -59,17 +61,20 @@ export const predictorConfig = {
     hasVeryHighBand: true,
     showBandThresholdPercentages: true,
     bandThresholdPercentages: ['0%', '0.6%', '2.1%', '5.3%', '83.1%'],
+    fallbackPredictor: 'ospdc',
   },
   indirectImageContactSexualReoffendingPredictor: {
     showScore: false,
     hasVeryHighBand: false,
     showBandThresholdPercentages: false,
+    fallbackPredictor: 'ospiic',
   },
   combinedSeriousReoffendingPredictor: {
     showScore: true,
     hasVeryHighBand: true,
     showBandThresholdPercentages: true,
     bandThresholdPercentages: ['0%', '1%', '3%', '6.9%', '25%+'],
+    fallbackPredictor: 'rsr',
   },
 }
 
