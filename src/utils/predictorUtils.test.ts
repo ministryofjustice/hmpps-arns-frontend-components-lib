@@ -1,4 +1,10 @@
-import { convertScoreToScaleMarkerPosition, convertBandToScaleMarkerPosition, Band } from './predictorUtils'
+import {
+  convertScoreToScaleMarkerPosition,
+  convertBandToScaleMarkerPosition,
+  Band,
+  containsCompletedAssessment,
+} from './predictorUtils'
+import { RiskData } from '../types/RiskData'
 
 describe('predictorUtils', () => {
   describe('convertScoreToScalePosition', () => {
@@ -110,6 +116,71 @@ describe('predictorUtils', () => {
         // visualiseTestResult(0, includeVeryHigh ? [0, 25, 50, 75, 100] : [0, 33, 67, 100], expectedPosition)
       },
     )
+  })
+
+  describe('containsCompletedAssessment', () => {
+    it('should return true when httpStatus is 200 and assessments exist', () => {
+      const data: RiskData = {
+        httpStatus: 200,
+        assessments: [
+          {
+            outputVersion: '2',
+            completedDate: '01 January 2026',
+            completedDateTime: '01 January 2026 at 12:00',
+            assessmentType: 'layer 3',
+          },
+        ],
+      }
+      expect(containsCompletedAssessment(data)).toBe(true)
+    })
+
+    it('should return false when httpStatus is not 200', () => {
+      const data: RiskData = {
+        httpStatus: 404,
+        assessments: [
+          {
+            outputVersion: '2',
+            completedDate: '01 January 2026',
+            completedDateTime: '01 January 2026 at 12:00',
+            assessmentType: 'layer 3',
+          },
+        ],
+      }
+      expect(containsCompletedAssessment(data)).toBe(false)
+    })
+
+    it('should return false when assessments array is empty', () => {
+      const data: RiskData = {
+        httpStatus: 200,
+        assessments: [],
+      }
+      expect(containsCompletedAssessment(data)).toBe(false)
+    })
+
+    it('should return false when data is null or undefined', () => {
+      expect(containsCompletedAssessment(null)).toBe(false)
+      expect(containsCompletedAssessment(undefined)).toBe(false)
+    })
+
+    it('should return false if httpStatus property is null', () => {
+      const data: RiskData = {
+        httpStatus: null,
+        assessments: [
+          {
+            outputVersion: '2',
+            completedDate: '01 January 2026',
+            completedDateTime: '01 January 2026 at 12:00',
+            assessmentType: 'layer 3',
+          },
+        ],
+      }
+      expect(containsCompletedAssessment(data)).toBe(false)
+    })
+
+    it('should return false if assessments property is null', () => {
+      const data: RiskData = { httpStatus: 200, assessments: null }
+      expect(containsCompletedAssessment(data)).toBe(false)
+    })
   })
 })
 

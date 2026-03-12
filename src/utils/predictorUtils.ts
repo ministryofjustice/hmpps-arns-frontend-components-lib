@@ -1,3 +1,5 @@
+import { RiskData } from '../types/RiskData'
+
 export type Band = 'LOW' | 'MEDIUM' | 'HIGH' | 'VERY HIGH' | 'NOT APPLICABLE'
 
 export const convertScoreToScaleMarkerPosition = (score: number, thresholds: (number | string)[]): string => {
@@ -56,4 +58,8 @@ export const convertBandToScaleMarkerPosition = (band: Band, hasVeryHighBand: bo
     default:
       throw new Error(`Unexpected band ${band}`)
   }
+}
+
+export const containsCompletedAssessment = (data: RiskData): boolean => {
+  return data?.httpStatus === 200 && (data?.assessments?.length ?? 0) > 0
 }
