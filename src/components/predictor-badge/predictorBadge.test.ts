@@ -72,6 +72,65 @@ describe('predictor-badge', () => {
       validateBadge(renderedHtml, predictor, level, score, staticOrDynamic, showScore)
     },
   )
+
+  describe('legacy fallback', () => {
+    it.each([
+      ['ogrs3', 'ogrs3', 'ogrs3'],
+      ['ovp', 'ovp', 'ovp'],
+      ['ogp', 'ogp', 'ogp'],
+      ['ospdc', 'ospdc', 'ospdc'],
+      ['ospiic', 'ospiic', 'ospiic'],
+      ['rsr', 'rsr', 'rsr'],
+      ['ogrs3', 'allReoffendingPredictor', 'ogrs3'],
+      ['ovp', 'violentReoffendingPredictor', 'ovp'],
+      ['rsr', 'seriousViolentReoffendingPredictor', null],
+      ['ospdc', 'directContactSexualReoffendingPredictor', 'ospdc'],
+      ['ospiic', 'indirectImageContactSexualReoffendingPredictor', 'ospiic'],
+      ['rsr', 'combinedSeriousReoffendingPredictor', 'rsr'],
+      ['allReoffendingPredictor', 'allReoffendingPredictor', 'allReoffendingPredictor'],
+      ['violentReoffendingPredictor', 'violentReoffendingPredictor', 'violentReoffendingPredictor'],
+      [
+        'seriousViolentReoffendingPredictor',
+        'seriousViolentReoffendingPredictor',
+        'seriousViolentReoffendingPredictor',
+      ],
+      [
+        'directContactSexualReoffendingPredictor',
+        'directContactSexualReoffendingPredictor',
+        'directContactSexualReoffendingPredictor',
+      ],
+      [
+        'indirectImageContactSexualReoffendingPredictor',
+        'indirectImageContactSexualReoffendingPredictor',
+        'indirectImageContactSexualReoffendingPredictor',
+      ],
+      [
+        'combinedSeriousReoffendingPredictor',
+        'combinedSeriousReoffendingPredictor',
+        'combinedSeriousReoffendingPredictor',
+      ],
+    ])(
+      'Legacy fallback, assessmentPredictor: %s, predictorInMacro: %s, predictorRendered: %s',
+      (assessmentPredictor: PredictorOption, predictorInMacro: PredictorOption, predictorRendered: PredictorOption) => {
+        const renderedHtml = getRenderedHtml(
+          dom,
+          'PREDICTOR_BADGE',
+          `predictor: "${predictorInMacro}", legacyFallback: true`,
+          getRiskTestData([
+            { predictor: assessmentPredictor, level: BandLevel.LOW, score: 12.34, staticOrDynamic: 'Static' },
+          ]),
+        )
+        const name = renderedHtml.document.querySelector('[data-test-id="nameAndBand"]')
+        if (predictorRendered) {
+          expect(name.innerHTML).toBe(
+            `${expectedPredictorNameMappings[predictorRendered].badgeContent} <strong>LOW</strong>`,
+          )
+        } else {
+          expect(name).toBeNull()
+        }
+      },
+    )
+  })
 })
 
 const validateBadge = (

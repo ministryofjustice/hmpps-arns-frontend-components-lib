@@ -1,3 +1,6 @@
+import { Assessments } from '../types/Assessments'
+import { RiskData } from '../types/RiskData'
+
 export type Band = 'LOW' | 'MEDIUM' | 'HIGH' | 'VERY HIGH' | 'NOT APPLICABLE'
 
 export const convertScoreToScaleMarkerPosition = (score: number, thresholds: (number | string)[]): string => {
