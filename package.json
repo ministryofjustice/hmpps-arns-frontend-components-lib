@@ -20,9 +20,6 @@
     "lint": "eslint . --cache --max-warnings 0",
     "lint:fix": "eslint . --cache --max-warnings 0 --fix",
     "security_audit": "npx audit-ci --config audit-ci.json",
-    "precommit:secrets": "gitleaks git --pre-commit --redact --staged --verbose --config .gitleaks/config.toml",
-    "precommit:lint": "node_modules/.bin/lint-staged",
-    "precommit:verify": "npm run typecheck",
     "setup": "npm ci && hmpps-npm-script-run-allowlist"
   },
   "lint-staged": {
