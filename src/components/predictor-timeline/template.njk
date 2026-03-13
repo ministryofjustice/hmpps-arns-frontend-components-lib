@@ -195,7 +195,7 @@ In template:
           aria-controls="{{ allSectionIds }}" aria-expanded="false">Open all</button>
 </div>
 
-<div class="predictor-timeline predictor" data-test-id="predictor-timeline">
+<div class="predictor-timeline predictor" data-test-id="predictor-timeline" data-module="predictor-timeline">
   {% for item in assessments %}
 
     {% set sectionId = "predictor-section-" + (item.completedDateTime | replace(" ", "-") | replace(":", "-") | lower) %}
