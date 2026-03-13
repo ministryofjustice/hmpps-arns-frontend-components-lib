@@ -1,0 +1,239 @@
+{#
+ARNS Predictor Timeline Component
+
+@name predictorTimeline
+
+@description Displays the history of a sujects assessments.
+
+@example
+In route handler:
+  const riskData = await arnsComponents.getRiskData(token, 'crn', 'X123456')
+  res.render('page', { riskData })
+
+In template:
+  {% from "components/predictor-timeline/macro.njk" import predictorTimeline %}
+  {{ predictorTimeline({
+    data: riskData,
+    ogrs4ReleaseDate: "23 February 2026 at 09:00"
+  }) }}
+
+@param {object} params
+  @param {RiskData} params.data - Risk data object from ArnsComponents.getRiskData() containing an 'assessments' array
+  @param {string} params.ogrs4ReleaseDate - The release date for the warning macro
+#}
+{% set ogrs4ReleaseDate = params.ogrs4ReleaseDate | default("23 February 2026 at 09:00") %}
+{% set hasTimelineWarning = false %}
+
+{% macro predictorTimelineItem(predictor, isLegacy) %}
+  {% if predictor %}
+
+    {% set timelineItemClass = '' %}
+
+    {% if isLegacy %}
+
+      {% switch predictor.band %}
+      {% case 'VERY HIGH' %}
+        {% set timelineItemClass = 'legacy-predictor-timeline-item--very-high' %}
+      {% case 'HIGH' %}
+        {% set timelineItemClass = 'legacy-predictor-timeline-item--high' %}
+      {% case 'MEDIUM' %}
+        {% set timelineItemClass = 'legacy-predictor-timeline-item--medium' %}
+      {% case 'LOW' %}
+        {% set timelineItemClass = 'legacy-predictor-timeline-item--low' %}
+      {% default %}
+        {% set timelineItemClass = 'legacy-predictor-timeline-item--default' %}
+      {% endswitch %}
+
+      {% if predictor.band is undefined %}
+        {% set band = 'UNKNOWN' %}
+        {% set timelineItemClass = 'legacy-predictor-timeline-item--default' %}
+      {% else %}
+        {% set band = predictor.band | replace('_', ' ') %}
+      {% endif %}
+
+      <div class="{{ timelineItemClass }}" data-predictor-badge="{{ predictor.name }} {{ band }}">
+        <span class="legacy-predictor-timeline-item__type_and_level" data-test-id="nameAndBand">{{ predictor.name | upper }} <strong>{{ band }}</strong></span>
+
+        {% if predictor.score and timelineItemClass != 'legacy-predictor-timeline-item--default' %}
+          <span class="legacy-predictor-timeline-item__score" data-test-id="score">{{ predictor.score }}%</span>
+        {% endif %}
+
+        {% if predictor.staticOrDynamic and timelineItemClass != 'legacy-predictor-timeline-item--default' %}
+          <span class="legacy-predictor-timeline-item__static_or_dynamic" data-test-id="staticOrDynamic">{{ predictor.staticOrDynamic }}</span>
+        {% endif %}
+
+      </div>
+
+    {% else %}
+
+      {% switch predictor.band %}
+      {% case 'VERY HIGH' %}
+        {% set timelineItemClass = 'predictor-timeline-item--very-high' %}
+      {% case 'HIGH' %}
+        {% set timelineItemClass = 'predictor-timeline-item--high' %}
+      {% case 'MEDIUM' %}
+        {% set timelineItemClass = 'predictor-timeline-item--medium' %}
+      {% case 'LOW' %}
+        {% set timelineItemClass = 'predictor-timeline-item--low' %}
+      {% default %}
+        {% set timelineItemClass = 'predictor-timeline-item--default' %}
+      {% endswitch %}
+
+      {% set staticOrDynamicClass = 'predictor-timeline-item__static_or_dynamic' %}
+      {% if predictor.score and predictor.band in ['VERY HIGH', 'MEDIUM'] and predictor.staticOrDynamic | upper === 'DYNAMIC' %}
+        {% set staticOrDynamicClass = staticOrDynamicClass + ' predictor-timeline-item__wrapped_static_or_dynamic' %}
+      {% endif %}
+
+      {% if predictor.band is undefined %}
+        {% set band = 'UNKNOWN' %}
+        {% set timelineItemClass = 'predictor-timeline-item--default' %}
+      {% else %}
+        {% set band = predictor.band | replace('_', ' ') %}
+      {% endif %}
+
+      <div class="{{ timelineItemClass }}" data-expanded-predictor-badge="{{ predictor.name }} {{ band }}">
+        <span class="predictor-timeline-item__type" data-test-id="name">{{ predictor.name }}</span>
+
+        <div class="predictor-timeline-item__stats">
+          <span class="predictor-timeline-item__level" data-test-id="band">{{ band }}</span>
+
+          {% if predictor.score and timelineItemClass != 'predictor-timeline-item--default' %}
+            <span class="predictor-timeline-item__score" data-test-id="score">{{ predictor.score }}%</span>
+          {% endif %}
+
+          {% if predictor.staticOrDynamic and timelineItemClass != 'predictor-timeline-item--default' %}
+            <span class="{{ staticOrDynamicClass }}" data-test-id="staticOrDynamic">{{ predictor.staticOrDynamic }}</span>
+          {% endif %}
+
+        </div>
+      </div>
+    {% endif %}
+  {% endif %}
+{% endmacro %}
+
+{% macro timelineWarning() %}
+  <div class="predictor-timeline__item" data-test-id="timeline-item">
+    <div class="predictor-timeline__header">
+      <p class="predictor-timeline__byline">{{ ogrs4ReleaseDate }}</p>
+    </div>
+    <div class="predictor-timeline__description">
+      <div class="govuk-warning-text predictor-timeline__warning">
+        <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
+        <strong class="govuk-warning-text__text" data-test-id="warning-text">
+                <span
+                        class="govuk-visually-hidden">Warning the risk predictor tools have been updated after this date</span>
+          All assessments started after this date use updated risk predictor tools
+        </strong>
+      </div>
+      <details class="govuk-details predictor-timeline__details">
+        <summary class="govuk-details__summary">
+              <span class="govuk-details__summary-text">
+                How the risk predictor tools have changed
+              </span>
+        </summary>
+        <div class="govuk-details__text">
+          <h3>All reoffending</h3>
+          <b>Old version:</b> Offender Group Reconviction Scale (OGRS)<br>
+          <b>Updated version:</b> All Reoffending Predictor<br>
+          <br>
+          The All Reoffending Predictor now has both a static and dynamic version.
+          <br><br>
+          <h3>Violent reoffending</h3>
+          <b>Old version:</b> OASys Violent Predictor (OVP)<br>
+          <b>Updated version:</b> Violent Reoffending Predictor<br>
+          <br>
+          The Violent Reoffending Predictor now has both a static and dynamic version.
+          <br><br>
+          <h3>Sexual reoffending</h3>
+          <h4>Direct contact</h4>
+          <b>Old version:</b> OASys Sexual Predictor — Direct Contact (OSP-DC)<br>
+          <b>Updated version:</b> Direct Contact — Sexual Reoffending Predictor<br>
+          <br>
+          The Direct Contact — Sexual Reoffending Predictor only has a static score.
+          <br>
+          <h4>Indirect contact</h4>
+          <b>Old version:</b> OASys Sexual Predictor — Images and indirect contact with children (OSP-IIC)<br>
+          <b>Updated version:</b> Images and Indirect Contact — Sexual Reoffending Predictor<br>
+          <br>
+          The Images and Indirect Contact — Sexual Reoffending Predictor only has a static score.
+          <br><br>
+          <h3>Serious non-sexual violent reoffending</h3>
+          <b>Old version:</b> Previously part of RSR but not displayed<br>
+          <b>Updated version:</b> Serious Violent Reoffending Predictor<br>
+          <br>
+          The Serious Violent Reoffending Predictor has both static and dynamic versions.
+          <br><br>
+          <h3>Serious reoffending</h3>
+          This predictor is a combination of the Direct Contact — Sexual Reoffending Predictor, Images and
+          Indirect Contact — Sexual Reoffending Predictor and Serious Violent Reoffending Predictor scores.
+          <br>
+          <b>Old version:</b> Risk of Serious Recidivism (RSR)<br>
+          <b>Updated version:</b> Combined Serious Reoffending Predictor<br>
+          <br>
+          The Combined Serious Reoffending Predictor has both static and dynamic versions.
+          <br><br>
+          <h3>Which version will be displayed</h3>
+          All tools only show a dynamic score if both versions are available.
+          <br>
+        </div>
+      </details>
+    </div>
+  </div>
+{% endmacro %}
+
+{% set assessments = params.data.assessments %}
+
+{% set allSectionIds %}
+  {%- for item in assessments -%}
+    predictor-section-{{ item.completedDateTime | replace(" ", "-") | replace(":", "-") | lower }}{{ " " if not loop.last }}
+  {%- endfor -%}
+{% endset %}
+
+<div class="predictor-timeline__heading" data-test-id="timeline-heading">
+  <span class='govuk-heading-m'>Scores history</span>
+  <button id="predictor-timeline__toggle-all" class="predictor-timeline-link-btn" aria-label="Open all score history"
+          aria-controls="{{ allSectionIds }}" aria-expanded="false">Open all</button>
+</div>
+
+<div class="predictor-timeline predictor" data-test-id="predictor-timeline">
+  {% for item in assessments %}
+
+    {% set sectionId = "predictor-section-" + (item.completedDateTime | replace(" ", "-") | replace(":", "-") | lower) %}
+
+    {% if hasTimelineWarning === false %}
+      {% if item.completedDateTime | isBefore(ogrs4ReleaseDate) %}
+        {{ timelineWarning() }}
+        {% set hasTimelineWarning = true %}
+      {% endif %}
+    {% endif %}
+
+    <div class="predictor-timeline__item" data-test-id="timeline-item">
+      <div class="predictor-timeline__header" data-test-id="timeline-item-header">
+        <p class="predictor-timeline__byline" data-test-id="timeline-byline">{{ item.completedDateTime }}</p>
+      </div>
+      <div class="predictor-timeline__description" data-test-id="timeline-description">
+        <div id="{{ sectionId }}" class="predictor-timeline-section">
+          <ul class="govuk-list">
+            {% set excluded_fields = ['outputVersion', 'completedDate', 'completedDateTime', 'assessmentType'] %}
+            {% for key, value in item %}
+              {% if key not in excluded_fields %}
+                {% if key | upper not in ['OGRS3', 'OGP', 'OVP', 'RSR', 'OSPDC', 'OSPC', 'OSPIIC', 'OSPI'] %}
+                  <li>{{ predictorTimelineItem(value, false) }}</li>
+                {% else %}
+                  <li>{{ predictorTimelineItem(value, true) }}</li>
+                {% endif %}
+              {% endif %}
+            {% endfor %}
+          </ul>
+        </div>
+        <button class="predictor-timeline-link-btn predictor-timeline__toggle-section" aria-label="View scores for {{ item.completedDateTime }}"
+                aria-controls="{{ sectionId }}" aria-expanded="false">Open</button>
+      </div>
+    </div>
+  {% endfor %}
+
+  {% if hasTimelineWarning === false %}
+    {{ timelineWarning() }}
+  {% endif %}
+
+</div>
