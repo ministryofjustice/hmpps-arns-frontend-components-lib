@@ -14,7 +14,11 @@ $default-colour: govuk-colour("mid-grey");
 $default-colour--light: govuk-colour("light-grey");
 $default-colour__text: govuk-colour("black");
 
-.predictor-timeline {
+.js-enabled .arns-predictor-timeline-section--hidden {
+  display: none;
+}
+
+.arns-predictor-timeline {
   margin-bottom: govuk-spacing(4);
   overflow: hidden;
   position: relative;
@@ -30,7 +34,7 @@ $default-colour__text: govuk-colour("black");
   }
 }
 
-.predictor-timeline__item {
+.arns-predictor-timeline__item {
   padding-bottom: govuk-spacing(6);
   padding-left: govuk-spacing(4);
   position: relative;
@@ -46,56 +50,56 @@ $default-colour__text: govuk-colour("black");
   }
 }
 
-.predictor-timeline__byline {
+.arns-predictor-timeline__byline {
   @include govuk-font($size: 19);
   color: $govuk-text-colour;
   display: inline;
   margin: 0;
 }
 
-.predictor-timeline__description {
+.arns-predictor-timeline__description {
   @include govuk-font($size: 19);
   margin-top: govuk-spacing(4);
 }
 
-.predictor-timeline__heading {
+.arns-predictor-timeline__heading {
   margin-bottom: govuk-spacing(6);
 }
 
-.predictor-timeline__warning {
+.arns-predictor-timeline__warning {
   margin-bottom: 10px !important;
 }
 
-.predictor-timeline__details {
+.arns-predictor-timeline__details {
   margin-bottom: 0 !important;
 }
 
-@mixin predictor-timeline-item-base($primary-colour, $secondary-colour, $text-colour) {
+@mixin arns-predictor-timeline-item-base($primary-colour, $secondary-colour, $text-colour) {
   display: inline-flex;
   flex-direction: column;
   outline: 2px solid $primary-colour;
   width: 259px;
   margin-bottom: 5px;
 
-  & .predictor-timeline-item__type {
+  & .arns-predictor-timeline-item__type {
     @include govuk-font(19, "bold");
     color: govuk-colour("black");
 
     padding: 10px 10px 2px 10px;
   }
 
-  & .predictor-timeline-item__stats {
+  & .arns-predictor-timeline-item__stats {
     padding: 2px 10px 10px 10px;
   }
 
-  & .predictor-timeline-item__level {
+  & .arns-predictor-timeline-item__level {
     @include govuk-font(19, "bold");
     color: $text-colour;
 
     padding: 0;
   }
 
-  & .predictor-timeline-item__score {
+  & .arns-predictor-timeline-item__score {
     @include govuk-font(19, "bold");
     color: govuk-colour("black");
 
@@ -104,7 +108,7 @@ $default-colour__text: govuk-colour("black");
     padding: 2px 5px;
   }
 
-  & .predictor-timeline-item__static_or_dynamic {
+  & .arns-predictor-timeline-item__static_or_dynamic {
     @include govuk-font(19, "regular");
     color: #282D30;
 
@@ -113,37 +117,37 @@ $default-colour__text: govuk-colour("black");
     padding: 2px 5px;
   }
 
-  & .predictor-timeline-item__wrapped_static_or_dynamic {
+  & .arns-predictor-timeline-item__wrapped_static_or_dynamic {
     display: inline-block;
     margin-top: 3px;
   }
 }
 
-.predictor-timeline-item--very-high {
-  @include predictor-timeline-item-base(
+.arns-predictor-timeline-item--very-high {
+  @include arns-predictor-timeline-item-base(
                   $very-high-score-colour,
                   $very-high-score-colour--light,
                   $very-high-score-colour__text
   );
 }
 
-.predictor-timeline-item--high {
-  @include predictor-timeline-item-base($high-score-colour, $high-score-colour--light, $high-score-colour__text);
+.arns-predictor-timeline-item--high {
+  @include arns-predictor-timeline-item-base($high-score-colour, $high-score-colour--light, $high-score-colour__text);
 }
 
-.predictor-timeline-item--medium {
-  @include predictor-timeline-item-base($medium-score-colour, $medium-score-colour--light, $medium-score-colour__text);
+.arns-predictor-timeline-item--medium {
+  @include arns-predictor-timeline-item-base($medium-score-colour, $medium-score-colour--light, $medium-score-colour__text);
 }
 
-.predictor-timeline-item--low {
-  @include predictor-timeline-item-base($low-score-colour, $low-score-colour--light, $low-score-colour__text);
+.arns-predictor-timeline-item--low {
+  @include arns-predictor-timeline-item-base($low-score-colour, $low-score-colour--light, $low-score-colour__text);
 }
 
-.predictor-timeline-item--default {
-  @include predictor-timeline-item-base($default-colour, $default-colour--light, $default-colour__text);
+.arns-predictor-timeline-item--default {
+  @include arns-predictor-timeline-item-base($default-colour, $default-colour--light, $default-colour__text);
 }
 
-.predictor-timeline-link-btn {
+.arns-predictor-timeline-link-btn {
   @include govuk-font($size: 19);
   text-decoration-thickness: $govuk-link-underline-thickness;
   text-underline-offset: $govuk-link-underline-offset;
@@ -157,7 +161,7 @@ $default-colour__text: govuk-colour("black");
   text-decoration-skip: none
 }
 
-.predictor-timeline-link-btn:hover {
+.arns-predictor-timeline-link-btn:hover {
   color: $govuk-link-hover-colour;
   text-decoration-thickness: $govuk-link-hover-underline-thickness;
   // Disable ink skipping on underlines on hover. Browsers haven't
@@ -166,7 +170,7 @@ $default-colour__text: govuk-colour("black");
   text-decoration-skip: none; // Safari
 }
 
-.predictor-timeline-link-btn:focus {
+.arns-predictor-timeline-link-btn:focus {
   outline: 3px solid transparent;
   background-color: $govuk-focus-colour;
   box-shadow: 0 -2px $govuk-focus-colour, 0 4px $govuk-link-active-colour;
@@ -174,19 +178,19 @@ $default-colour__text: govuk-colour("black");
   color: $govuk-link-active-colour;
 }
 
-@mixin legacy-predictor-timeline-item-base($primary-colour, $secondary-colour, $text-colour) {
+@mixin arns-legacy-predictor-timeline-item-base($primary-colour, $secondary-colour, $text-colour) {
   display: inline-flex;
   outline: 2px solid $primary-colour;
   margin-bottom: 5px;
 
-  & .legacy-predictor-timeline-item__type_and_level {
+  & .arns-legacy-predictor-timeline-item__type_and_level {
     @include govuk-font(19, "regular");
     color: $text-colour;
 
     padding: 2px 10px;
   }
 
-  & .legacy-predictor-timeline-item__score {
+  & .arns-legacy-predictor-timeline-item__score {
     @include govuk-font(19, "bold");
     color: govuk-colour("black");
 
@@ -197,7 +201,7 @@ $default-colour__text: govuk-colour("black");
     align-content: center;
   }
 
-  & .legacy-predictor-timeline-item__static_or_dynamic {
+  & .arns-legacy-predictor-timeline-item__static_or_dynamic {
     @include govuk-font(19, "regular");
     color: #282D30;
 
@@ -209,27 +213,26 @@ $default-colour__text: govuk-colour("black");
   }
 }
 
-.legacy-predictor-timeline-item--very-high {
-  @include legacy-predictor-timeline-item-base(
+.arns-legacy-predictor-timeline-item--very-high {
+  @include arns-legacy-predictor-timeline-item-base(
                   $very-high-score-colour,
                   $very-high-score-colour--light,
                   $very-high-score-colour__text
   );
 }
 
-.legacy-predictor-timeline-item--high {
-  @include legacy-predictor-timeline-item-base($high-score-colour, $high-score-colour--light, $high-score-colour__text);
+.arns-legacy-predictor-timeline-item--high {
+  @include arns-legacy-predictor-timeline-item-base($high-score-colour, $high-score-colour--light, $high-score-colour__text);
 }
 
-.legacy-predictor-timeline-item--medium {
-  @include legacy-predictor-timeline-item-base($medium-score-colour, $medium-score-colour--light, $medium-score-colour__text);
+.arns-legacy-predictor-timeline-item--medium {
+  @include arns-legacy-predictor-timeline-item-base($medium-score-colour, $medium-score-colour--light, $medium-score-colour__text);
 }
 
-.legacy-predictor-timeline-item--low {
-  @include legacy-predictor-timeline-item-base($low-score-colour, $low-score-colour--light, $low-score-colour__text);
+.arns-legacy-predictor-timeline-item--low {
+  @include arns-legacy-predictor-timeline-item-base($low-score-colour, $low-score-colour--light, $low-score-colour__text);
 }
 
-.legacy-predictor-timeline-item--default {
-  @include legacy-predictor-timeline-item-base($default-colour, $default-colour--light, $default-colour__text);
+.arns-legacy-predictor-timeline-item--default {
+  @include arns-legacy-predictor-timeline-item-base($default-colour, $default-colour--light, $default-colour__text);
 }
-
