@@ -63,7 +63,7 @@ describe('predictor-timeline', () => {
     describe('Toggle Button Typography', () => {
       it('should render the "Open" buttons with correct link-style font and spacing', () => {
         const renderedHtml = getRenderedHtml(dom, 'PREDICTOR_TIMELINE', '', riskData)
-        const toggleBtn = renderedHtml.document.querySelector('.predictor-timeline__toggle-section')
+        const toggleBtn = renderedHtml.document.querySelector('.arns-predictor-timeline__toggle-section')
 
         expectStyleToBe(renderedHtml, toggleBtn, [
           { tag: 'fontSize', value: '1rem' },
