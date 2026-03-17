@@ -29,9 +29,8 @@
   </div>
   <div class="govuk-!-margin-bottom-4">
     <span data-test-id="arp-probability-statement">
-      About [X] in [Y] people ({{ ARP.score }}%) with a similar profile to
-      {{ forename }} will get a sanction for an offence they commit within two years. This puts {{ forename }}
-      in the {{ ARP.band | lower }} risk band.
+      About [X] in [Y] people ({{ ARP.score }}%) with a similar profile to {{ forename }} will get a sanction for an
+      offence they commit within two years. This puts {{ forename }} in the {{ ARP.band | lower }} risk band.
     </span>
   </div>
   <div class="scale-wrapper">
@@ -92,9 +91,8 @@
   </div>
   <div class="govuk-!-margin-bottom-4">
     <span data-test-id="vrp-probability-statement">
-      About [X] in [Y] people ({{ VRP.score }}%) with a similar profile to
-      {{ forename }} will get a sanction for a violent offence they commit within two years. This puts {{ forename }}
-      in the {{ VRP.band | lower }} risk band.
+      About [X] in [Y] people ({{ VRP.score }}%) with a similar profile to {{ forename }} will get a sanction for a
+      violent offence they commit within two years. This puts {{ forename }} in the {{ VRP.band | lower }} risk band.
     </span>
   </div>
   <div class="scale-wrapper">
@@ -111,7 +109,7 @@
       violent reoffending predictor, such as:
     </p>
     <ul>
-      <li>actual bodily harm, common assault and aggravated assault </li>
+      <li>actual bodily harm, common assault and aggravated assault</li>
       <li>robbery and assault with intent to rob</li>
       <li>arson not endangering life</li>
       <li>criminal damage not endangering life</li>
@@ -173,14 +171,46 @@
     {% endif %}
   </div>
   <div class="govuk-!-margin-bottom-4">
-    <span>{{ CSRP.score }}% of people with a similar profile to {{ forename }} will get a sanction for an offence they commit within two years. This puts {{ forename }} in the {{ CSRP.band }} risk band.</span>
+    <span data-test-id="csrp-probability-statement">
+      About [X] in [Y] people ({{ CSRP.score }}%) with a similar profile to {{ forename }} will get a sanction for a
+      seriously harmful offence they commit within two years. This puts {{ forename }} in the {{ CSRP.band | lower }} risk band.
+    </span>
   </div>
   <div class="scale-wrapper">
     {{ predictorScaleBar(CSRP, 'combinedSeriousReoffendingPredictor') }}
   </div>
 
   {% set combinedSeriousReoffendingPredictorContentHtml %}
-    <p>This is the content for the combined serious reoffending predictor.</p>
+    <h3>Understanding what this score means</h3>
+    <p>
+      The Combined serious reoffending predictor percentage scores may seem low. This is because serious violence is
+      relatively rare, so most people get a low score.
+    </p>
+    <h3>What this score predicts</h3>
+    <p>
+      The Combined serious reoffending predictor predicts seriously harmful offences by combining the scores from other predictors.
+    </p>
+    <p>
+      A seriously harmful offence involves an event that is life-threatening or traumatic.
+      The victim will find it difficult or impossible to recover physically or psychologically.
+    </p>
+    <h3>Risks combined in this score</h3>
+    <p>The Combined serious reoffending predictor combines 3 different scores:</p>
+    <ul>
+      <li>Serious violent reoffending predictor</li>
+      <li>Direct contact – sexual reoffending predictor</li>
+      <li>Images and indirect contact – sexual reoffending predictor</li>
+    </ul>
+    <p>
+      If a person has no history of sexual or sexually motivated offending, we base their score only on their
+      Serious violent reoffending predictor score.
+    </p>
+    <p>Everyone gets a Serious violent reoffending predictor score, even if they have no history of violent offending.</p>
+    <p>Go to the details for the Serious violent reoffending predictor and the two sexual reoffending predictors to find out:</p>
+    <ul>
+      <li>the offences they predict</li>
+      <li>how we calculate the scores </li>
+    </ul>
   {% endset %}
 
   {{ detailsChevron({ html: combinedSeriousReoffendingPredictorContentHtml }) }}
