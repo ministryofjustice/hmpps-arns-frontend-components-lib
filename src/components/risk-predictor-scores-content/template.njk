@@ -84,14 +84,76 @@
     {% endif %}
   </div>
   <div class="govuk-!-margin-bottom-4">
-    <span>{{ VRP.score }}% of people with a similar profile to {{ forename }} will get a sanction for an offence they commit within two years. This puts {{ forename }} in the {{ VRP.band }} risk band.</span>
+    <span data-test-id="vrp-probability-statement">
+      About [X] in [Y] people ({{ VRP.score }}%) with a similar profile to
+      {{ forename }} will get a sanction for a violent offence they commit within two years. This puts {{ forename }}
+      in the {{ VRP.band | lower }} risk band.
+    </span>
   </div>
   <div class="scale-wrapper">
     {{ predictorScaleBar(VRP, 'violentReoffendingPredictor') }}
   </div>
 
   {% set violentReoffendingPredictorContentHtml %}
-    <p>This is the content for the violent reoffending predictor.</p>
+    <h3>What this score predicts</h3>
+    <p>The Violent reoffending predictor predicts the risk of reoffending for all offences that are classed as violent.</p>
+    <p>
+      However, the <a href="#serious-violent-reoffending-predictor-header">Serious violent reoffending predictor</a> is
+      specifically designed to predict the most serious violent offences.  Because of this, the Violent reoffending
+      predictor should be used to identify whether someone is likely to commit offences not covered by the Serious
+      violent reoffending predictor, such as:
+    </p>
+    <ul>
+      <li>actual bodily harm, common assault and aggravated assault </li>
+      <li>robbery and assault with intent to rob</li>
+      <li>arson not endangering life</li>
+      <li>criminal damage not endangering life</li>
+      <li>abduction of children</li>
+      <li>intimidation</li>
+      <li>breach of restraining order</li>
+      <li>possessing or use of knives or offensive weapons offences</li>
+      <li>public order and harassment</li>
+      <li>resisting arrest</li>
+      <li>disorderly behaviour</li>
+      <li>drunkenness offences (not including those related to driving)</li>
+    </ul>
+    <p>
+      To check if a specific offence is classed as violent, go to the
+      <a href="https://equip-portal.equip.service.justice.gov.uk/CtrlWebIsapi.dll/app/documents/C025AF635DB44965AC7B629E5538CB5B/master">
+        full list of violent offences (EQUip)</a>.
+    </p>
+    <h3>How we calculate the score</h3>
+    <p>We calculate the score using:</p>
+    <ul>
+      <li>static factors only, when we have limited information (a static score)</li>
+      <li>dynamic and static factors, when we have more detailed information (a dynamic score)</li>
+    </ul>
+    {% if VRP.staticOrDynamic | upper === 'STATIC' %}
+      <p data-test-id="vrp-static-or-dynamic-factors">This score has been calculated using static factors only.</p>
+    {% elseif VRP.staticOrDynamic | upper === 'DYNAMIC' %}
+      <p data-test-id="vrp-static-or-dynamic-factors">This score has been calculated using both dynamic and static factors.</p>
+    {% endif %}
+    <p>Static factors are things which cannot be deliberately changed, and include the person's:</p>
+    <ul>
+      <li>age when they enter the community caseload</li>
+      <li>current offence</li>
+      <li>total number of sanctions</li>
+      <li>number of violent sanctions</li>
+      <li>length of offending history</li>
+    </ul>
+    <p>The person’s current legal gender also counts towards the static score.</p>
+    <p>Dynamic factors are things that can change, and include their:</p>
+    <ul>
+      <li>accommodation status</li>
+      <li>employment status</li>
+      <li>relationship status</li>
+      <li>history of domestic abuse</li>
+      <li>regular activities that encourage offending</li>
+      <li>drug use and motivation to tackle drug use</li>
+      <li>alcohol use</li>
+      <li>impulsivity</li>
+      <li>temper control</li>
+    </ul>
   {% endset %}
 
   {{ detailsChevron({ html: violentReoffendingPredictorContentHtml }) }}
@@ -118,7 +180,7 @@
 
   {#  Serious violent reoffending predictor  #}
   <div class="predictor-header-wrapper">
-    <h3>Serious violent reoffending predictor</h3>
+    <h3 id="serious-violent-reoffending-predictor-header">Serious violent reoffending predictor</h3>
     {% if SVRP.staticOrDynamic %}
       <div class="staticOrDynamicTag" data-test-id="svrp-staticOrDynamic">{{ govukTag({ text: SVRP.staticOrDynamic, classes: "govuk-tag--grey"}) }}</div>
     {% endif %}
