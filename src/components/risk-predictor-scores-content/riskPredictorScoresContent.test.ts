@@ -20,19 +20,36 @@ describe('risk-predictor-scores-content', () => {
   })
 
   describe('should render static or dynamic factors statement within predictor details sections', () => {
+    const staticFactorsStatement = 'This score has been calculated using static factors only.'
+    const dynamicFactorsStatement = 'This score has been calculated using static factors only.'
+
+    it('should render static or dyanamic factors statement for all reoffending predictor', () => {
+      const riskData = getRiskTestData(null)
+      const forename = 'Alex'
+      const firstAssessment = riskData.assessments?.[0] as AssessmentV2
+      firstAssessment.allReoffendingPredictor.band = 'STATIC'
+      let renderedHtml = getRenderedHtml(dom, 'RISK_PREDICTOR_SCORES_CONTENT', `forename: '${forename}'`, riskData)
+      expect(
+        renderedHtml.document.querySelector('[data-test-id="arp-static-or-dynamic-factors"]').textContent.trim(),
+      ).toBe(staticFactorsStatement)
+      firstAssessment.allReoffendingPredictor.band = 'DYNAMIC'
+      renderedHtml = getRenderedHtml(dom, 'RISK_PREDICTOR_SCORES_CONTENT', `forename: '${forename}'`, riskData)
+      expect(
+        renderedHtml.document.querySelector('[data-test-id="arp-static-or-dynamic-factors"]').textContent.trim(),
+      ).toBe(dynamicFactorsStatement)
+    })
+
     it('should render static or dyanamic factors statement for violent reoffending predictor', () => {
       const riskData = getRiskTestData(null)
       const forename = 'Alex'
       const firstAssessment = riskData.assessments?.[0] as AssessmentV2
       firstAssessment.violentReoffendingPredictor.band = 'STATIC'
       let renderedHtml = getRenderedHtml(dom, 'RISK_PREDICTOR_SCORES_CONTENT', `forename: '${forename}'`, riskData)
-      const staticFactorsStatement = 'This score has been calculated using static factors only.'
       expect(
         renderedHtml.document.querySelector('[data-test-id="vrp-static-or-dynamic-factors"]').textContent.trim(),
       ).toBe(staticFactorsStatement)
       firstAssessment.violentReoffendingPredictor.band = 'DYNAMIC'
       renderedHtml = getRenderedHtml(dom, 'RISK_PREDICTOR_SCORES_CONTENT', `forename: '${forename}'`, riskData)
-      const dynamicFactorsStatement = 'This score has been calculated using static factors only.'
       expect(
         renderedHtml.document.querySelector('[data-test-id="vrp-static-or-dynamic-factors"]').textContent.trim(),
       ).toBe(dynamicFactorsStatement)
@@ -82,6 +99,13 @@ export const validatePage = (renderedHtml: DOMWindow, riskData: RiskData, forena
   staticOrDynamicNull.forEach(selector => {
     expect(selector).toBeNull()
   })
+
+  const expectedArpProbabilityStatement = `About [X] in [Y] people (${latestAssessment.allReoffendingPredictor.score}%) with a similar profile to
+      ${forename} will get a sanction for an offence they commit within two years. This puts ${forename}
+      in the ${latestAssessment.allReoffendingPredictor.band.toLowerCase()} risk band.`
+  expect(renderedHtml.document.querySelector('[data-test-id="arp-probability-statement"]').textContent.trim()).toBe(
+    expectedArpProbabilityStatement,
+  )
 
   const expectedVrpProbabilityStatement = `About [X] in [Y] people (${latestAssessment.violentReoffendingPredictor.score}%) with a similar profile to
       ${forename} will get a sanction for a violent offence they commit within two years. This puts ${forename}

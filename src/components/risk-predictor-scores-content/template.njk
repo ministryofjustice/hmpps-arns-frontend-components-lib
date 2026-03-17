@@ -28,7 +28,11 @@
     {% endif %}
   </div>
   <div class="govuk-!-margin-bottom-4">
-    <span>{{ ARP.score }}% of people with a similar profile to {{ forename }} will get a sanction for an offence they commit within two years. This puts {{ forename }} in the {{ ARP.band }} risk band.</span>
+    <span data-test-id="arp-probability-statement">
+      About [X] in [Y] people ({{ ARP.score }}%) with a similar profile to
+      {{ forename }} will get a sanction for an offence they commit within two years. This puts {{ forename }}
+      in the {{ ARP.band | lower }} risk band.
+    </span>
   </div>
   <div class="scale-wrapper">
     {{ predictorScaleBar(ARP, 'allReoffendingPredictor') }}
@@ -36,10 +40,13 @@
 
   {% set allReoffendingPredictorContentHtml %}
     <h3>What this score predicts</h3>
-    <p>The All reoffending predictor predicts the likelihood of someone getting a sanction for any recordable
-      offence.</p>
-    <p>It includes all sexual and all violent offences, but there are other risk predictors that are specifically
-      designed to predict serious, violent and sexual offences.</p>
+    <p>
+      The All reoffending predictor predicts the likelihood of someone getting a sanction for any recordable offence.
+    </p>
+    <p>
+      It includes all sexual and all violent offences, but there are other risk predictors that are specifically
+      designed to predict serious, violent and sexual offences.
+    </p>
     <h3>How we calculate the score</h3>
     <p>We calculate the score using:</p>
     <ul>
@@ -47,19 +54,19 @@
       <li>dynamic and static factors, when we have more detailed information (a dynamic score)</li>
     </ul>
     {% if ARP.staticOrDynamic | upper === 'STATIC' %}
-      <p>This score has been calculated using static factors only.</p>
+      <p data-test-id="arp-static-or-dynamic-factors">This score has been calculated using static factors only.</p>
     {% elseif ARP.staticOrDynamic | upper === 'DYNAMIC' %}
-      <p>This score has been calculated using both dynamic and static factors.</p>
+      <p data-test-id="arp-static-or-dynamic-factors">This score has been calculated using both dynamic and static factors.</p>
     {% endif %}
 
     <p>Static factors are things which cannot be deliberately changed, and include the person's:</p>
     <ul>
       <li>age when they enter the community caseload</li>
-      <li>sex at birth</li>
       <li>current offence</li>
       <li>total number of sanctions</li>
       <li>length of offending history</li>
     </ul>
+    <p>The person’s current legal gender also counts towards the static score.</p>
     <p>Dynamic factors are things that can change, and include their:</p>
     <ul>
       <li>accommodation status</li>
@@ -70,7 +77,7 @@
       <li>drug use and motivation to tackle drug use</li>
       <li>alcohol use</li>
       <li>impulsivity</li>
-      <li>pro-criminal attitudes</li>
+      <li>attitudes that support or excuse criminal behaviour</li>
     </ul>
   {% endset %}
 
