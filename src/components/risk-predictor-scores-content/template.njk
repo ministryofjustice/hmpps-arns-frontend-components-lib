@@ -36,7 +36,7 @@
   </div>
   <div class="govuk-!-margin-bottom-4">
     <span data-test-id="arp-probability-statement">
-      About [X] in [Y] people ({{ ARP.score }}%) with a similar profile to {{ forename }} will get a sanction for an
+      {{ ARP.score | probabilityStatement }} with a similar profile to {{ forename }} will get a sanction for an
       offence they commit within two years. This puts {{ forename }} in the {{ ARP.band | lower }} risk band.
     </span>
   </div>
@@ -100,7 +100,7 @@
   </div>
   <div class="govuk-!-margin-bottom-4">
     <span data-test-id="vrp-probability-statement">
-      About [X] in [Y] people ({{ VRP.score }}%) with a similar profile to {{ forename }} will get a sanction for a
+      {{ VRP.score | probabilityStatement }} with a similar profile to {{ forename }} will get a sanction for a
       violent offence they commit within two years. This puts {{ forename }} in the {{ VRP.band | lower }} risk band.
     </span>
   </div>
@@ -183,7 +183,7 @@
   </div>
   <div class="govuk-!-margin-bottom-4">
     <span data-test-id="csrp-probability-statement">
-      About [X] in [Y] people ({{ CSRP.score }}%) with a similar profile to {{ forename }} will get a sanction for a
+      {{ CSRP.score | probabilityStatement }} with a similar profile to {{ forename }} will get a sanction for a
       seriously harmful offence they commit within two years. This puts {{ forename }} in the {{ CSRP.band | lower }} risk band.
     </span>
   </div>
@@ -232,7 +232,7 @@
   </div>
   <div class="govuk-!-margin-bottom-4">
     <span data-test-id="svrp-probability-statement">
-      About [X] in [Y] people ({{ SVRP.score }}%) with a similar profile to {{ forename }} will get a sanction for a
+      {{ SVRP.score | probabilityStatement }} with a similar profile to {{ forename }} will get a sanction for a
       serious violent offence they commit within two years. This puts {{ forename }} in the {{ SVRP.band | lower }} risk band.
     </span>
   </div>
@@ -322,7 +322,7 @@
   {% else %}
     <div class="govuk-!-margin-bottom-4">
       <span data-test-id="dcsrp-probability-statement">
-        About [X] in [Y] people ({{ DCSRP.score }}%) with a similar profile to {{ forename }} will get a sanction for a
+        {{ DCSRP.score | probabilityStatement }} with a similar profile to {{ forename }} will get a sanction for a
         direct contact sexual offence they commit within two years. This puts {{ forename }} in the {{ DCSRP.band | lower }} risk band.
       </span>
     </div>

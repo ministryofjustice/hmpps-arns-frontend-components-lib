@@ -3,6 +3,8 @@ import {
   convertScoreToScaleMarkerPosition,
   convertBandToScaleMarkerPosition,
   containsCompletedAssessment,
+  isBefore,
+  probabilityStatement,
 } from './utils/predictorUtils'
 
 export const predictorConfig = {
@@ -88,10 +90,6 @@ export const arnsNunjucksSetup = (env: Environment) => {
   env.addFilter('scoreToScaleMarkerPosition', convertScoreToScaleMarkerPosition)
   env.addFilter('bandToScaleMarkerPosition', convertBandToScaleMarkerPosition)
   env.addFilter('containsCompletedAssessment', containsCompletedAssessment)
-  env.addFilter('isBefore', function isBefore(dateStr, targetDateStr = null): boolean {
-    const formattedDate = dateStr.replace(' at ', ' ')
-    const date = new Date(formattedDate)
-    const target = targetDateStr ? new Date(targetDateStr.replace(' at ', ' ')) : new Date()
-    return date < target
-  })
+  env.addFilter('isBefore', isBefore)
+  env.addFilter('probabilityStatement', probabilityStatement)
 }
