@@ -87,7 +87,9 @@
     </ul>
   {% endset %}
 
-  {{ detailsChevron({ html: allReoffendingPredictorContentHtml }) }}
+  <div class="bottom-border">
+    {{ detailsChevron({ html: allReoffendingPredictorContentHtml }) }}
+  </div>
 
   {#  Violent reoffending predictor  #}
   <div class="predictor-header-wrapper">
@@ -168,7 +170,9 @@
     </ul>
   {% endset %}
 
-  {{ detailsChevron({ html: violentReoffendingPredictorContentHtml }) }}
+  <div class="bottom-border">
+    {{ detailsChevron({ html: violentReoffendingPredictorContentHtml }) }}
+  </div>
 
   {#  Combined serious reoffending predictor  #}
   <div class="predictor-header-wrapper">
@@ -215,7 +219,9 @@
     </ul>
   {% endset %}
 
-  {{ detailsChevron({ html: combinedSeriousReoffendingPredictorContentHtml }) }}
+  <div class="bottom-border">
+    {{ detailsChevron({ html: combinedSeriousReoffendingPredictorContentHtml }) }}
+  </div>
 
   {#  Serious violent reoffending predictor  #}
   <div class="predictor-header-wrapper">
@@ -298,14 +304,16 @@
     </ul>
   {% endset %}
 
-  {{ detailsChevron({ html: seriousViolentReoffendingPredictorContentHtml }) }}
+  <div class="bottom-border">
+    {{ detailsChevron({ html: seriousViolentReoffendingPredictorContentHtml }) }}
+  </div>
 
   {#  Direct contact - Sexual reoffending predictor  #}
   <div class="predictor-header-wrapper">
     <h3>Direct contact - Sexual reoffending predictor</h3>
   </div>
   {% if DCSRP.band === 'NOT APPLICABLE' %}
-    <div class="details--chevron-style">
+    <div class="bottom-border">
       <p data-test-id="dcsrp-not-applicable">
         We only calculate sexual reoffending predictor scores for men with a known history of sexual or sexually
         motivated offending. {{ forename }} does not have a score for this predictor.
@@ -382,7 +390,9 @@
       </p>
     {% endset %}
 
-    {{ detailsChevron({ html: directContactSexualReoffendingPredictorContentHtml }) }}
+    <div class="bottom-border">
+      {{ detailsChevron({ html: directContactSexualReoffendingPredictorContentHtml }) }}
+    </div>
   {% endif %}
 
   {#  Images and indirect contact - Sexual reoffending predictor  #}
@@ -400,7 +410,7 @@
     <p>This is the content for the images and indirect contact - Sexual reoffending predictor.</p>
   {% endset %}
 
-  <div class="noThresholdScaleBuffer">
+  <div class="noThresholdScaleBuffer bottom-border">
     {{ detailsChevron({html: imagesAndIndirectContactSexualReoffendingPredictorContentHtml}) }}
   </div>
 
