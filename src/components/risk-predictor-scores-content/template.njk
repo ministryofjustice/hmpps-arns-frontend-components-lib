@@ -87,7 +87,9 @@
     </ul>
   {% endset %}
 
-  {{ detailsChevron({ html: allReoffendingPredictorContentHtml }) }}
+  <div class="bottom-border">
+    {{ detailsChevron({ html: allReoffendingPredictorContentHtml }) }}
+  </div>
 
   {#  Violent reoffending predictor  #}
   <div class="predictor-header-wrapper">
@@ -168,7 +170,9 @@
     </ul>
   {% endset %}
 
-  {{ detailsChevron({ html: violentReoffendingPredictorContentHtml }) }}
+  <div class="bottom-border">
+    {{ detailsChevron({ html: violentReoffendingPredictorContentHtml }) }}
+  </div>
 
   {#  Combined serious reoffending predictor  #}
   <div class="predictor-header-wrapper">
@@ -215,7 +219,9 @@
     </ul>
   {% endset %}
 
-  {{ detailsChevron({ html: combinedSeriousReoffendingPredictorContentHtml }) }}
+  <div class="bottom-border">
+    {{ detailsChevron({ html: combinedSeriousReoffendingPredictorContentHtml }) }}
+  </div>
 
   {#  Serious violent reoffending predictor  #}
   <div class="predictor-header-wrapper">
@@ -298,34 +304,100 @@
     </ul>
   {% endset %}
 
-  {{ detailsChevron({ html: seriousViolentReoffendingPredictorContentHtml }) }}
+  <div class="bottom-border">
+    {{ detailsChevron({ html: seriousViolentReoffendingPredictorContentHtml }) }}
+  </div>
 
   {#  Direct contact - Sexual reoffending predictor  #}
   <div class="predictor-header-wrapper">
     <h3>Direct contact - Sexual reoffending predictor</h3>
-    {% if DCSRP.staticOrDynamic %}
-      <div class="staticOrDynamicTag" data-test-id="dcsrp-staticOrDynamic">{{ govukTag({ text: DCSRP.staticOrDynamic, classes: "govuk-tag--grey"}) }}</div>
-    {% endif %}
   </div>
-  <div class="govuk-!-margin-bottom-4">
-    <span>{{ DCSRP.score }}% of people with a similar profile to {{ forename }} will get a sanction for an offence they commit within two years. This puts {{ forename }} in the {{ DCSRP.band }} risk band.</span>
-  </div>
-  <div class="scale-wrapper">
-    {{ predictorScaleBar(DCSRP, 'directContactSexualReoffendingPredictor') }}
-  </div>
+  {% if DCSRP.band === 'NOT APPLICABLE' %}
+    <div class="bottom-border">
+      <p data-test-id="dcsrp-not-applicable">
+        We only calculate sexual reoffending predictor scores for men with a known history of sexual or sexually
+        motivated offending. {{ forename }} does not have a score for this predictor.
+      </p>
+    </div>
+  {% else %}
+    <div class="govuk-!-margin-bottom-4">
+      <span data-test-id="dcsrp-probability-statement">
+        About [X] in [Y] people ({{ DCSRP.score }}%) with a similar profile to {{ forename }} will get a sanction for a
+        direct contact sexual offence they commit within two years. This puts {{ forename }} in the {{ DCSRP.band | lower }} risk band.
+      </span>
+    </div>
+    <div class="scale-wrapper">
+      {{ predictorScaleBar(DCSRP, 'directContactSexualReoffendingPredictor') }}
+    </div>
 
-  {% set directContactSexualReoffendingPredictorContentHtml %}
-    <p>This is the content for the direct contact - Sexual reoffending predictor.</p>
-  {% endset %}
+    {% set directContactSexualReoffendingPredictorContentHtml %}
+      <h3>How we calculate the score</h3>
+      <p>
+        We only calculate a Direct contact – sexual reoffending predictor score for men with a known history of sexual
+        or sexually motivated offending.
+      </p>
+      <p>We calculate the score using the number of current and previous sanctions a person has for:</p>
+      <ul>
+        <li>sexual or sexually motivated offences involving contact with an adult</li>
+        <li>sexual or sexually motivated offences involving direct contact with a child</li>
+        <li>non-contact sexual offences</li>
+      </ul>
+      <p>It does not count indecent images of children offences.</p>
+      <p>We also look at static factors, which are things which cannot be deliberately changed. These include:</p>
+      <ul>
+        <li>age when they enter the community caseload</li>
+        <li>total number of sanctions</li>
+        <li>if their current offence was a direct contact offence committed against a stranger victim</li>
+      </ul>
+      <h3>What this score predicts</h3>
+      <p>The Direct contact – sexual reoffending predictor predicts the risk of the following offences with an adult victim:</p>
+      <ul>
+        <li>rape or attempted rape</li>
+        <li>sexual assault</li>
+        <li>causing a female to engage in sexual activity without consent</li>
+        <li>sex with an adult relative</li>
+        <li>sexual activity with someone with a mental disorder or learning disability, including ‘breach of trust’ offences</li>
+        <li>abduction (under the Sexual Offences 1956 Act)</li>
+        <li>trafficking for sexual exploitation</li>
+        <li>administering a substance with intent to engage in a sexual activity</li>
+      </ul>
+      <p>It also predicts the risk of the following offences with a child victim:</p>
+      <ul>
+        <li>rape or attempted rape</li>
+        <li>assault by penetration</li>
+        <li>sexual assault</li>
+        <li>causing a female to engage in sexual activity without consent</li>
+        <li>sexual activity with a child family member</li>
+        <li>inciting a child family member to engage in sexual activity</li>
+        <li>abuse of trust sexual offences</li>
+        <li>abduction (under the Sexual Offences 1956 Act, not the Child Abduction Act 1984)</li>
+      </ul>
+      <p>
+        It does not predict other sexual offences that do not involve actual or attempted physical contact with a live
+        human victim. For example:
+      </p>
+      <ul>
+        <li>possession of extreme pornographic images</li>
+        <li>exposure</li>
+        <li>voyeurism</li>
+        <li>sending a photograph or film of genitals</li>
+        <li>sharing or threatening to share an intimate photograph or film</li>
+      </ul>
+      <p>
+        Further guidance about the offences it does not predict is available as an annex to the
+        <a href="https://equip-portal.equip.service.justice.gov.uk/CtrlWebIsapi.dll/app/documents/091B36B5CE134AC5B45D06A30D09F8B9/master">
+          Understanding risk predictors - actuarial risk assessment instruments (ARAI) user guidance (EQUip)</a>.
+      </p>
+    {% endset %}
 
-  {{ detailsChevron({ html: directContactSexualReoffendingPredictorContentHtml }) }}
+    <div class="bottom-border">
+      {{ detailsChevron({ html: directContactSexualReoffendingPredictorContentHtml }) }}
+    </div>
+  {% endif %}
 
   {#  Images and indirect contact - Sexual reoffending predictor  #}
   <div class="predictor-header-wrapper">
     <h3>Images and indirect contact - Sexual reoffending predictor</h3>
-    {% if IICSRP.staticOrDynamic %}
-      <div class="staticOrDynamicTag" data-test-id="iicsrp-staticOrDynamic">{{ govukTag({ text: IICSRP.staticOrDynamic, classes: "govuk-tag--grey"}) }}</div>
-    {% endif %}
   </div>
   <div class="govuk-!-margin-bottom-4">
     <span>{{ IICSRP.score }}% of people with a similar profile to {{ forename }} will get a sanction for an offence they commit within two years. This puts {{ forename }} in the {{ IICSRP.band }} risk band.</span>
@@ -338,7 +410,7 @@
     <p>This is the content for the images and indirect contact - Sexual reoffending predictor.</p>
   {% endset %}
 
-  <div class="noThresholdScaleBuffer">
+  <div class="noThresholdScaleBuffer bottom-border">
     {{ detailsChevron({html: imagesAndIndirectContactSexualReoffendingPredictorContentHtml}) }}
   </div>
 

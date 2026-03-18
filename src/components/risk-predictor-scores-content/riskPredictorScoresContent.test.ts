@@ -92,6 +92,32 @@ describe('risk-predictor-scores-content', () => {
       expect(renderedHtml.document.querySelector('[data-test-id="svrp-no-sexual-history-header"]')).toBeNull()
     })
   })
+
+  describe('should render dynamic content for Direct contact - Sexual reoffending predictor section', () => {
+    it('should render appropriate content when there is no direct contact - Sexual reoffending history', () => {
+      const riskData = getRiskTestData(null)
+      const forename = 'Alex'
+      const firstAssessment = riskData.assessments?.[0] as AssessmentV2
+      firstAssessment.directContactSexualReoffendingPredictor.band = 'NOT APPLICABLE'
+      const renderedHtml = getRenderedHtml(dom, 'RISK_PREDICTOR_SCORES_CONTENT', `forename: '${forename}'`, riskData)
+      expect(renderedHtml.document.querySelector('[data-test-id="dcsrp-not-applicable"]')).not.toBeNull()
+      expect(renderedHtml.document.querySelector('[data-test-id="dcsrp-probability-statement"]')).toBeNull()
+      expect(
+        renderedHtml.document.querySelector('[data-test-id="directContactSexualReoffendingPredictor-scale"]'),
+      ).toBeNull()
+    })
+
+    it('should render appropriate content when there is direct contact - Sexual reoffending history', () => {
+      const riskData = getRiskTestData(null)
+      const forename = 'Alex'
+      const renderedHtml = getRenderedHtml(dom, 'RISK_PREDICTOR_SCORES_CONTENT', `forename: '${forename}'`, riskData)
+      expect(renderedHtml.document.querySelector('[data-test-id="dcsrp-not-applicable"]')).toBeNull()
+      expect(renderedHtml.document.querySelector('[data-test-id="dcsrp-probability-statement"]')).not.toBeNull()
+      expect(
+        renderedHtml.document.querySelector('[data-test-id="directContactSexualReoffendingPredictor-scale"]'),
+      ).not.toBeNull()
+    })
+  })
 })
 
 export const validatePage = (renderedHtml: DOMWindow, riskData: RiskData, forename: string) => {
@@ -128,15 +154,6 @@ export const validatePage = (renderedHtml: DOMWindow, riskData: RiskData, forena
     expect(selector).not.toBeNull()
   })
 
-  const staticOrDynamicNull = [
-    renderedHtml.document.querySelector('[data-test-id="dcsrp-staticOrDynamic"]'),
-    renderedHtml.document.querySelector('[data-test-id="iicsrp-staticOrDynamic"]'),
-  ]
-
-  staticOrDynamicNull.forEach(selector => {
-    expect(selector).toBeNull()
-  })
-
   const expectedArpProbabilityStatement = `About [X] in [Y] people (${latestAssessment.allReoffendingPredictor.score}%) with a similar profile to ${forename} will get a sanction for an
       offence they commit within two years. This puts ${forename} in the ${latestAssessment.allReoffendingPredictor.band.toLowerCase()} risk band.`
   expect(renderedHtml.document.querySelector('[data-test-id="arp-probability-statement"]').textContent.trim()).toBe(
@@ -159,5 +176,11 @@ export const validatePage = (renderedHtml: DOMWindow, riskData: RiskData, forena
       serious violent offence they commit within two years. This puts ${forename} in the ${latestAssessment.seriousViolentReoffendingPredictor.band.toLowerCase()} risk band.`
   expect(renderedHtml.document.querySelector('[data-test-id="svrp-probability-statement"]').textContent.trim()).toBe(
     expectedSvrpProbabilityStatement,
+  )
+
+  const expectedDcsrpProbabilityStatement = `About [X] in [Y] people (${latestAssessment.directContactSexualReoffendingPredictor.score}%) with a similar profile to ${forename} will get a sanction for a
+        direct contact sexual offence they commit within two years. This puts ${forename} in the ${latestAssessment.directContactSexualReoffendingPredictor.band.toLowerCase()} risk band.`
+  expect(renderedHtml.document.querySelector('[data-test-id="dcsrp-probability-statement"]').textContent.trim()).toBe(
+    expectedDcsrpProbabilityStatement,
   )
 }
