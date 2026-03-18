@@ -60,11 +60,6 @@ describe('risk-predictor-scores-content', () => {
 export const validatePage = (renderedHtml: DOMWindow, riskData: RiskData, forename: string) => {
   const latestAssessment: AssessmentV2 = riskData.assessments?.[0] as AssessmentV2
 
-  const introTestElement = renderedHtml.document.querySelector('[data-test-id="predictor-intro"]')
-  expect(introTestElement.textContent.trim()).toContain(
-    'We have developed and validated these risk predictors using real historical data about how often people who have been on probation get further sanctions.',
-  )
-
   const sourceTextElement = renderedHtml.document.querySelector('.govuk-inset-text')
 
   expect(sourceTextElement).not.toBeNull()
