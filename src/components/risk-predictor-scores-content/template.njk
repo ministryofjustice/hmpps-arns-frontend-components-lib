@@ -13,7 +13,14 @@
 {% set IICSRP = latestAssessment.indirectImageContactSexualReoffendingPredictor %}
 
 {% if latestAssessment %}
-
+  <div data-test-id="predictor-intro">
+    <p>We have developed and validated these risk predictors using real historical data about how often people who have been on probation get further sanctions.</p>
+    <p>Someone gets a sanction if they:</p>
+    <ul>
+      <li>are convicted by a court and given a sentence (such as a fine, community order, discharge or prison)</li>
+      <li>accept a formal caution from the police</li>
+    </ul>
+  </div>
   <div class="bottom-border">
     {{ govukInsetText({
       text: "Source: " + latestAssessment.assessmentType + " assessment, completed on " + latestAssessment.completedDate
