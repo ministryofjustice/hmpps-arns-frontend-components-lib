@@ -225,14 +225,77 @@
     {% endif %}
   </div>
   <div class="govuk-!-margin-bottom-4">
-    <span>{{ SVRP.score }}% of people with a similar profile to {{ forename }} will get a sanction for an offence they commit within two years. This puts {{ forename }} in the {{ SVRP.band }} risk band.</span>
+    <span data-test-id="svrp-probability-statement">
+      About [X] in [Y] people ({{ SVRP.score }}%) with a similar profile to {{ forename }} will get a sanction for a
+      serious violent offence they commit within two years. This puts {{ forename }} in the {{ SVRP.band | lower }} risk band.
+    </span>
   </div>
   <div class="scale-wrapper">
     {{ predictorScaleBar(SVRP, 'seriousViolentReoffendingPredictor') }}
   </div>
 
   {% set seriousViolentReoffendingPredictorContentHtml %}
-    <p>This is the content for the serious violent reoffending predictor.</p>
+    {% if DCSRP.band === 'NOT APPLICABLE' and IICSRP.band === 'NOT APPLICABLE' %}
+      <h3 data-test-id="svrp-no-sexual-history-header">Why this score is the same as Combined serious reoffending predictor</h3>
+      <p>
+        We only calculate sexual reoffending predictor scores for men with a known history of sexual or sexually
+        motivated offending. Because of this, {{ forename }}’s Combined serious reoffending predictor score is just
+        based on their Serious violent reoffending prediction. This is why the two scores are the same.
+      </p>
+    {% endif %}
+    <h3>How we calculate the score</h3>
+    <p>We calculate the score using:</p>
+    <ul>
+      <li>static factors only, when we have limited information (a static score)</li>
+      <li>dynamic and static factors, when we have more detailed information (a dynamic score)</li>
+    </ul>
+    {% if SVRP.staticOrDynamic | upper === 'STATIC' %}
+      <p data-test-id="svrp-static-or-dynamic-factors">This score has been calculated using static factors only.</p>
+    {% elseif SVRP.staticOrDynamic | upper === 'DYNAMIC' %}
+      <p data-test-id="svrp-static-or-dynamic-factors">This score has been calculated using both dynamic and static factors.</p>
+    {% endif %}
+    <p>Static factors are things which cannot be deliberately changed, and include the person's:</p>
+    <ul>
+      <li>age when they enter the community caseload</li>
+      <li>current offence</li>
+      <li>total number of sanctions</li>
+      <li>number of violent sanctions</li>
+      <li>length of offending history</li>
+    </ul>
+    <p>The person’s current legal gender also counts towards the static score.</p>
+    <p>Dynamic factors are things that can change, and include their:</p>
+    <ul>
+      <li>previous and current weapons offences</li>
+      <li>accommodation status</li>
+      <li>employment status</li>
+      <li>alcohol use</li>
+      <li>temper control</li>
+      <li>attitudes that support or excuse criminal behaviour</li>
+    </ul>
+    <h3>What this score predicts</h3>
+    <p>The Serious violent reoffending predictor predicts the risk of reoffending for: </p>
+    <ul>
+      <li>murder or attempted murder</li>
+      <li>conspiracy to, soliciting, assisting or encouraging murder</li>
+      <li>manslaughter</li>
+      <li>wounding or inflicting grievous bodily harm (GBH)</li>
+      <li>nonfatal strangulation or suffocation</li>
+      <li>offences related to possessing or use of a firearm or imitation firearm</li>
+      <li>aggravated burglary in a dwelling</li>
+      <li>kidnap or false imprisonment</li>
+      <li>arson endangering life</li>
+      <li>criminal damage endangering life</li>
+      <li>aggravated vehicle taking causing death</li>
+      <li>blackmail</li>
+      <li>other non-motoring offences endangering life</li>
+    </ul>
+    <p>It does not predict the following serious offences:</p>
+    <ul>
+      <li>cruelty to or neglect of children</li>
+      <li>abandoning children under two years</li>
+      <li>abduction of children</li>
+      <li>terrorism offences</li>
+    </ul>
   {% endset %}
 
   {{ detailsChevron({ html: seriousViolentReoffendingPredictorContentHtml }) }}
