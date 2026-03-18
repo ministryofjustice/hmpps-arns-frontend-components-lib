@@ -100,17 +100,21 @@ export const validatePage = (renderedHtml: DOMWindow, riskData: RiskData, forena
     expect(selector).toBeNull()
   })
 
-  const expectedArpProbabilityStatement = `About [X] in [Y] people (${latestAssessment.allReoffendingPredictor.score}%) with a similar profile to
-      ${forename} will get a sanction for an offence they commit within two years. This puts ${forename}
-      in the ${latestAssessment.allReoffendingPredictor.band.toLowerCase()} risk band.`
+  const expectedArpProbabilityStatement = `About [X] in [Y] people (${latestAssessment.allReoffendingPredictor.score}%) with a similar profile to ${forename} will get a sanction for an
+      offence they commit within two years. This puts ${forename} in the ${latestAssessment.allReoffendingPredictor.band.toLowerCase()} risk band.`
   expect(renderedHtml.document.querySelector('[data-test-id="arp-probability-statement"]').textContent.trim()).toBe(
     expectedArpProbabilityStatement,
   )
 
-  const expectedVrpProbabilityStatement = `About [X] in [Y] people (${latestAssessment.violentReoffendingPredictor.score}%) with a similar profile to
-      ${forename} will get a sanction for a violent offence they commit within two years. This puts ${forename}
-      in the ${latestAssessment.violentReoffendingPredictor.band.toLowerCase()} risk band.`
+  const expectedVrpProbabilityStatement = `About [X] in [Y] people (${latestAssessment.violentReoffendingPredictor.score}%) with a similar profile to ${forename} will get a sanction for a
+      violent offence they commit within two years. This puts ${forename} in the ${latestAssessment.violentReoffendingPredictor.band.toLowerCase()} risk band.`
   expect(renderedHtml.document.querySelector('[data-test-id="vrp-probability-statement"]').textContent.trim()).toBe(
     expectedVrpProbabilityStatement,
+  )
+
+  const expectedCsrpProbabilityStatement = `About [X] in [Y] people (${latestAssessment.combinedSeriousReoffendingPredictor.score}%) with a similar profile to ${forename} will get a sanction for a
+      seriously harmful offence they commit within two years. This puts ${forename} in the ${latestAssessment.combinedSeriousReoffendingPredictor.band.toLowerCase()} risk band.`
+  expect(renderedHtml.document.querySelector('[data-test-id="csrp-probability-statement"]').textContent.trim()).toBe(
+    expectedCsrpProbabilityStatement,
   )
 }
