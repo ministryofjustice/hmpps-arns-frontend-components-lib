@@ -23,7 +23,7 @@ describe('risk-predictor-scores-content', () => {
     const staticFactorsStatement = 'This score has been calculated using static factors only.'
     const dynamicFactorsStatement = 'This score has been calculated using static factors only.'
 
-    it('should render static or dyanamic factors statement for all reoffending predictor', () => {
+    it('should render static or dyanamic factors statement for All reoffending predictor', () => {
       const riskData = getRiskTestData(null)
       const forename = 'Alex'
       const firstAssessment = riskData.assessments?.[0] as AssessmentV2
@@ -39,7 +39,7 @@ describe('risk-predictor-scores-content', () => {
       ).toBe(dynamicFactorsStatement)
     })
 
-    it('should render static or dyanamic factors statement for violent reoffending predictor', () => {
+    it('should render static or dyanamic factors statement for Violent reoffending predictor', () => {
       const riskData = getRiskTestData(null)
       const forename = 'Alex'
       const firstAssessment = riskData.assessments?.[0] as AssessmentV2
@@ -53,6 +53,43 @@ describe('risk-predictor-scores-content', () => {
       expect(
         renderedHtml.document.querySelector('[data-test-id="vrp-static-or-dynamic-factors"]').textContent.trim(),
       ).toBe(dynamicFactorsStatement)
+    })
+
+    it('should render static or dyanamic factors statement for Serious violent reoffending predictor', () => {
+      const riskData = getRiskTestData(null)
+      const forename = 'Alex'
+      const firstAssessment = riskData.assessments?.[0] as AssessmentV2
+      firstAssessment.seriousViolentReoffendingPredictor.band = 'STATIC'
+      let renderedHtml = getRenderedHtml(dom, 'RISK_PREDICTOR_SCORES_CONTENT', `forename: '${forename}'`, riskData)
+      expect(
+        renderedHtml.document.querySelector('[data-test-id="svrp-static-or-dynamic-factors"]').textContent.trim(),
+      ).toBe(staticFactorsStatement)
+      firstAssessment.seriousViolentReoffendingPredictor.band = 'DYNAMIC'
+      renderedHtml = getRenderedHtml(dom, 'RISK_PREDICTOR_SCORES_CONTENT', `forename: '${forename}'`, riskData)
+      expect(
+        renderedHtml.document.querySelector('[data-test-id="svrp-static-or-dynamic-factors"]').textContent.trim(),
+      ).toBe(dynamicFactorsStatement)
+    })
+  })
+
+  describe('should render dynamic content for Serious violent reoffending predictor details section', () => {
+    it('should render "why this score is the same as..." content when there is no sexual reoffending history', () => {
+      const riskData = getRiskTestData(null)
+      const forename = 'Alex'
+      const firstAssessment = riskData.assessments?.[0] as AssessmentV2
+      firstAssessment.directContactSexualReoffendingPredictor.band = 'NOT APPLICABLE'
+      firstAssessment.indirectImageContactSexualReoffendingPredictor.band = 'NOT APPLICABLE'
+      const renderedHtml = getRenderedHtml(dom, 'RISK_PREDICTOR_SCORES_CONTENT', `forename: '${forename}'`, riskData)
+      expect(
+        renderedHtml.document.querySelector('[data-test-id="svrp-no-sexual-history-header"]').textContent.trim(),
+      ).toBe('Why this score is the same as Combined serious reoffending predictor')
+    })
+
+    it('should not render "why this score is the same as..." content when there is sexual reoffending history', () => {
+      const riskData = getRiskTestData(null)
+      const forename = 'Alex'
+      const renderedHtml = getRenderedHtml(dom, 'RISK_PREDICTOR_SCORES_CONTENT', `forename: '${forename}'`, riskData)
+      expect(renderedHtml.document.querySelector('[data-test-id="svrp-no-sexual-history-header"]')).toBeNull()
     })
   })
 })
@@ -116,5 +153,11 @@ export const validatePage = (renderedHtml: DOMWindow, riskData: RiskData, forena
       seriously harmful offence they commit within two years. This puts ${forename} in the ${latestAssessment.combinedSeriousReoffendingPredictor.band.toLowerCase()} risk band.`
   expect(renderedHtml.document.querySelector('[data-test-id="csrp-probability-statement"]').textContent.trim()).toBe(
     expectedCsrpProbabilityStatement,
+  )
+
+  const expectedSvrpProbabilityStatement = `About [X] in [Y] people (${latestAssessment.seriousViolentReoffendingPredictor.score}%) with a similar profile to ${forename} will get a sanction for a
+      serious violent offence they commit within two years. This puts ${forename} in the ${latestAssessment.seriousViolentReoffendingPredictor.band.toLowerCase()} risk band.`
+  expect(renderedHtml.document.querySelector('[data-test-id="svrp-probability-statement"]').textContent.trim()).toBe(
+    expectedSvrpProbabilityStatement,
   )
 }
