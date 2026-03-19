@@ -118,6 +118,56 @@ describe('risk-predictor-scores-content', () => {
       ).not.toBeNull()
     })
   })
+
+  describe('should render dynamic content for Image and indirect contact - Sexual reoffending predictor section', () => {
+    it('should render appropriate content when there is no Image and indirect contact - Sexual reoffending history', () => {
+      const riskData = getRiskTestData(null)
+      const forename = 'Alex'
+      const firstAssessment = riskData.assessments?.[0] as AssessmentV2
+      firstAssessment.indirectImageContactSexualReoffendingPredictor.band = 'NOT APPLICABLE'
+      const renderedHtml = getRenderedHtml(dom, 'RISK_PREDICTOR_SCORES_CONTENT', `forename: '${forename}'`, riskData)
+      expect(renderedHtml.document.querySelector('[data-test-id="iicsrp-not-applicable"]')).not.toBeNull()
+      expect(renderedHtml.document.querySelector('[data-test-id="iicsrp-intro-statement"]')).toBeNull()
+      expect(
+        renderedHtml.document.querySelector('[data-test-id="indirectImageContactSexualReoffendingPredictor-scale"]'),
+      ).toBeNull()
+    })
+
+    it('should render appropriate content when there is Image and indirect contact - Sexual reoffending history', () => {
+      const riskData = getRiskTestData(null)
+      const forename = 'Alex'
+      const renderedHtml = getRenderedHtml(dom, 'RISK_PREDICTOR_SCORES_CONTENT', `forename: '${forename}'`, riskData)
+      expect(renderedHtml.document.querySelector('[data-test-id="iicsrp-not-applicable"]')).toBeNull()
+      expect(renderedHtml.document.querySelector('[data-test-id="iicsrp-intro-statement"]')).not.toBeNull()
+      expect(
+        renderedHtml.document.querySelector('[data-test-id="indirectImageContactSexualReoffendingPredictor-scale"]'),
+      ).not.toBeNull()
+    })
+
+    it('should render intro statement with correct amount of sanctions when there is Image and indirect contact - Sexual reoffending history', () => {
+      const riskData = getRiskTestData(null)
+      const forename = 'Alex'
+      const firstAssessment = riskData.assessments?.[0] as AssessmentV2
+
+      firstAssessment.indirectImageContactSexualReoffendingPredictor.band = 'LOW'
+      let renderedHtml = getRenderedHtml(dom, 'RISK_PREDICTOR_SCORES_CONTENT', `forename: '${forename}'`, riskData)
+      expect(renderedHtml.document.querySelector('[data-test-id="iicsrp-intro-statement"]').textContent).toContain(
+        'This is because they have 0 previous relevant sanctions.',
+      )
+
+      firstAssessment.indirectImageContactSexualReoffendingPredictor.band = 'MEDIUM'
+      renderedHtml = getRenderedHtml(dom, 'RISK_PREDICTOR_SCORES_CONTENT', `forename: '${forename}'`, riskData)
+      expect(renderedHtml.document.querySelector('[data-test-id="iicsrp-intro-statement"]').textContent).toContain(
+        'This is because they have 1 previous relevant sanctions.',
+      )
+
+      firstAssessment.indirectImageContactSexualReoffendingPredictor.band = 'HIGH'
+      renderedHtml = getRenderedHtml(dom, 'RISK_PREDICTOR_SCORES_CONTENT', `forename: '${forename}'`, riskData)
+      expect(renderedHtml.document.querySelector('[data-test-id="iicsrp-intro-statement"]').textContent).toContain(
+        'This is because they have more than 2 previous relevant sanctions.',
+      )
+    })
+  })
 })
 
 export const validatePage = (renderedHtml: DOMWindow, riskData: RiskData, forename: string) => {
@@ -182,5 +232,11 @@ export const validatePage = (renderedHtml: DOMWindow, riskData: RiskData, forena
         direct contact sexual offence they commit within two years. This puts ${forename} in the ${latestAssessment.directContactSexualReoffendingPredictor.band.toLowerCase()} risk band.`
   expect(renderedHtml.document.querySelector('[data-test-id="dcsrp-probability-statement"]').textContent.trim()).toBe(
     expectedDcsrpProbabilityStatement,
+  )
+
+  const expectedIicsrpIntroStatement = `${forename} is in the ${latestAssessment.indirectImageContactSexualReoffendingPredictor.band.toLowerCase()} risk category for getting a sanction for an indirect sexual contact
+        offence they commit within two years. This is because they have more than 2 previous relevant sanctions.`
+  expect(renderedHtml.document.querySelector('[data-test-id="iicsrp-intro-statement"]').textContent.trim()).toBe(
+    expectedIicsrpIntroStatement,
   )
 }

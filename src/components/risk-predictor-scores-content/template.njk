@@ -2,6 +2,7 @@
 {% from "../details-chevron/macro.njk" import detailsChevron %}
 {% from "../predictor-scale-bar/macro.njk" import predictorScaleBar %}
 {%- from "govuk/components/tag/macro.njk" import govukTag -%}
+{% from "govuk/components/table/macro.njk" import govukTable %}
 
 {% set latestAssessment = params.data.assessments | first if params.data.assessments else null %}
 {% set forename = params.forename | default('This individual') %}
@@ -249,6 +250,30 @@
         based on their Serious violent reoffending prediction. This is why the two scores are the same.
       </p>
     {% endif %}
+    <h3>What this score predicts</h3>
+    <p>The Serious violent reoffending predictor predicts the risk of reoffending for:</p>
+    <ul>
+      <li>murder or attempted murder</li>
+      <li>conspiracy to, soliciting, assisting or encouraging murder</li>
+      <li>manslaughter</li>
+      <li>wounding or inflicting grievous bodily harm (GBH)</li>
+      <li>nonfatal strangulation or suffocation</li>
+      <li>offences related to possessing or use of a firearm or imitation firearm</li>
+      <li>aggravated burglary in a dwelling</li>
+      <li>kidnap or false imprisonment</li>
+      <li>arson endangering life</li>
+      <li>criminal damage endangering life</li>
+      <li>aggravated vehicle taking causing death</li>
+      <li>blackmail</li>
+      <li>other non-motoring offences endangering life</li>
+    </ul>
+    <p>It does not predict the following serious offences:</p>
+    <ul>
+      <li>cruelty to or neglect of children</li>
+      <li>abandoning children under two years</li>
+      <li>abduction of children</li>
+      <li>terrorism offences</li>
+    </ul>
     <h3>How we calculate the score</h3>
     <p>We calculate the score using:</p>
     <ul>
@@ -277,30 +302,6 @@
       <li>alcohol use</li>
       <li>temper control</li>
       <li>attitudes that support or excuse criminal behaviour</li>
-    </ul>
-    <h3>What this score predicts</h3>
-    <p>The Serious violent reoffending predictor predicts the risk of reoffending for: </p>
-    <ul>
-      <li>murder or attempted murder</li>
-      <li>conspiracy to, soliciting, assisting or encouraging murder</li>
-      <li>manslaughter</li>
-      <li>wounding or inflicting grievous bodily harm (GBH)</li>
-      <li>nonfatal strangulation or suffocation</li>
-      <li>offences related to possessing or use of a firearm or imitation firearm</li>
-      <li>aggravated burglary in a dwelling</li>
-      <li>kidnap or false imprisonment</li>
-      <li>arson endangering life</li>
-      <li>criminal damage endangering life</li>
-      <li>aggravated vehicle taking causing death</li>
-      <li>blackmail</li>
-      <li>other non-motoring offences endangering life</li>
-    </ul>
-    <p>It does not predict the following serious offences:</p>
-    <ul>
-      <li>cruelty to or neglect of children</li>
-      <li>abandoning children under two years</li>
-      <li>abduction of children</li>
-      <li>terrorism offences</li>
     </ul>
   {% endset %}
 
@@ -331,24 +332,6 @@
     </div>
 
     {% set directContactSexualReoffendingPredictorContentHtml %}
-      <h3>How we calculate the score</h3>
-      <p>
-        We only calculate a Direct contact – sexual reoffending predictor score for men with a known history of sexual
-        or sexually motivated offending.
-      </p>
-      <p>We calculate the score using the number of current and previous sanctions a person has for:</p>
-      <ul>
-        <li>sexual or sexually motivated offences involving contact with an adult</li>
-        <li>sexual or sexually motivated offences involving direct contact with a child</li>
-        <li>non-contact sexual offences</li>
-      </ul>
-      <p>It does not count indecent images of children offences.</p>
-      <p>We also look at static factors, which are things which cannot be deliberately changed. These include:</p>
-      <ul>
-        <li>age when they enter the community caseload</li>
-        <li>total number of sanctions</li>
-        <li>if their current offence was a direct contact offence committed against a stranger victim</li>
-      </ul>
       <h3>What this score predicts</h3>
       <p>The Direct contact – sexual reoffending predictor predicts the risk of the following offences with an adult victim:</p>
       <ul>
@@ -388,6 +371,24 @@
         <a href="https://equip-portal.equip.service.justice.gov.uk/CtrlWebIsapi.dll/app/documents/091B36B5CE134AC5B45D06A30D09F8B9/master">
           Understanding risk predictors - actuarial risk assessment instruments (ARAI) user guidance (EQUip)</a>.
       </p>
+      <h3>How we calculate the score</h3>
+      <p>
+        We only calculate a Direct contact – sexual reoffending predictor score for men with a known history of sexual
+        or sexually motivated offending.
+      </p>
+      <p>We calculate the score using the number of current and previous sanctions a person has for:</p>
+      <ul>
+        <li>sexual or sexually motivated offences involving contact with an adult</li>
+        <li>sexual or sexually motivated offences involving direct contact with a child</li>
+        <li>non-contact sexual offences</li>
+      </ul>
+      <p>It does not count indecent images of children offences.</p>
+      <p>We also look at static factors, which are things which cannot be deliberately changed. These include:</p>
+      <ul>
+        <li>age when they enter the community caseload</li>
+        <li>total number of sanctions</li>
+        <li>if their current offence was a direct contact offence committed against a stranger victim</li>
+      </ul>
     {% endset %}
 
     <div class="bottom-border">
@@ -399,19 +400,104 @@
   <div class="predictor-header-wrapper">
     <h3>Images and indirect contact - Sexual reoffending predictor</h3>
   </div>
-  <div class="govuk-!-margin-bottom-4">
-    <span>{{ IICSRP.score }}% of people with a similar profile to {{ forename }} will get a sanction for an offence they commit within two years. This puts {{ forename }} in the {{ IICSRP.band }} risk band.</span>
-  </div>
-  <div class="scale-wrapper">
-    {{ predictorScaleBar(IICSRP, 'indirectImageContactSexualReoffendingPredictor') }}
-  </div>
+  {% if IICSRP.band === 'NOT APPLICABLE' %}
+    <div class="bottom-border">
+        <p data-test-id="iicsrp-not-applicable">
+            We only calculate sexual reoffending predictor scores for men with a known history of sexual or sexually
+            motivated offending. {{ forename }} does not have a score for this predictor.
+        </p>
+    </div>
+  {% else %}
 
-  {% set imagesAndIndirectContactSexualReoffendingPredictorContentHtml %}
-    <p>This is the content for the images and indirect contact - Sexual reoffending predictor.</p>
-  {% endset %}
+    {% switch IICSRP.band | upper %}
+      {% case 'LOW' %}
+        {% set numberOfSanctions = '0' %}
+      {% case 'MEDIUM' %}
+        {% set numberOfSanctions = '1' %}
+      {% case 'HIGH' %}
+        {% set numberOfSanctions = 'more than 2' %}
+      {% default %}
+        {% set numberOfSanctions = 'unknown' %}
+    {% endswitch %}
 
-  <div class="noThresholdScaleBuffer bottom-border">
-    {{ detailsChevron({html: imagesAndIndirectContactSexualReoffendingPredictorContentHtml}) }}
-  </div>
+    <div class="govuk-!-margin-bottom-4">
+      <span data-test-id="iicsrp-intro-statement">
+        {{ forename }} is in the {{ IICSRP.band | lower }} risk category for getting a sanction for an indirect sexual contact
+        offence they commit within two years. This is because they have {{ numberOfSanctions }} previous relevant sanctions.
+      </span>
+    </div>
+    <div class="scale-wrapper">
+      {{ predictorScaleBar(IICSRP, 'indirectImageContactSexualReoffendingPredictor') }}
+    </div>
+
+    {% set imagesAndIndirectContactSexualReoffendingPredictorContentHtml %}
+      <h3>What this score predicts</h3>
+      <p>The Images and indirect contact – sexual reoffending predictor predicts the risk of:</p>
+      <ul>
+        <li>causing or inciting a child to engage in sexual activity</li>
+        <li>engaging in sexual activity in the presence of a child under 13 (offender aged 18 or over)</li>
+        <li>causing a child under 13 to watch a sexual act (offender aged 18 or over)</li>
+        <li>meeting a child following sexual grooming</li>
+        <li>sexual communication with a child</li>
+        <li>taking, permitting to be taken or making indecent photographs or pseudo photographs of children</li>
+        <li>distributing or publishing indecent photographs or pseudo photographs of children</li>
+        <li>possession of an indecent photograph of a child</li>
+        <li>possessing prohibited images of children</li>
+      </ul>
+      <p>
+        It does not predict other sexual offences that do not involve actual or attempted physical contact with a live
+        human victim. For example:
+      </p>
+      <ul>
+        <li>possession of extreme pornographic images</li>
+        <li>exposure</li>
+        <li>voyeurism</li>
+        <li>sending a photograph or film of genitals</li>
+        <li>sharing or threatening to share an intimate photograph or film</li>
+      </ul>
+      <p>
+        Further guidance about the offences it does not predict is available as an annex to the
+        <a href="https://equip-portal.equip.service.justice.gov.uk/CtrlWebIsapi.dll/app/documents/091B36B5CE134AC5B45D06A30D09F8B9/master">
+          Understanding risk predictors - actuarial risk assessment instruments (ARAI) user guidance (EQUip)</a>.
+      </p>
+      <h3>How we calculate the score</h3>
+      <p>
+        We only calculate an Images and indirect contact – sexual reoffending predictor score for men with a known
+        history of sexual or sexually motivated offending.
+      </p>
+      <p>We calculate the score using the number of current and previous sanctions a person has for:</p>
+      <ul>
+        <li>indirect child contact offences</li>
+        <li>indecent images of children offences</li>
+      </ul>
+      <p>Indirect contact offences are:</p>
+      <ul>
+        <li>causing a child to watch a sexual act</li>
+        <li>causing or inciting a child to engage in sexual activity</li>
+        <li>arranging child prostitution or pornography</li>
+        <li>arranging or facilitating child sexual offences</li>
+        <li>sexual communication with a child</li>
+        <li>grooming</li>
+      </ul>
+      <p>The score puts the person into a risk band:</p>
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-one-half">
+          {{ govukTable({
+            firstCellIsHeader: true,
+            head: [ { text: "Risk band" }, { text: "Number of sanctions" } ],
+            rows: [
+              [ { text: "Low" }, { text: "0" } ],
+              [ { text: "Medium" }, { text: "1" } ],
+              [ { text: "High" }, { text: "2 or more" } ]
+            ]
+          }) }}
+        </div>
+      </div>
+    {% endset %}
+
+    <div class="noThresholdScaleBuffer bottom-border">
+      {{ detailsChevron({html: imagesAndIndirectContactSexualReoffendingPredictorContentHtml}) }}
+    </div>
+  {% endif %}
 
 {% endif %}
