@@ -178,7 +178,7 @@ export const validatePage = (renderedHtml: DOMWindow, riskData: RiskData, forena
     expectedSvrpProbabilityStatement,
   )
 
-  const expectedDcsrpProbabilityStatement = `About 1 in 100 people (1.23%) with a similar profile to ${forename} will get a sanction for a
+  const expectedDcsrpProbabilityStatement = `About 3 in 100 people (2.81%) with a similar profile to ${forename} will get a sanction for a
         direct contact sexual offence they commit within two years. This puts ${forename} in the ${latestAssessment.directContactSexualReoffendingPredictor.band.toLowerCase()} risk band.`
   expect(renderedHtml.document.querySelector('[data-test-id="dcsrp-probability-statement"]').textContent.trim()).toBe(
     expectedDcsrpProbabilityStatement,

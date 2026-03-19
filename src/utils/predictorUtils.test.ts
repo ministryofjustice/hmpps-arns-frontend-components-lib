@@ -86,8 +86,6 @@ describe('predictorUtils', () => {
       'Happy path cases - convertScoreToScalePosition(%s, %s) -> %s',
       (score: number, thresholds: number[], expectedPosition: string) => {
         expect(convertScoreToScaleMarkerPosition(score, thresholds)).toBe(expectedPosition)
-        // Uncomment the below to see a visualisation of the calculated position
-        // visualiseTestResult(score, thresholds, expectedPosition)
       },
     )
   })
@@ -114,8 +112,6 @@ describe('predictorUtils', () => {
       'Happy path cases - convertBandToScaleMarkerPosition(%s, %s) -> %s',
       (band: string, includeVeryHigh: boolean, expectedPosition: number) => {
         expect(convertBandToScaleMarkerPosition(band as Band, includeVeryHigh)).toBe(expectedPosition)
-        // Uncomment the below to see a visualisation of the calculated position
-        // visualiseTestResult(0, includeVeryHigh ? [0, 25, 50, 75, 100] : [0, 33, 67, 100], expectedPosition)
       },
     )
   })
@@ -208,6 +204,7 @@ describe('isBefore', () => {
 describe('probabilityStatement', () => {
   const cases: [number, string][] = [
     // Guardrails
+    [0, 'Less than 1 in 100 people (0%)'],
     [0.99, 'Less than 1 in 100 people (0.99%)'],
     [1, '1 in 100 people (1%)'],
     [99, '99 in 100 people (99%)'],
@@ -377,6 +374,11 @@ describe('probabilityStatement', () => {
     // Assertions
     expect(missingFromGenerated).toHaveLength(0)
     expect(unexpectedInGenerated).toHaveLength(0)
+  })
+
+  it('should return an empty string for null, undefined, or non-numeric inputs', () => {
+    expect(probabilityStatement(null)).toBe('Error: score is null or undefined.')
+    expect(probabilityStatement(undefined)).toBe('Error: score is null or undefined.')
   })
 
   describe('Score to Statement Mapping', () => {

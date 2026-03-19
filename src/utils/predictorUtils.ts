@@ -71,7 +71,9 @@ export const isBefore = (dateStr: string, targetDateStr: string = null): boolean
   return date < target
 }
 
-export const probabilityStatement = (inputScore: number): string => {
+export const probabilityStatement = (inputScore?: number): string => {
+  if (inputScore === null || inputScore === undefined) return 'Error: score is null or undefined.'
+
   // Normalise input (e.g. 12.34 becomes 0.1234)
   const score = inputScore / 100
 
