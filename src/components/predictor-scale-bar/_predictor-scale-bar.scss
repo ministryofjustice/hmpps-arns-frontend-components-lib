@@ -98,9 +98,15 @@ $low-score-colour__text: #485b10;
   border: 2px solid govuk-colour("black");
 }
 
+@for $i from 0 through 100 {
+  .arns-scale-marker-wrapper-position-#{$i} {
+    left: calc(-40px + (#{$i} / 100) * (100% - 1px));
+  }
+}
+
+
 .arns-scale-marker-wrapper {
   position: relative;
-  left: calc(-40px + (var(--margin) / 100) * (100% - 1px));
 
   &.arns-scale-marker-wrapper--very-high {
     @include arns-scale-marker-card-colour(
@@ -133,10 +139,6 @@ $low-score-colour__text: #485b10;
                     $low-score-colour__text
     );
   }
-}
-
-.arns-scale-marker-wrapper[data-margin] {
-  --margin: attr(data-margin number);
 }
 
 .arns-scale-marker__card-top {
