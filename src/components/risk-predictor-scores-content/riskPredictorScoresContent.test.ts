@@ -168,6 +168,55 @@ describe('risk-predictor-scores-content', () => {
       )
     })
   })
+
+  describe('Display missing data warning', () => {
+    it('should test predictors with no values and display missing data warning', () => {
+      const renderedHtml = getRenderedHtml(
+        dom,
+        'RISK_PREDICTOR_SCORES_CONTENT',
+        'forename: "John"',
+        getRiskTestData([
+          { predictor: 'allReoffendingPredictor', level: null, score: null, staticOrDynamic: null },
+          { predictor: 'violentReoffendingPredictor', level: null, score: null, staticOrDynamic: null },
+          { predictor: 'combinedSeriousReoffendingPredictor', level: null, score: null, staticOrDynamic: null },
+          { predictor: 'seriousViolentReoffendingPredictor', level: null, score: null, staticOrDynamic: null },
+          { predictor: 'directContactSexualReoffendingPredictor', level: null, score: null, staticOrDynamic: null },
+          {
+            predictor: 'indirectImageContactSexualReoffendingPredictor',
+            level: null,
+            score: null,
+            staticOrDynamic: null,
+          },
+        ]),
+      )
+      expect(renderedHtml.document.querySelector(`[data-test-id="missingInfoWarningTextARP"]`)).not.toBeNull()
+      expect(renderedHtml.document.querySelector(`[data-test-id="missingInfoWarningTextVRP"]`)).not.toBeNull()
+      expect(renderedHtml.document.querySelector(`[data-test-id="missingInfoWarningTextCSRP"]`)).not.toBeNull()
+      expect(renderedHtml.document.querySelector(`[data-test-id="missingInfoWarningTextSVRP"]`)).not.toBeNull()
+      expect(renderedHtml.document.querySelector(`[data-test-id="missingInfoWarningTextDCSRP"]`)).not.toBeNull()
+      expect(renderedHtml.document.querySelector(`[data-test-id="missingInfoWarningTextIICSRP"]`)).not.toBeNull()
+    })
+
+    it('should test assessment with no predictors and display missing data warning', () => {
+      const renderedHtml = getRenderedHtml(dom, 'RISK_PREDICTOR_SCORES_CONTENT', 'forename: "John"', {
+        httpStatus: 200,
+        assessments: [
+          {
+            outputVersion: '2',
+            completedDateTime: '01 January 2025 at 15:21',
+            completedDate: '01 January 2025',
+            assessmentType: 'layer 3',
+          },
+        ],
+      })
+      expect(renderedHtml.document.querySelector(`[data-test-id="missingInfoWarningTextARP"]`)).not.toBeNull()
+      expect(renderedHtml.document.querySelector(`[data-test-id="missingInfoWarningTextVRP"]`)).not.toBeNull()
+      expect(renderedHtml.document.querySelector(`[data-test-id="missingInfoWarningTextCSRP"]`)).not.toBeNull()
+      expect(renderedHtml.document.querySelector(`[data-test-id="missingInfoWarningTextSVRP"]`)).not.toBeNull()
+      expect(renderedHtml.document.querySelector(`[data-test-id="missingInfoWarningTextDCSRP"]`)).not.toBeNull()
+      expect(renderedHtml.document.querySelector(`[data-test-id="missingInfoWarningTextIICSRP"]`)).not.toBeNull()
+    })
+  })
 })
 
 export const validatePage = (renderedHtml: DOMWindow, riskData: RiskData, forename: string) => {
