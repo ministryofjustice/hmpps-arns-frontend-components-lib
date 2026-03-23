@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 // Call this function from your app insights setup script, providing the initialised appInsights object
 export function init(appInsights) {
 
