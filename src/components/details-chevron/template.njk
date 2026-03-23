@@ -8,7 +8,8 @@
   In template:
     {% from "components/details-chevron/macro.njk" import detailsChevron %}
     {{ detailsChevron({
-      html: <p>some html</p>,
+      html: "<p>some html</p>",
+      id: "my-id",
       showText: "show",
       hideText: "hide",
       })
@@ -16,11 +17,12 @@
 
 @param {object} params
   @param {HTML} params.html - The HTML content to show/hide
+  @param {string} params.id - A unique id for this details chevron
   @param {string?} params.showText - show text override
   @param {string?} params.hideText - hide text override
 
 #}
-<details class="govuk-details details--chevron-style">
+<details class="govuk-details details--chevron-style" id="{{ params.id }}">
   <summary class="govuk-details__summary">
     <span class="details__chevron" aria-hidden="true"></span>
     <span class="details__toggle-text">
