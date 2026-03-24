@@ -134,4 +134,18 @@ describe('details-chevron', () => {
       expect(hideHiddenSpan).toBeNull()
     })
   })
+
+  describe('Test ids for app insights', () => {
+    it('should set id on details component', () => {
+      const context = 'All reoffending predictor'
+      const window = getDomFromNjks(dom, `${componentImport}{{ detailsChevron(params) }}`, {
+        params: { html: 'content', ariaContext: context },
+      })
+
+      const expectedSuffix = '-all-reoffending-predictor'
+      const details = window.document.querySelector(`[data-test-id="details-wrapper${expectedSuffix}"]`)
+
+      expect(details.id).toBe(`details${expectedSuffix}`)
+    })
+  })
 })

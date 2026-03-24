@@ -14,12 +14,8 @@ export function init(appInsights) {
     details.addEventListener('toggle', (event) => {
       const isExpanded = event.target.open
       if (details.id) {
-        trackEvent(details.id, isExpanded)
+        appInsights.trackEvent({ name: id, properties: { isExpanded: isExpanded } })
       }
     })
   })
-
-  function trackEvent(id, isExpanded) {
-    appInsights.trackEvent({ name: id, properties: { isExpanded: isExpanded } })
-  }
 }
