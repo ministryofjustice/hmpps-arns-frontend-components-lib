@@ -13,7 +13,9 @@ export function init(appInsights) {
   containingDiv.querySelectorAll('details').forEach((details) => {
     details.addEventListener('toggle', (event) => {
       const isExpanded = event.target.open
-      trackEvent(details.id, isExpanded)
+      if (details.id) {
+        trackEvent(details.id, isExpanded)
+      }
     })
   })
 
