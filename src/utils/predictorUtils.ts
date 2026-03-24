@@ -78,7 +78,7 @@ export const probabilityStatement = (inputScore?: number): string => {
   const score = inputScore / 100
 
   // Guardrails
-  if (score < 0.01) return `Less than 1 in 100 people (${inputScore}%)`
+  if (score < 0.01) return `Fewer than 1 in 100 people (${inputScore}%)`
   if (score > 0.99) return `More than 99 in 100 people (${inputScore}%)`
 
   const DENOMINATORS = [2, 3, 4, 5, 8, 10, 20, 25, 50, 100]
