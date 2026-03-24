@@ -52,7 +52,7 @@ describe('predictor-timeline', () => {
       const item = renderedHtml.document.querySelector('[data-test-id="timeline-item"]')
       expectStyleToBe(renderedHtml, item, [
         { tag: 'position', value: 'relative' },
-        { tag: 'paddingBottom', value: '30px' },
+        { tag: 'paddingBottom', value: '20px' },
         { tag: 'paddingLeft', value: '20px' },
       ])
 
@@ -63,13 +63,16 @@ describe('predictor-timeline', () => {
     describe('Toggle Button Typography', () => {
       it('should render the "Open" buttons with correct link-style font and spacing', () => {
         const renderedHtml = getRenderedHtml(dom, 'PREDICTOR_TIMELINE', '', riskData)
-        const toggleBtn = renderedHtml.document.querySelector('.arns-predictor-timeline__toggle-section')
+        const toggleBtn = renderedHtml.document.querySelector(
+          '[data-test-id="button-predictor-section-01-january-2025-at-15-21"]',
+        )
 
         expectStyleToBe(renderedHtml, toggleBtn, [
           { tag: 'fontSize', value: '1rem' },
           { tag: 'background', value: 'rgba(0, 0, 0, 0)' },
           { tag: 'padding', value: '0px' },
           { tag: 'textDecoration', value: 'underline' },
+          { tag: 'marginBottom', value: '10px' },
         ])
       })
     })
