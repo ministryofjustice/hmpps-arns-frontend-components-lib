@@ -212,6 +212,8 @@ In template:
         <p class="arns-predictor-timeline__byline" data-test-id="timeline-byline">{{ item.completedDateTime }}</p>
       </div>
       <div class="arns-predictor-timeline__description" data-test-id="timeline-description">
+        <button class="arns-predictor-timeline-link-btn arns-predictor-timeline__toggle-section" aria-label="View scores for {{ item.completedDateTime }}"
+                aria-controls="{{ sectionId }}" aria-expanded="false" data-test-id="button-{{ sectionId }}">Open</button>
         <div id="{{ sectionId }}" class="arns-predictor-timeline-section">
           <ul class="govuk-list">
             {% set excluded_fields = ['outputVersion', 'completedDate', 'completedDateTime', 'assessmentType'] %}
@@ -226,8 +228,6 @@ In template:
             {% endfor %}
           </ul>
         </div>
-        <button class="arns-predictor-timeline-link-btn arns-predictor-timeline__toggle-section" aria-label="View scores for {{ item.completedDateTime }}"
-                aria-controls="{{ sectionId }}" aria-expanded="false">Open</button>
       </div>
     </div>
   {% endfor %}

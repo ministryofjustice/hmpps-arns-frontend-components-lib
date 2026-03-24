@@ -35,7 +35,7 @@ $default-colour__text: govuk-colour("black");
 }
 
 .arns-predictor-timeline__item {
-  padding-bottom: govuk-spacing(6);
+  padding-bottom: govuk-spacing(4);
   padding-left: govuk-spacing(4);
   position: relative;
 
@@ -159,6 +159,10 @@ $default-colour__text: govuk-colour("black");
   cursor: pointer;
   text-decoration-skip-ink: none;
   text-decoration-skip: none
+}
+
+.arns-predictor-timeline__toggle-section{
+  margin-bottom: govuk-spacing(2);
 }
 
 .arns-predictor-timeline-link-btn:hover {
