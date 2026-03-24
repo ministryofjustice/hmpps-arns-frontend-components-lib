@@ -254,7 +254,7 @@ export const validatePage = (renderedHtml: DOMWindow, riskData: RiskData, forena
   })
 
   const expectedArpProbabilityStatement = `About 1 in 100 people (1.23%) with a similar profile to ${forename} will get a sanction for an
-      offence they commit within two years. This puts ${forename} in the ${latestAssessment.allReoffendingPredictor.band.toLowerCase()} risk band.`
+          offence they commit within two years. This puts ${forename} in the ${latestAssessment.allReoffendingPredictor.band.toLowerCase()} risk band.`
   expect(renderedHtml.document.querySelector('[data-test-id="arp-probability-statement"]').textContent.trim()).toBe(
     expectedArpProbabilityStatement,
   )
