@@ -204,8 +204,8 @@ describe('isBefore', () => {
 describe('probabilityStatement', () => {
   const cases: [number, string][] = [
     // Guardrails
-    [0, 'Less than 1 in 100 people (0%)'],
-    [0.99, 'Less than 1 in 100 people (0.99%)'],
+    [0, 'Fewer than 1 in 100 people (0%)'],
+    [0.99, 'Fewer than 1 in 100 people (0.99%)'],
     [1, '1 in 100 people (1%)'],
     [99, '99 in 100 people (99%)'],
     [99.01, 'More than 99 in 100 people (99.01%)'],
