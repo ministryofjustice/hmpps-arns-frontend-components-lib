@@ -254,37 +254,37 @@ export const validatePage = (renderedHtml: DOMWindow, riskData: RiskData, forena
   })
 
   const expectedArpProbabilityStatement = `About 1 in 100 people (1.23%) with a similar profile to ${forename} will get a sanction for an
-        offence they commit within two years. This puts ${forename} in the ${latestAssessment.allReoffendingPredictor.band.toLowerCase()} risk band.`
+          offence they commit within two years. This puts ${forename} in the ${latestAssessment.allReoffendingPredictor.band.toLowerCase()} risk band.`
   expect(renderedHtml.document.querySelector('[data-test-id="arp-probability-statement"]').textContent.trim()).toBe(
     expectedArpProbabilityStatement,
   )
 
   const expectedVrpProbabilityStatement = `About 1 in 100 people (1.23%) with a similar profile to ${forename} will get a sanction for a
-        violent offence they commit within two years. This puts ${forename} in the ${latestAssessment.violentReoffendingPredictor.band.toLowerCase()} risk band.`
+      violent offence they commit within two years. This puts ${forename} in the ${latestAssessment.violentReoffendingPredictor.band.toLowerCase()} risk band.`
   expect(renderedHtml.document.querySelector('[data-test-id="vrp-probability-statement"]').textContent.trim()).toBe(
     expectedVrpProbabilityStatement,
   )
 
   const expectedCsrpProbabilityStatement = `About 1 in 100 people (1.23%) with a similar profile to ${forename} will get a sanction for a
-        seriously harmful offence they commit within two years. This puts ${forename} in the ${latestAssessment.combinedSeriousReoffendingPredictor.band.toLowerCase()} risk band.`
+      seriously harmful offence they commit within two years. This puts ${forename} in the ${latestAssessment.combinedSeriousReoffendingPredictor.band.toLowerCase()} risk band.`
   expect(renderedHtml.document.querySelector('[data-test-id="csrp-probability-statement"]').textContent.trim()).toBe(
     expectedCsrpProbabilityStatement,
   )
 
   const expectedSvrpProbabilityStatement = `About 1 in 100 people (1.23%) with a similar profile to ${forename} will get a sanction for a
-        serious violent offence they commit within two years. This puts ${forename} in the ${latestAssessment.seriousViolentReoffendingPredictor.band.toLowerCase()} risk band.`
+      serious violent offence they commit within two years. This puts ${forename} in the ${latestAssessment.seriousViolentReoffendingPredictor.band.toLowerCase()} risk band.`
   expect(renderedHtml.document.querySelector('[data-test-id="svrp-probability-statement"]').textContent.trim()).toBe(
     expectedSvrpProbabilityStatement,
   )
 
   const expectedDcsrpProbabilityStatement = `About 3 in 100 people (2.81%) with a similar profile to ${forename} will get a sanction for a
-          direct contact sexual offence they commit within two years. This puts ${forename} in the ${latestAssessment.directContactSexualReoffendingPredictor.band.toLowerCase()} risk band.`
+        direct contact sexual offence they commit within two years. This puts ${forename} in the ${latestAssessment.directContactSexualReoffendingPredictor.band.toLowerCase()} risk band.`
   expect(renderedHtml.document.querySelector('[data-test-id="dcsrp-probability-statement"]').textContent.trim()).toBe(
     expectedDcsrpProbabilityStatement,
   )
 
   const expectedIicsrpIntroStatement = `${forename} is in the ${latestAssessment.indirectImageContactSexualReoffendingPredictor.band.toLowerCase()} risk category for getting a sanction for an indirect sexual contact
-          offence they commit within two years. This is because they have more than 2 previous relevant sanctions.`
+        offence they commit within two years. This is because they have more than 2 previous relevant sanctions.`
   expect(renderedHtml.document.querySelector('[data-test-id="iicsrp-intro-statement"]').textContent.trim()).toBe(
     expectedIicsrpIntroStatement,
   )

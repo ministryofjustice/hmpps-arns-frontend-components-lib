@@ -8,8 +8,7 @@
   In template:
     {% from "components/details-chevron/macro.njk" import detailsChevron %}
     {{ detailsChevron({
-      html: "<p>some html</p>",
-      id: "my-id",
+      html: <p>some html</p>,
       showText: "show",
       hideText: "hide",
       })
@@ -17,20 +16,34 @@
 
 @param {object} params
   @param {HTML} params.html - The HTML content to show/hide
-  @param {string} params.id - A unique id for this details chevron
   @param {string?} params.showText - show text override
   @param {string?} params.hideText - hide text override
+  @param {string?} params.ariaContext - predictor in sentence case
 
 #}
-<details class="govuk-details details--chevron-style" id="{{ params.id }}">
-  <summary class="govuk-details__summary">
-    <span class="details__chevron" aria-hidden="true"></span>
-    <span class="details__toggle-text">
-      <span class="details__show">{{ params.showText if params.showText else "Show details" }}</span>
-      <span class="details__hide">{{ params.hideText if params.hideText else "Hide details" }}</span>
+{% set idSuffix = ("-" + params.ariaContext | replace(' ', '-') | lower) if params.ariaContext else "" %}
+<details class="govuk-details details--chevron-style" data-test-id="details-wrapper{{ idSuffix }}">
+  <summary class="govuk-details__summary" id="details-summary{{ idSuffix }}" data-test-id="details-summary">
+    <span class="details__chevron" aria-hidden="true" data-test-id="details-chevron"></span>
+    <span class="details__toggle-text" data-test-id="details-toggle-text">
+      <span class="details__show" data-test-id="details-show">
+        {{ params.showText if params.showText else "Show details" }}
+        {% if params.ariaContext %}
+          <span class="govuk-visually-hidden" data-test-id="details-show-hidden-text"> for the {{ params.ariaContext }}</span>
+        {% endif %}
+      </span>
+      <span class="details__hide" data-test-id="details-hide">
+        {{ params.hideText if params.hideText else "Hide details" }}
+        {% if params.ariaContext %}
+          <span class="govuk-visually-hidden" data-test-id="details-hide-hidden-text"> for the {{ params.ariaContext }}</span>
+        {% endif %}
+      </span>
     </span>
   </summary>
-  <div class="govuk-details__text">
+  <section class="govuk-details__text"
+           aria-labelledby="details-summary{{ idSuffix }}"
+           role="region"
+           data-test-id="details-section">
     {{ params.html | safe }}
-  </div>
+  </section>
 </details>
