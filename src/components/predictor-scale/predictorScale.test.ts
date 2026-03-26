@@ -205,6 +205,18 @@ describe('predictor-scale', () => {
     expect(lastUpdatedEl?.textContent?.trim()).toBe('Last updated: 02 January 2024')
   })
 
+  it('should render the component without lastUpdated', () => {
+    const predictor: PredictorOption = 'rsr'
+    const renderedHtml = getRenderedHtml(
+      dom,
+      'PREDICTOR_SCALE',
+      `predictor: "rsr", excludeDate: true`,
+      getRiskTestData([{ predictor, level: BandLevel.HIGH, score: 50, staticOrDynamic: 'Dynamic' }]),
+    )
+
+    expect(renderedHtml.document.querySelector('[data-test-id="LastUpdatedDate"]')).toBeNull()
+  })
+
   describe('legacy fallback', () => {
     it.each(legacyFallbackTestCases)(
       'Legacy fallback, assessmentPredictor: %s, predictorInMacro: %s, predictorRendered: %s',
