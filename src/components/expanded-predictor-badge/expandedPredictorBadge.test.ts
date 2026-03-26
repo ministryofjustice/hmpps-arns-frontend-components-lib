@@ -75,6 +75,19 @@ describe('expanded-predictor-badge', () => {
     },
   )
 
+  it('should render the component without lastUpdated', () => {
+    const predictor: PredictorOption = 'rsr'
+    const renderedHtml = getRenderedHtml(
+      dom,
+      'EXPANDED_PREDICTOR_BADGE',
+      `predictor: "rsr", excludeDate: true`,
+      getRiskTestData([{ predictor, level: BandLevel.HIGH, score: 50, staticOrDynamic: 'Dynamic' }]),
+    )
+
+    expect(renderedHtml.document.querySelector('[data-test-id="LastUpdatedDate"]')).toBeNull()
+    expect(renderedHtml.document.querySelector('[data-test-id="badgeStats"]').className).toContain('arns-excluded-date')
+  })
+
   describe('legacy fallback', () => {
     it.each(legacyFallbackTestCases)(
       'Legacy fallback, assessmentPredictor: %s, predictorInMacro: %s, predictorRendered: %s',
