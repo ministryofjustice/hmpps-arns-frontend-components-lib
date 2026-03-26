@@ -1,6 +1,6 @@
 {
   "name": "@ministryofjustice/hmpps-arns-frontend-components-lib",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "ARNS front-end library for risk score visualisations",
   "main": "./dist/index.cjs.js",
   "module": "./dist/index.esm.js",

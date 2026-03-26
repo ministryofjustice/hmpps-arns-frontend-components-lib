@@ -22,7 +22,7 @@
 
 #}
 {% set idSuffix = ("-" + params.ariaContext | replace(' ', '-') | lower) if params.ariaContext else "" %}
-<details class="govuk-details details--chevron-style" data-test-id="details-wrapper{{ idSuffix }}">
+<details class="govuk-details details--chevron-style" data-test-id="details-wrapper{{ idSuffix }}" id="details{{ idSuffix }}">
   <summary class="govuk-details__summary" id="details-summary{{ idSuffix }}" data-test-id="details-summary">
     <span class="details__chevron" aria-hidden="true" data-test-id="details-chevron"></span>
     <span class="details__toggle-text" data-test-id="details-toggle-text">
