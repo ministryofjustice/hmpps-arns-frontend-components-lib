@@ -26,6 +26,7 @@
     @param {boolean} [params.showScore] - Optional config override - If true, displays the percentage score
     @param {boolean} [params.fixedWidth] - Optional - If true or undefined, displays the expanded predictor badge in a fixed width format
     @param {boolean} [params.legacyFallback] - Optional (default false) - If true and predictor requested is OGRS4-gen, fallback to showing the OGRS3-gen predictor if the latest assessment is OGRS3-gen.
+    @param {boolean} params.excludeDate - Optional flag for excluding date
 #}
 {% set latestAssessment = params.data.assessments | first if params.data.assessments else null %}
 
@@ -82,7 +83,7 @@
         <span
           class="arns-predictor-badge__type" data-test-id="name">{{ predictor.name }}</span>
 
-        <div class="arns-predictor-badge__stats">
+        <div class="{% if params.excludeDate == true %}arns-excluded-date {% endif %}arns-predictor-badge__stats" data-test-id="badgeStats">
           <span class="arns-predictor-badge__level" data-test-id="band">{{ band }}</span>
 
           {% if shouldShowScore and badgeClass != 'arns-expanded-predictor-badge--default' %}
@@ -94,8 +95,9 @@
           {% endif %}
 
         </div>
-
-        <span class="arns-predictor-badge__last_updated" data-test-id="completedDate">Last updated: {{ predictor.completedDate }}</span>
+        {% if not params.excludeDate %}
+          <span class="arns-predictor-badge__last_updated" data-test-id="completedDate">Last updated: {{ predictor.completedDate }}</span>
+        {% endif %}
 
       </div>
     {% endif %}

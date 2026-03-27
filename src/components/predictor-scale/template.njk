@@ -21,6 +21,7 @@ In template:
   @param {RiskData} params.data - Risk data object from ArnsComponents.getRiskData() containing an 'assessments' array
   @param {string} params.predictor - The name of the specific predictor to display
   @param {boolean} [params.legacyFallback] - Optional (default false) - If true and predictor requested is OGRS4-gen, fallback to showing the OGRS3-gen predictor if the latest assessment is OGRS3-gen.
+  @param {boolean} params.excludeDate - Optional flag for excluding date
 #}
 {%- from "govuk/components/tag/macro.njk" import govukTag -%}
 {%- from "../predictor-scale-bar/macro.njk" import predictorScaleBar -%}
@@ -51,7 +52,9 @@ In template:
           <div class="arns-predictor-scale-header-wrapper">
             <div>
               <h2 class="govuk-heading-m" data-test-id="name">{{ predictor.name }}</h2>
+              {% if not params.excludeDate %}
               <p class="govuk-hint" data-test-id="LastUpdatedDate">Last updated: {{ predictor.completedDate if predictor.completedDate else 'unknown' }}</p>
+              {% endif %}
             </div>
             {% if predictor.staticOrDynamic %}
               <div data-test-id="staticOrDynamic">{{ govukTag({ text: predictor.staticOrDynamic, classes: "govuk-tag--grey"}) }}</div>
