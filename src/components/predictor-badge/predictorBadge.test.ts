@@ -57,7 +57,7 @@ describe('predictor-badge', () => {
         getRiskTestData([{ predictor, level: BandLevel.LOW, score: 12.34, staticOrDynamic: 'Static' }]),
       )
       const name = renderedHtml.document.querySelector('[data-test-id="nameAndBand"]')
-      expect(name.innerHTML).toBe(`${expectedPredictorNameMappings[predictor].badgeContent} <strong>LOW</strong>`)
+      expect(name.innerHTML).toBe(`${expectedPredictorNameMappings[predictor].name} <strong>LOW</strong>`)
     })
   })
 
@@ -88,9 +88,7 @@ describe('predictor-badge', () => {
         )
         const name = renderedHtml.document.querySelector('[data-test-id="nameAndBand"]')
         if (predictorRendered) {
-          expect(name.innerHTML).toBe(
-            `${expectedPredictorNameMappings[predictorRendered].badgeContent} <strong>LOW</strong>`,
-          )
+          expect(name.innerHTML).toBe(`${expectedPredictorNameMappings[predictorRendered].name} <strong>LOW</strong>`)
         } else {
           expect(name).toBeNull()
         }
@@ -145,7 +143,7 @@ const validateBadge = (
       { tag: 'color', value: properties.typeAndLevelColour },
       { tag: 'backgroundColor', value: 'rgba(0, 0, 0, 0)' },
     ],
-    `${expectedPredictorNameMappings[predictor].badgeContent} <strong>${displayBand}</strong>`,
+    `${expectedPredictorNameMappings[predictor].name} <strong>${displayBand}</strong>`,
   )
 
   // Validate Score (Scoped search using data-test-id)

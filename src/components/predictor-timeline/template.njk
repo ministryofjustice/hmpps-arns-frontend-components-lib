@@ -52,7 +52,7 @@ In template:
       {% endif %}
 
       <div class="{{ timelineItemClass }}" data-predictor-badge="{{ predictor.name }} {{ band }}">
-        <span class="arns-legacy-predictor-timeline-item__type_and_level" data-test-id="nameAndBand">{{ predictor.name | upper }} <strong>{{ band }}</strong></span>
+        <span class="arns-legacy-predictor-timeline-item__type_and_level" data-test-id="nameAndBand">{{ predictor.name }} <strong>{{ band }}</strong></span>
 
         {% if predictor.score and timelineItemClass != 'arns-legacy-predictor-timeline-item--default' %}
           <span class="arns-legacy-predictor-timeline-item__score" data-test-id="score">{{ predictor.score }}%</span>
@@ -121,59 +121,59 @@ In template:
         <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
         <strong class="govuk-warning-text__text" data-test-id="warning-text">
                 <span
-                        class="govuk-visually-hidden">Warning the risk predictor tools have been updated after this date</span>
-          All assessments started after this date use updated risk predictor tools
+                        class="govuk-visually-hidden">Warning the risk predictors have been updated after this date</span>
+          All assessments started after this date use updated risk predictors
         </strong>
       </div>
       <details class="govuk-details arns-predictor-timeline__details">
         <summary class="govuk-details__summary">
               <span class="govuk-details__summary-text">
-                How the risk predictor tools have changed
+                How the risk predictors have changed
               </span>
         </summary>
         <div class="govuk-details__text">
           <h3>All reoffending</h3>
-          <b>Old version:</b> Offender Group Reconviction Scale (OGRS)<br>
-          <b>Updated version:</b> All Reoffending Predictor<br>
+          <b>Old version:</b> Offender group reconviction scale (OGRS)<br>
+          <b>Updated version:</b> All reoffending predictor<br>
           <br>
-          The All Reoffending Predictor now has both a static and dynamic version.
+          The All reoffending predictor now has both a static and dynamic version.
           <br><br>
           <h3>Violent reoffending</h3>
-          <b>Old version:</b> OASys Violent Predictor (OVP)<br>
-          <b>Updated version:</b> Violent Reoffending Predictor<br>
+          <b>Old version:</b> OASys violent predictor (OVP)<br>
+          <b>Updated version:</b> Violent reoffending predictor<br>
           <br>
-          The Violent Reoffending Predictor now has both a static and dynamic version.
+          The Violent reoffending predictor now has both a static and dynamic version.
           <br><br>
           <h3>Sexual reoffending</h3>
           <h4>Direct contact</h4>
-          <b>Old version:</b> OASys Sexual Predictor — Direct Contact (OSP-DC)<br>
-          <b>Updated version:</b> Direct Contact — Sexual Reoffending Predictor<br>
+          <b>Old version:</b> OASys sexual predictor — direct contact (OSP-DC)<br>
+          <b>Updated version:</b> Direct contact — sexual reoffending predictor<br>
           <br>
-          The Direct Contact — Sexual Reoffending Predictor only has a static score.
+          The Direct contact — sexual reoffending predictor only has a static score.
           <br>
           <h4>Indirect contact</h4>
-          <b>Old version:</b> OASys Sexual Predictor — Images and indirect contact with children (OSP-IIC)<br>
-          <b>Updated version:</b> Images and Indirect Contact — Sexual Reoffending Predictor<br>
+          <b>Old version:</b> OASys sexual predictor — images and indirect contact with children (OSP-IIC)<br>
+          <b>Updated version:</b> Images and indirect contact — sexual reoffending predictor<br>
           <br>
-          The Images and Indirect Contact — Sexual Reoffending Predictor only has a static score.
+          The Images and indirect contact — sexual reoffending predictor only has a static score.
           <br><br>
           <h3>Serious non-sexual violent reoffending</h3>
           <b>Old version:</b> Previously part of RSR but not displayed<br>
-          <b>Updated version:</b> Serious Violent Reoffending Predictor<br>
+          <b>Updated version:</b> Serious violent reoffending predictor<br>
           <br>
-          The Serious Violent Reoffending Predictor has both static and dynamic versions.
+          The Serious violent reoffending predictor has both static and dynamic versions.
           <br><br>
           <h3>Serious reoffending</h3>
-          This predictor is a combination of the Direct Contact — Sexual Reoffending Predictor, Images and
-          Indirect Contact — Sexual Reoffending Predictor and Serious Violent Reoffending Predictor scores.
+          This predictor is a combination of the Direct contact — sexual reoffending predictor, Images and
+          indirect contact — sexual reoffending predictor and Serious violent reoffending predictor scores.
           <br>
-          <b>Old version:</b> Risk of Serious Recidivism (RSR)<br>
-          <b>Updated version:</b> Combined Serious Reoffending Predictor<br>
+          <b>Old version:</b> Risk of serious recidivism (RSR)<br>
+          <b>Updated version:</b> Combined serious reoffending predictor<br>
           <br>
-          The Combined Serious Reoffending Predictor has both static and dynamic versions.
+          The Combined serious reoffending predictor has both static and dynamic versions.
           <br><br>
           <h3>Which version will be displayed</h3>
-          All tools only show a dynamic score if both versions are available.
+          All predictors only show a dynamic score if both versions are available.
           <br>
         </div>
       </details>

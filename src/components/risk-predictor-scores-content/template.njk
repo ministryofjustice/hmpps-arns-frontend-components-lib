@@ -16,7 +16,7 @@
 
 {% if latestAssessment %}
   <div data-module="arns-custom-app-insights">
-    <section class="govuk-!-margin-bottom-6 bottom-border" data-test-id="predictor-intro" aria-labelledby="intro-heading">
+    <section class="bottom-border" data-test-id="predictor-intro" aria-labelledby="intro-heading">
       <h2 id="intro-heading" class="govuk-visually-hidden">
         Introduction to risk predictors
       </h2>
@@ -404,7 +404,7 @@
     <section role="region" aria-labelledby="dcsrp-heading">
 
       <div class="predictor-header-wrapper">
-        <h3 id="dcsrp-heading">Direct contact &mdash; sexual reoffending predictor</h3>
+        <h3 id="dcsrp-heading">Direct contact &ndash; sexual reoffending predictor</h3>
       </div>
       {% if DCSRP and DCSRP.score and DCSRP.band %}
         {% if DCSRP.band === 'NOT APPLICABLE' %}
@@ -509,7 +509,7 @@
     {#  Images and indirect contact - Sexual reoffending predictor  #}
     <section role="region" aria-labelledby="iicsrp-heading">
       <div class="predictor-header-wrapper">
-        <h3 id="iicsrp-heading">Images and indirect contact &mdash; sexual reoffending predictor</h3>
+        <h3 id="iicsrp-heading">Images and indirect contact &ndash; sexual reoffending predictor</h3>
       </div>
       {% if IICSRP and IICSRP.band %}
         {% if IICSRP.band === 'NOT APPLICABLE' %}
