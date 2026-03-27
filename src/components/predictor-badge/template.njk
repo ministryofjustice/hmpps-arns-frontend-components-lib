@@ -67,7 +67,7 @@
       <div class="{{ badgeClass }}"
            data-predictor-badge="{{ predictor.name }} {{ band }}">
 
-        <span class="arns-predictor-badge__type_and_level" data-test-id="nameAndBand">{{ predictor.name | upper }} <strong>{{ band }}</strong></span>
+        <span class="arns-predictor-badge__type_and_level" data-test-id="nameAndBand">{{ predictor.name }} <strong>{{ band }}</strong></span>
 
         {% if shouldShowScore and badgeClass != 'arns-predictor-badge--default' %}
           <span class="arns-predictor-badge__score" data-test-id="score">{{ predictor.score }}%</span>

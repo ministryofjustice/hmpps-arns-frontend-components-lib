@@ -138,10 +138,10 @@ describe('predictor-timeline', () => {
         const renderedHtml = getRenderedHtml(dom, 'PREDICTOR_TIMELINE', '', riskData)
 
         const newItem = renderedHtml.document.querySelector(
-          '[data-expanded-predictor-badge="All Reoffending Predictor LOW"]',
+          '[data-expanded-predictor-badge="All reoffending predictor LOW"]',
         )
         expect(newItem).not.toBeNull()
-        expect(newItem.querySelector('[data-test-id="name"]').textContent).toBe('All Reoffending Predictor')
+        expect(newItem.querySelector('[data-test-id="name"]').textContent).toBe('All reoffending predictor')
         expect(newItem.querySelector('[data-test-id="band"]').textContent).toBe('LOW')
         expect(newItem.querySelector('[data-test-id="score"]').textContent).toBe('1.23%')
         expect(newItem.querySelector('[data-test-id="staticOrDynamic"]').textContent).toBe('Static')
