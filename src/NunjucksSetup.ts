@@ -1,5 +1,11 @@
 import { Environment } from 'nunjucks'
-import { convertScoreToScaleMarkerPosition, convertBandToScaleMarkerPosition } from './utils/predictorUtils'
+import {
+  convertScoreToScaleMarkerPosition,
+  convertBandToScaleMarkerPosition,
+  containsCompletedAssessment,
+  isBefore,
+  probabilityStatement,
+} from './utils/predictorUtils'
 
 export const predictorConfig = {
   ogrs3: {
@@ -83,4 +89,7 @@ export const arnsNunjucksSetup = (env: Environment) => {
 
   env.addFilter('scoreToScaleMarkerPosition', convertScoreToScaleMarkerPosition)
   env.addFilter('bandToScaleMarkerPosition', convertBandToScaleMarkerPosition)
+  env.addFilter('containsCompletedAssessment', containsCompletedAssessment)
+  env.addFilter('isBefore', isBefore)
+  env.addFilter('probabilityStatement', probabilityStatement)
 }

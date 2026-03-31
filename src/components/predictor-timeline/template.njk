@@ -1,0 +1,239 @@
+{#
+ARNS Predictor Timeline Component
+
+@name predictorTimeline
+
+@description Displays the history of a sujects assessments.
+
+@example
+In route handler:
+  const riskData = await arnsComponents.getRiskData(token, 'crn', 'X123456')
+  res.render('page', { riskData })
+
+In template:
+  {% from "components/predictor-timeline/macro.njk" import predictorTimeline %}
+  {{ predictorTimeline({
+    data: riskData,
+    ogrs4ReleaseDate: "23 February 2026 at 09:00"
+  }) }}
+
+@param {object} params
+  @param {RiskData} params.data - Risk data object from ArnsComponents.getRiskData() containing an 'assessments' array
+  @param {string} params.ogrs4ReleaseDate - The release date for the warning macro
+#}
+{% set ogrs4ReleaseDate = params.ogrs4ReleaseDate | default("23 February 2026 at 09:00") %}
+{% set hasTimelineWarning = false %}
+
+{% macro predictorTimelineItem(predictor, isLegacy) %}
+  {% if predictor %}
+
+    {% set timelineItemClass = '' %}
+
+    {% if isLegacy %}
+
+      {% switch predictor.band %}
+      {% case 'VERY HIGH' %}
+        {% set timelineItemClass = 'arns-legacy-predictor-timeline-item--very-high' %}
+      {% case 'HIGH' %}
+        {% set timelineItemClass = 'arns-legacy-predictor-timeline-item--high' %}
+      {% case 'MEDIUM' %}
+        {% set timelineItemClass = 'arns-legacy-predictor-timeline-item--medium' %}
+      {% case 'LOW' %}
+        {% set timelineItemClass = 'arns-legacy-predictor-timeline-item--low' %}
+      {% default %}
+        {% set timelineItemClass = 'arns-legacy-predictor-timeline-item--default' %}
+      {% endswitch %}
+
+      {% if predictor.band is undefined %}
+        {% set band = 'UNKNOWN' %}
+        {% set timelineItemClass = 'arns-legacy-predictor-timeline-item--default' %}
+      {% else %}
+        {% set band = predictor.band | replace('_', ' ') %}
+      {% endif %}
+
+      <div class="{{ timelineItemClass }}" data-predictor-badge="{{ predictor.name }} {{ band }}">
+        <span class="arns-legacy-predictor-timeline-item__type_and_level" data-test-id="nameAndBand">{{ predictor.name }} <strong>{{ band }}</strong></span>
+
+        {% if predictor.score and timelineItemClass != 'arns-legacy-predictor-timeline-item--default' %}
+          <span class="arns-legacy-predictor-timeline-item__score" data-test-id="score">{{ predictor.score }}%</span>
+        {% endif %}
+
+        {% if predictor.staticOrDynamic and timelineItemClass != 'arns-legacy-predictor-timeline-item--default' %}
+          <span class="arns-legacy-predictor-timeline-item__static_or_dynamic" data-test-id="staticOrDynamic">{{ predictor.staticOrDynamic }}</span>
+        {% endif %}
+
+      </div>
+
+    {% else %}
+
+      {% switch predictor.band %}
+      {% case 'VERY HIGH' %}
+        {% set timelineItemClass = 'arns-predictor-timeline-item--very-high' %}
+      {% case 'HIGH' %}
+        {% set timelineItemClass = 'arns-predictor-timeline-item--high' %}
+      {% case 'MEDIUM' %}
+        {% set timelineItemClass = 'arns-predictor-timeline-item--medium' %}
+      {% case 'LOW' %}
+        {% set timelineItemClass = 'arns-predictor-timeline-item--low' %}
+      {% default %}
+        {% set timelineItemClass = 'arns-predictor-timeline-item--default' %}
+      {% endswitch %}
+
+      {% set staticOrDynamicClass = 'arns-predictor-timeline-item__static_or_dynamic' %}
+      {% if predictor.score and predictor.band in ['VERY HIGH', 'MEDIUM'] and predictor.staticOrDynamic | upper === 'DYNAMIC' %}
+        {% set staticOrDynamicClass = staticOrDynamicClass + ' arns-predictor-timeline-item__wrapped_static_or_dynamic' %}
+      {% endif %}
+
+      {% if predictor.band is undefined %}
+        {% set band = 'UNKNOWN' %}
+        {% set timelineItemClass = 'arns-predictor-timeline-item--default' %}
+      {% else %}
+        {% set band = predictor.band | replace('_', ' ') %}
+      {% endif %}
+
+      <div class="{{ timelineItemClass }}" data-expanded-predictor-badge="{{ predictor.name }} {{ band }}">
+        <span class="arns-predictor-timeline-item__type" data-test-id="name">{{ predictor.name }}</span>
+
+        <div class="arns-predictor-timeline-item__stats">
+          <span class="arns-predictor-timeline-item__level" data-test-id="band">{{ band }}</span>
+
+          {% if predictor.score and timelineItemClass != 'arns-predictor-timeline-item--default' %}
+            <span class="arns-predictor-timeline-item__score" data-test-id="score">{{ predictor.score }}%</span>
+          {% endif %}
+
+          {% if predictor.staticOrDynamic and timelineItemClass != 'arns-predictor-timeline-item--default' %}
+            <span class="{{ staticOrDynamicClass }}" data-test-id="staticOrDynamic">{{ predictor.staticOrDynamic }}</span>
+          {% endif %}
+
+        </div>
+      </div>
+    {% endif %}
+  {% endif %}
+{% endmacro %}
+
+{% macro timelineWarning() %}
+  <div class="arns-predictor-timeline__item" data-test-id="timeline-item">
+    <div class="arns-predictor-timeline__header">
+      <p class="arns-predictor-timeline__byline">{{ ogrs4ReleaseDate }}</p>
+    </div>
+    <div class="arns-predictor-timeline__description">
+      <div class="govuk-warning-text arns-predictor-timeline__warning">
+        <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
+        <strong class="govuk-warning-text__text" data-test-id="warning-text">
+                <span
+                        class="govuk-visually-hidden">Warning the risk predictors have been updated after this date</span>
+          All assessments started after this date use updated risk predictors
+        </strong>
+      </div>
+      <details class="govuk-details arns-predictor-timeline__details">
+        <summary class="govuk-details__summary">
+              <span class="govuk-details__summary-text">
+                How the risk predictors have changed
+              </span>
+        </summary>
+        <div class="govuk-details__text">
+          <h3>All reoffending</h3>
+          <b>Old version:</b> Offender group reconviction scale (OGRS)<br>
+          <b>Updated version:</b> All reoffending predictor<br>
+          <br>
+          The All reoffending predictor now has both a static and dynamic version.
+          <br><br>
+          <h3>Violent reoffending</h3>
+          <b>Old version:</b> OASys violent predictor (OVP)<br>
+          <b>Updated version:</b> Violent reoffending predictor<br>
+          <br>
+          The Violent reoffending predictor now has both a static and dynamic version.
+          <br><br>
+          <h3>Sexual reoffending</h3>
+          <h4>Direct contact</h4>
+          <b>Old version:</b> OASys sexual predictor — direct contact (OSP-DC)<br>
+          <b>Updated version:</b> Direct contact — sexual reoffending predictor<br>
+          <br>
+          The Direct contact — sexual reoffending predictor only has a static score.
+          <br>
+          <h4>Indirect contact</h4>
+          <b>Old version:</b> OASys sexual predictor — images and indirect contact with children (OSP-IIC)<br>
+          <b>Updated version:</b> Images and indirect contact — sexual reoffending predictor<br>
+          <br>
+          The Images and indirect contact — sexual reoffending predictor only has a static score.
+          <br><br>
+          <h3>Serious non-sexual violent reoffending</h3>
+          <b>Old version:</b> Previously part of RSR but not displayed<br>
+          <b>Updated version:</b> Serious violent reoffending predictor<br>
+          <br>
+          The Serious violent reoffending predictor has both static and dynamic versions.
+          <br><br>
+          <h3>Serious reoffending</h3>
+          This predictor is a combination of the Direct contact — sexual reoffending predictor, Images and
+          indirect contact — sexual reoffending predictor and Serious violent reoffending predictor scores.
+          <br>
+          <b>Old version:</b> Risk of serious recidivism (RSR)<br>
+          <b>Updated version:</b> Combined serious reoffending predictor<br>
+          <br>
+          The Combined serious reoffending predictor has both static and dynamic versions.
+          <br><br>
+          <h3>Which version will be displayed</h3>
+          All predictors only show a dynamic score if both versions are available.
+          <br>
+        </div>
+      </details>
+    </div>
+  </div>
+{% endmacro %}
+
+{% set assessments = params.data.assessments %}
+
+{% set allSectionIds %}
+  {%- for item in assessments -%}
+    predictor-section-{{ item.completedDateTime | replace(" ", "-") | replace(":", "-") | lower }}{{ " " if not loop.last }}
+  {%- endfor -%}
+{% endset %}
+
+<div class="arns-predictor-timeline__heading" data-test-id="timeline-heading">
+  <span class='govuk-heading-m'>Scores history</span>
+  <button id="predictor-timeline__toggle-all" class="arns-predictor-timeline-link-btn" aria-label="Open all score history"
+          aria-controls="{{ allSectionIds }}" aria-expanded="false">Open all</button>
+</div>
+
+<div class="arns-predictor-timeline predictor" data-test-id="predictor-timeline" data-module="predictor-timeline">
+  {% for item in assessments %}
+
+    {% set sectionId = "predictor-section-" + (item.completedDateTime | replace(" ", "-") | replace(":", "-") | lower) %}
+
+    {% if hasTimelineWarning === false %}
+      {% if item.completedDateTime | isBefore(ogrs4ReleaseDate) %}
+        {{ timelineWarning() }}
+        {% set hasTimelineWarning = true %}
+      {% endif %}
+    {% endif %}
+
+    <div class="arns-predictor-timeline__item" data-test-id="timeline-item">
+      <div class="arns-predictor-timeline__header" data-test-id="timeline-item-header">
+        <p class="arns-predictor-timeline__byline" data-test-id="timeline-byline">{{ item.completedDateTime }}</p>
+      </div>
+      <div class="arns-predictor-timeline__description" data-test-id="timeline-description">
+        <button class="arns-predictor-timeline-link-btn arns-predictor-timeline__toggle-section" aria-label="View scores for {{ item.completedDateTime }}"
+                aria-controls="{{ sectionId }}" aria-expanded="false" data-test-id="button-{{ sectionId }}">Open</button>
+        <div id="{{ sectionId }}" class="arns-predictor-timeline-section">
+          <ul class="govuk-list">
+            {% set excluded_fields = ['outputVersion', 'completedDate', 'completedDateTime', 'assessmentType'] %}
+            {% for key, value in item %}
+              {% if key not in excluded_fields %}
+                {% if key | upper not in ['OGRS3', 'OGP', 'OVP', 'RSR', 'OSPDC', 'OSPC', 'OSPIIC', 'OSPI'] %}
+                  <li>{{ predictorTimelineItem(value, false) }}</li>
+                {% else %}
+                  <li>{{ predictorTimelineItem(value, true) }}</li>
+                {% endif %}
+              {% endif %}
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
+    </div>
+  {% endfor %}
+
+  {% if hasTimelineWarning === false %}
+    {{ timelineWarning() }}
+  {% endif %}
+
+</div>

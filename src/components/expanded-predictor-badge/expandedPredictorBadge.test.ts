@@ -7,6 +7,7 @@ import {
   getInitialDom,
   getRenderedHtml,
   getRiskTestData,
+  legacyFallbackTestCases,
   predictorConfig,
   PredictorOption,
   StaticOrDynamicContent,
@@ -73,6 +74,41 @@ describe('expanded-predictor-badge', () => {
       validateBadge(renderedHtml, predictor, level, score, staticOrDynamic, showScore, fixedWidth)
     },
   )
+
+  it('should render the component without lastUpdated', () => {
+    const predictor: PredictorOption = 'rsr'
+    const renderedHtml = getRenderedHtml(
+      dom,
+      'EXPANDED_PREDICTOR_BADGE',
+      `predictor: "rsr", excludeDate: true`,
+      getRiskTestData([{ predictor, level: BandLevel.HIGH, score: 50, staticOrDynamic: 'Dynamic' }]),
+    )
+
+    expect(renderedHtml.document.querySelector('[data-test-id="LastUpdatedDate"]')).toBeNull()
+    expect(renderedHtml.document.querySelector('[data-test-id="badgeStats"]').className).toContain('arns-excluded-date')
+  })
+
+  describe('legacy fallback', () => {
+    it.each(legacyFallbackTestCases)(
+      'Legacy fallback, assessmentPredictor: %s, predictorInMacro: %s, predictorRendered: %s',
+      (assessmentPredictor: PredictorOption, predictorInMacro: PredictorOption, predictorRendered: PredictorOption) => {
+        const renderedHtml = getRenderedHtml(
+          dom,
+          'EXPANDED_PREDICTOR_BADGE',
+          `predictor: "${predictorInMacro}", legacyFallback: true`,
+          getRiskTestData([
+            { predictor: assessmentPredictor, level: BandLevel.LOW, score: 12.34, staticOrDynamic: 'Static' },
+          ]),
+        )
+        const name = renderedHtml.document.querySelector('[data-test-id="name"]')
+        if (predictorRendered) {
+          expect(name.innerHTML).toBe(expectedPredictorNameMappings[predictorRendered].name)
+        } else {
+          expect(name).toBeNull()
+        }
+      },
+    )
+  })
 })
 
 const validateBadge = (

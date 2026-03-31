@@ -5,6 +5,7 @@ import {
   getInitialDom,
   getRenderedHtml,
   getRiskTestData,
+  legacyFallbackTestCases,
   PredictorOption,
   RiskTestDataOptions,
   StaticOrDynamicContent,
@@ -202,5 +203,39 @@ describe('predictor-scale', () => {
     const lastUpdatedEl = renderedHtml.document.querySelector('[data-test-id="LastUpdatedDate"]')
     expect(lastUpdatedEl?.className).toContain('govuk-hint')
     expect(lastUpdatedEl?.textContent?.trim()).toBe('Last updated: 02 January 2024')
+  })
+
+  it('should render the component without lastUpdated', () => {
+    const predictor: PredictorOption = 'rsr'
+    const renderedHtml = getRenderedHtml(
+      dom,
+      'PREDICTOR_SCALE',
+      `predictor: "rsr", excludeDate: true`,
+      getRiskTestData([{ predictor, level: BandLevel.HIGH, score: 50, staticOrDynamic: 'Dynamic' }]),
+    )
+
+    expect(renderedHtml.document.querySelector('[data-test-id="LastUpdatedDate"]')).toBeNull()
+  })
+
+  describe('legacy fallback', () => {
+    it.each(legacyFallbackTestCases)(
+      'Legacy fallback, assessmentPredictor: %s, predictorInMacro: %s, predictorRendered: %s',
+      (assessmentPredictor: PredictorOption, predictorInMacro: PredictorOption, predictorRendered: PredictorOption) => {
+        const renderedHtml = getRenderedHtml(
+          dom,
+          'PREDICTOR_SCALE',
+          `predictor: "${predictorInMacro}", legacyFallback: true`,
+          getRiskTestData([
+            { predictor: assessmentPredictor, level: BandLevel.LOW, score: 12.34, staticOrDynamic: 'Static' },
+          ]),
+        )
+        const name = renderedHtml.document.querySelector('[data-test-id="name"]')
+        if (predictorRendered) {
+          expect(name.innerHTML).toBe(expectedPredictorNameMappings[predictorRendered].name)
+        } else {
+          expect(name).toBeNull()
+        }
+      },
+    )
   })
 })
