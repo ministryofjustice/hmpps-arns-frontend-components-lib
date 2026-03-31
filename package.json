@@ -115,7 +115,7 @@
     "@ministryofjustice/hmpps-rest-client": "^1.0.0",
     "@types/express": "^5.0.6",
     "@types/jsdom": "27.0.0",
-    "@types/node": "22.19.11",
+    "@types/node": "22.19.15",
     "@types/nunjucks": "^3.2.6",
     "jsdom": "28.0.0",
     "nunjucks": "^3.2.4",
