@@ -299,7 +299,7 @@
     <section role="region" aria-labelledby="svrp-heading">
       {% if SVRP and SVRP.score and SVRP.band and SVRP.staticOrDynamic %}
         <div class="predictor-header-wrapper">
-          <h3 id="svrp-header">Serious violent reoffending predictor</h3>
+          <h3 id="svrp-heading">Serious violent reoffending predictor</h3>
           <div class="staticOrDynamicTag" data-test-id="svrp-staticOrDynamic">
             {{ govukTag({ text: SVRP.staticOrDynamic, classes: "govuk-tag--grey"}) }}
           </div>
@@ -392,7 +392,7 @@
         </div>
       {% else %}
         <div class="predictor-header-wrapper">
-          <h3 id="svrp-header">Serious violent reoffending predictor</h3>
+          <h3 id="svrp-heading">Serious violent reoffending predictor</h3>
         </div>
         <div class="bottom-border" data-test-id="missingInfoWarningTextSVRP">
           <p>{{ missingInfoWarningText }}</p>
