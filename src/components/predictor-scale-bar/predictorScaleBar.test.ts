@@ -203,7 +203,7 @@ describe('predictor-scale-bar', () => {
 
       const computedStyle = renderedHtml.window.getComputedStyle(mediumBandSpan!)
       expect(computedStyle.backgroundImage).toContain('repeating-linear-gradient')
-      expect(computedStyle.backgroundImage).toContain('rgba(255, 255, 255, 0.25)')
+      expect(computedStyle.backgroundImage).toContain('rgb(243, 202, 185)')
     })
 
     it('should apply striped pattern to the VERY HIGH band', () => {
@@ -225,7 +225,7 @@ describe('predictor-scale-bar', () => {
 
       const computedStyle = renderedHtml.window.getComputedStyle(veryHighBandSpan!)
       expect(computedStyle.backgroundImage).toContain('repeating-linear-gradient')
-      expect(computedStyle.backgroundImage).toContain('rgba(0, 0, 0, 0.15)')
+      expect(computedStyle.backgroundImage).toContain('rgb(195, 144, 136)')
     })
   })
 })
