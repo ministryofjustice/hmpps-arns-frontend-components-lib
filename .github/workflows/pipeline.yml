@@ -76,12 +76,13 @@ jobs:
       - name: Setup node with public npmjs.com registry
         uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f # v6
         with:
-          node-version: 22.22.1 # Pin to this version while we investigate why 22.22.2 causes the next step to break
+          node-version: 22
           registry-url: 'https://registry.npmjs.org'
           scope: '@ministryofjustice'
       # Ensure npm 11.5.1 or later is installed, to support OIDC publishing
+      # Need to install v10 first as a workaround to this issue: https://github.com/nodejs/node/issues/62425
       - name: Update npm
-        run: npm install -g npm@latest
+        run: npm install -g npm@10 && npm install -g npm@latest
       - name: Install dependencies
         run: npm run setup
       - name: Build all packages
