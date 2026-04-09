@@ -215,6 +215,23 @@ describe('predictor-scale', () => {
     )
 
     expect(renderedHtml.document.querySelector('[data-test-id="LastUpdatedDate"]')).toBeNull()
+    const headingEl = renderedHtml.document.querySelector('[data-test-id="name"]')
+    expect(headingEl.tagName).toBe('H2')
+    expect(headingEl.className).toContain('govuk-heading-m')
+  })
+
+  it('should render the component with custom header size', () => {
+    const predictor: PredictorOption = 'rsr'
+    const renderedHtml = getRenderedHtml(
+      dom,
+      'PREDICTOR_SCALE',
+      `predictor: "rsr", headingLevel: 4, headingClass: "xs"`,
+      getRiskTestData([{ predictor, level: BandLevel.HIGH, score: 50, staticOrDynamic: 'Dynamic' }]),
+    )
+
+    const headingEl = renderedHtml.document.querySelector('[data-test-id="name"]')
+    expect(headingEl.tagName).toBe('H4')
+    expect(headingEl.className).toContain('govuk-heading-xs')
   })
 
   describe('legacy fallback', () => {
