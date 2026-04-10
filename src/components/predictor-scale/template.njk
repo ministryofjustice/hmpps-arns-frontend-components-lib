@@ -47,15 +47,15 @@ In template:
 
       <div class="arns-predictor-scale govuk-body" data-predictor-scale="{{ predictor.name }}">
         {% if predictor.band == null or predictor.score == null %}
-          <h{{ headingLevel }} class="govuk-heading-{{ headingClass }}" data-test-id="name">{{ predictor.name }}</h{{ headingLevel }}>
+          <h{{ headingLevel }} class="govuk-heading-{{ headingClass }} predictor-scale-header" data-test-id="name">{{ predictor.name }}</h{{ headingLevel }}>
           <p class="govuk-body" data-test-id="unknownSummary">The score cannot be calculated due to missing information (e.g. no assessment, completed, or required data not present).</p>
         {% elif predictor.band === 'NOT APPLICABLE' %}
-          <h{{ headingLevel }} class="govuk-heading-{{ headingClass }}" data-test-id="name">{{ predictor.name }}</h{{ headingLevel }}>
+          <h{{ headingLevel }} class="govuk-heading-{{ headingClass }} predictor-scale-header" data-test-id="name">{{ predictor.name }}</h{{ headingLevel }}>
           <p class="govuk-body" data-test-id="notApplicableSummary">We only calculate sexual reoffending predictor scores for men with a known history of sexual or sexually motivated offending. This person does not have a score for this predictor.</p>
         {% else %}
           <div class="arns-predictor-scale-header-wrapper">
             <div>
-              <h{{ headingLevel }} class="govuk-heading-{{ headingClass }}" data-test-id="name">{{ predictor.name }}</h{{ headingLevel }}>
+              <h{{ headingLevel }} class="govuk-heading-{{ headingClass }} predictor-scale-header" data-test-id="name">{{ predictor.name }}</h{{ headingLevel }}>
               {% if not params.excludeDate %}
               <p class="govuk-hint" data-test-id="LastUpdatedDate">Last updated: {{ predictor.completedDate if predictor.completedDate else 'unknown' }}</p>
               {% endif %}
