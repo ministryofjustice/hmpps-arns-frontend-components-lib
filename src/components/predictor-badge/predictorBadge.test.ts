@@ -202,14 +202,14 @@ const expectedBandMappings: Record<BandLevel, PredictorProperties> = {
     scoreBackgroundColour: 'rgb(255, 172, 159)',
   },
   NOT_APPLICABLE: {
-    borderColour: '#b1b4b6',
+    borderColour: '#cecece',
     typeAndLevelColour: 'rgb(11, 12, 12)',
     scoreBackgroundColour: null,
   },
 }
 
 const nullBandMapping: PredictorProperties = {
-  borderColour: '#b1b4b6',
+  borderColour: '#cecece',
   typeAndLevelColour: 'rgb(11, 12, 12)',
   scoreBackgroundColour: null,
 }
