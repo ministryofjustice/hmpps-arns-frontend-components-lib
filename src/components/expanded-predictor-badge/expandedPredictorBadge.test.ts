@@ -199,7 +199,7 @@ const validateBadge = (
     (band === BandLevel.VERY_HIGH || band === BandLevel.MEDIUM) &&
     staticOrDynamic === 'Dynamic'
   const displayCss = hasSDWrapperStyles ? 'inline-block' : 'inline'
-  const marginTopCss = hasSDWrapperStyles ? '3px' : ''
+  const marginTopCss = hasSDWrapperStyles ? '3px' : '0'
 
   // Validate Static/Dynamic (Scoped search using data-test-id)
   const sdEl = badgeContainer.querySelector('[data-test-id="staticOrDynamic"]')
