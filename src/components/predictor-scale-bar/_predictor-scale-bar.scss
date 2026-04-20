@@ -1,10 +1,12 @@
 $very-high-score-colour: #942514;
+$very-high-score-colour-stripe: #c39088;
 $very-high-score-colour--light: #ffac9f;
 $very-high-score-colour__text: #711a0d;
 $high-score-colour: #d4351c;
 $high-score-colour--light: #f6d7d2;
 $high-score-colour__text: #942514;
 $medium-score-colour: #f47738;
+$medium-score-colour-stripe: #f3cab9;
 $medium-score-colour--light: #f9e8bd;
 $medium-score-colour__text: #a34e00;
 $low-score-colour: #85994b;
@@ -17,8 +19,8 @@ $low-score-colour__text: #485b10;
                   -45deg,
                   transparent,
                   transparent 5px,
-                  rgba(255, 255, 255, 0.25) 5px,
-                  rgba(255, 255, 255, 0.25) 10px
+                  $medium-score-colour-stripe 5px,
+                  $medium-score-colour-stripe 10px
   );
 }
 
@@ -28,8 +30,8 @@ $low-score-colour__text: #485b10;
                   45deg,
                   transparent,
                   transparent 5px,
-                  rgba(0, 0, 0, 0.15) 5px,
-                  rgba(0, 0, 0, 0.15) 10px
+                  $very-high-score-colour-stripe 5px,
+                  $very-high-score-colour-stripe 10px
   );
 }
 
@@ -98,9 +100,15 @@ $low-score-colour__text: #485b10;
   border: 2px solid govuk-colour("black");
 }
 
+@for $i from 0 through 100 {
+  .arns-scale-marker-wrapper-position-#{$i} {
+    left: calc(-40px + (#{$i} / 100) * (100% - 1px));
+  }
+}
+
+
 .arns-scale-marker-wrapper {
   position: relative;
-  left: calc(-40px + (var(--margin) / 100) * (100% - 1px));
 
   &.arns-scale-marker-wrapper--very-high {
     @include arns-scale-marker-card-colour(
@@ -133,10 +141,6 @@ $low-score-colour__text: #485b10;
                     $low-score-colour__text
     );
   }
-}
-
-.arns-scale-marker-wrapper[data-margin] {
-  --margin: attr(data-margin number);
 }
 
 .arns-scale-marker__card-top {

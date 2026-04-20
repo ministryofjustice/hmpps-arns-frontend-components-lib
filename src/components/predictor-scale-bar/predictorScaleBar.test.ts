@@ -23,6 +23,8 @@ describe('predictor-scale-bar', () => {
         border: 'rgb(133, 153, 75)',
         background: 'rgb(222, 233, 189)',
         textColor: 'rgb(72, 91, 16)',
+        score: 42.13,
+        expectedPointerPosition: 21,
       },
       {
         level: BandLevel.MEDIUM,
@@ -30,6 +32,8 @@ describe('predictor-scale-bar', () => {
         border: 'rgb(244, 119, 56)',
         background: 'rgb(249, 232, 189)',
         textColor: 'rgb(163, 78, 0)',
+        score: 52.89,
+        expectedPointerPosition: 28,
       },
       {
         level: BandLevel.HIGH,
@@ -37,6 +41,8 @@ describe('predictor-scale-bar', () => {
         border: 'rgb(212, 53, 28)',
         background: 'rgb(246, 215, 210)',
         textColor: 'rgb(148, 37, 20)',
+        score: 78,
+        expectedPointerPosition: 55,
       },
       {
         level: BandLevel.VERY_HIGH,
@@ -44,19 +50,21 @@ describe('predictor-scale-bar', () => {
         border: 'rgb(148, 37, 20)',
         background: 'rgb(255, 172, 159)',
         textColor: 'rgb(113, 26, 13)',
+        score: 92.56,
+        expectedPointerPosition: 81,
       },
     ]
 
     it.each(levelTestCases)(
       'should render the correct marker style for $level',
-      ({ level, expectedClass, border, background, textColor }) => {
+      ({ level, expectedClass, border, background, textColor, score, expectedPointerPosition }) => {
         const predictorType: PredictorOption = 'allReoffendingPredictor'
 
         const riskData = getRiskTestData([
           {
             predictor: predictorType,
             level,
-            score: 50,
+            score,
             staticOrDynamic: 'Static',
           },
         ])
@@ -86,6 +94,12 @@ describe('predictor-scale-bar', () => {
           { tag: 'borderWidth', value: '2px' },
         ])
 
+        // Check the left styling is correct to move pointer to the correct position
+        expect(markerWrapper?.className).toContain(`arns-scale-marker-wrapper-position-${expectedPointerPosition}`)
+        expectStyleToBe(renderedHtml, markerWrapper, [
+          { tag: 'left', value: `calc(-40px + 0.${expectedPointerPosition} * (100% - 1px))` },
+        ])
+
         // Validate Marker Card Content (Low, Medium, High, Very high)
         const formattedText = level.replace('_', ' ').toLowerCase()
         const expectedText = formattedText.charAt(0).toUpperCase() + formattedText.slice(1)
@@ -95,7 +109,7 @@ describe('predictor-scale-bar', () => {
 
         // Validate Score is present (Since showScore is true)
         const scoreLabel = document.querySelector('[data-test-id="scaleMarkerCardBottom"]')
-        expect(scoreLabel?.textContent?.trim()).toBe('50%')
+        expect(scoreLabel?.textContent?.trim()).toBe(`${score}%`)
         expectStyleToBe(renderedHtml, scoreLabel, [{ tag: 'backgroundColor', value: background }])
 
         // Check the Card Pointer (Primary Colour)
@@ -189,7 +203,7 @@ describe('predictor-scale-bar', () => {
 
       const computedStyle = renderedHtml.window.getComputedStyle(mediumBandSpan!)
       expect(computedStyle.backgroundImage).toContain('repeating-linear-gradient')
-      expect(computedStyle.backgroundImage).toContain('rgba(255, 255, 255, 0.25)')
+      expect(computedStyle.backgroundImage).toContain('rgb(243, 202, 185)')
     })
 
     it('should apply striped pattern to the VERY HIGH band', () => {
@@ -211,7 +225,7 @@ describe('predictor-scale-bar', () => {
 
       const computedStyle = renderedHtml.window.getComputedStyle(veryHighBandSpan!)
       expect(computedStyle.backgroundImage).toContain('repeating-linear-gradient')
-      expect(computedStyle.backgroundImage).toContain('rgba(0, 0, 0, 0.15)')
+      expect(computedStyle.backgroundImage).toContain('rgb(195, 144, 136)')
     })
   })
 })

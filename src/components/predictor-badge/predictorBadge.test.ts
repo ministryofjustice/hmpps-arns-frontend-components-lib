@@ -7,6 +7,7 @@ import {
   getInitialDom,
   getRenderedHtml,
   getRiskTestData,
+  legacyFallbackTestCases,
   predictorConfig,
   PredictorOption,
   StaticOrDynamicContent,
@@ -56,7 +57,7 @@ describe('predictor-badge', () => {
         getRiskTestData([{ predictor, level: BandLevel.LOW, score: 12.34, staticOrDynamic: 'Static' }]),
       )
       const name = renderedHtml.document.querySelector('[data-test-id="nameAndBand"]')
-      expect(name.innerHTML).toBe(`${expectedPredictorNameMappings[predictor].badgeContent} <strong>LOW</strong>`)
+      expect(name.innerHTML).toBe(`${expectedPredictorNameMappings[predictor].name} <strong>LOW</strong>`)
     })
   })
 
@@ -74,52 +75,7 @@ describe('predictor-badge', () => {
   )
 
   describe('legacy fallback', () => {
-    it.each([
-      // When legacy predictor in assessment and requested, return legacy predictor
-      ['ogrs3', 'ogrs3', 'ogrs3'],
-      ['ovp', 'ovp', 'ovp'],
-      ['ogp', 'ogp', 'ogp'],
-      ['ospdc', 'ospdc', 'ospdc'],
-      ['ospiic', 'ospiic', 'ospiic'],
-      ['rsr', 'rsr', 'rsr'],
-      // When legacy predictor in assessment and new predictor is requested, return legacy predictor, apart from CSRP which has no fallback
-      ['ogrs3', 'allReoffendingPredictor', 'ogrs3'],
-      ['ovp', 'violentReoffendingPredictor', 'ovp'],
-      ['rsr', 'seriousViolentReoffendingPredictor', null],
-      ['ospdc', 'directContactSexualReoffendingPredictor', 'ospdc'],
-      ['ospiic', 'indirectImageContactSexualReoffendingPredictor', 'ospiic'],
-      ['rsr', 'combinedSeriousReoffendingPredictor', 'rsr'],
-      // When new predictor in assessment and requested, return new predictor
-      ['allReoffendingPredictor', 'allReoffendingPredictor', 'allReoffendingPredictor'],
-      ['violentReoffendingPredictor', 'violentReoffendingPredictor', 'violentReoffendingPredictor'],
-      [
-        'seriousViolentReoffendingPredictor',
-        'seriousViolentReoffendingPredictor',
-        'seriousViolentReoffendingPredictor',
-      ],
-      [
-        'directContactSexualReoffendingPredictor',
-        'directContactSexualReoffendingPredictor',
-        'directContactSexualReoffendingPredictor',
-      ],
-      [
-        'indirectImageContactSexualReoffendingPredictor',
-        'indirectImageContactSexualReoffendingPredictor',
-        'indirectImageContactSexualReoffendingPredictor',
-      ],
-      [
-        'combinedSeriousReoffendingPredictor',
-        'combinedSeriousReoffendingPredictor',
-        'combinedSeriousReoffendingPredictor',
-      ],
-      // When new predictor in assessment and legacy predictor requested, nothing is displayed
-      ['allReoffendingPredictor', 'ogrs3', null],
-      ['violentReoffendingPredictor', 'ovp', null],
-      ['seriousViolentReoffendingPredictor', 'rsr', null],
-      ['directContactSexualReoffendingPredictor', 'ospdc', null],
-      ['indirectImageContactSexualReoffendingPredictor', 'ospiic', null],
-      ['combinedSeriousReoffendingPredictor', 'rsr', null],
-    ])(
+    it.each(legacyFallbackTestCases)(
       'Legacy fallback, assessmentPredictor: %s, predictorInMacro: %s, predictorRendered: %s',
       (assessmentPredictor: PredictorOption, predictorInMacro: PredictorOption, predictorRendered: PredictorOption) => {
         const renderedHtml = getRenderedHtml(
@@ -132,9 +88,7 @@ describe('predictor-badge', () => {
         )
         const name = renderedHtml.document.querySelector('[data-test-id="nameAndBand"]')
         if (predictorRendered) {
-          expect(name.innerHTML).toBe(
-            `${expectedPredictorNameMappings[predictorRendered].badgeContent} <strong>LOW</strong>`,
-          )
+          expect(name.innerHTML).toBe(`${expectedPredictorNameMappings[predictorRendered].name} <strong>LOW</strong>`)
         } else {
           expect(name).toBeNull()
         }
@@ -189,7 +143,7 @@ const validateBadge = (
       { tag: 'color', value: properties.typeAndLevelColour },
       { tag: 'backgroundColor', value: 'rgba(0, 0, 0, 0)' },
     ],
-    `${expectedPredictorNameMappings[predictor].badgeContent} <strong>${displayBand}</strong>`,
+    `${expectedPredictorNameMappings[predictor].name} <strong>${displayBand}</strong>`,
   )
 
   // Validate Score (Scoped search using data-test-id)
@@ -248,14 +202,14 @@ const expectedBandMappings: Record<BandLevel, PredictorProperties> = {
     scoreBackgroundColour: 'rgb(255, 172, 159)',
   },
   NOT_APPLICABLE: {
-    borderColour: '#b1b4b6',
+    borderColour: '#cecece',
     typeAndLevelColour: 'rgb(11, 12, 12)',
     scoreBackgroundColour: null,
   },
 }
 
 const nullBandMapping: PredictorProperties = {
-  borderColour: '#b1b4b6',
+  borderColour: '#cecece',
   typeAndLevelColour: 'rgb(11, 12, 12)',
   scoreBackgroundColour: null,
 }

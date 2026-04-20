@@ -71,7 +71,7 @@ In template:
 {% endif %}
 
 <div class="arns-scale-marker" data-test-id='scaleMarker'>
-  <div class="{{ scaleMarkerClass }} arns-scale-marker-wrapper" data-margin="{{ scalePosition }}" data-test-id='scaleMarkerPosition'>
+  <div class="{{ scaleMarkerClass }} arns-scale-marker-wrapper arns-scale-marker-wrapper-position-{{ scalePosition | round }}" data-test-id='scaleMarkerPosition'>
     {{ predictorScaleMarker(predictor, config.showScore) }}
   </div>
 </div>
@@ -93,4 +93,3 @@ In template:
     </div>
   {% endif %}
 </div>
-

@@ -2,6 +2,7 @@
 {% from "../details-chevron/macro.njk" import detailsChevron %}
 {% from "../predictor-scale-bar/macro.njk" import predictorScaleBar %}
 {%- from "govuk/components/tag/macro.njk" import govukTag -%}
+{% from "govuk/components/table/macro.njk" import govukTable %}
 
 {% set latestAssessment = params.data.assessments | first if params.data.assessments else null %}
 {% set forename = params.forename | default('This individual') %}
@@ -11,171 +12,614 @@
 {% set SVRP = latestAssessment.seriousViolentReoffendingPredictor %}
 {% set DCSRP = latestAssessment.directContactSexualReoffendingPredictor %}
 {% set IICSRP = latestAssessment.indirectImageContactSexualReoffendingPredictor %}
+{% set missingInfoWarningText = 'The score cannot be calculated due to missing information (e.g. no assessment completed, or required data not present)' %}
 
 {% if latestAssessment %}
+  <div class="govuk-body" data-module="arns-custom-app-insights">
+    <section class="bottom-border" data-test-id="predictor-intro" aria-labelledby="intro-heading">
+      <h2 id="intro-heading" class="govuk-visually-hidden">
+        Introduction to risk predictors
+      </h2>
 
-  <div class="bottom-border">
-    {{ govukInsetText({
-      text: "Source: " + latestAssessment.assessmentType + " assessment, completed on " + latestAssessment.completedDate
-    }) }}
+      <div data-test-id="predictor-intro">
+        <p>
+          We have developed and validated these risk predictors using real historical data about how often people who have
+          been on probation get further sanctions.
+        </p>
+        <p>Someone gets a sanction if they:</p>
+        <ul>
+          <li>are convicted by a court and given a sentence (such as a fine, community order, discharge or prison)</li>
+          <li>accept a formal caution from the police</li>
+        </ul>
+      </div>
+
+      {{ govukInsetText({
+        text: "Source: " + latestAssessment.assessmentType + " assessment, completed on " + latestAssessment.completedDate
+      }) }}
+
+    </section>
+
+    {#  All reoffending predictor  #}
+    <section role="region" aria-labelledby="arp-heading">
+      {% if ARP and ARP.score and ARP.band and ARP.staticOrDynamic %}
+        <div class="predictor-header-wrapper">
+          <h3 id="arp-heading">All reoffending predictor</h3>
+          <div class="staticOrDynamicTag" data-test-id="arp-staticOrDynamic">
+            {{ govukTag({ text: ARP.staticOrDynamic, classes: "govuk-tag--grey"}) }}
+          </div>
+        </div>
+
+        <div class="govuk-!-margin-bottom-4">
+          <span data-test-id="arp-probability-statement">
+            {{ ARP.score | probabilityStatement }} with a similar profile to {{ forename }} will get a sanction for an
+            offence they commit within two years. This puts {{ forename }} in the {{ ARP.band | lower }} risk band.
+          </span>
+        </div>
+        <div class="scale-wrapper"
+             role="img"
+             aria-label="A linear gauge chart showing the All reoffending predictor score is {{ ARP.score }}%. This is in the {{ ARP.band }} band. Below 50% is low, 50% to below 75% is medium, 75% to below 90% is high, 90% to 100% is very high. This was last updated {{ ARP.completedDate }}.">
+          {{ predictorScaleBar(ARP, 'allReoffendingPredictor') }}
+        </div>
+
+        {% set allReoffendingPredictorContentHtml %}
+          <h3>What this score predicts</h3>
+          <p>
+            The All reoffending predictor predicts the likelihood of someone getting a sanction for any recordable offence.
+          </p>
+          <p>
+            It includes all sexual and all violent offences, but there are other risk predictors that are specifically
+            designed to predict serious, violent and sexual offences.
+          </p>
+          <h3>How we calculate the score</h3>
+          <p>We calculate the score using:</p>
+          <ul>
+            <li>static factors only, when we have limited information (a static score)</li>
+            <li>dynamic and static factors, when we have more detailed information (a dynamic score)</li>
+          </ul>
+          {% if ARP.staticOrDynamic | upper === 'STATIC' %}
+            <p data-test-id="arp-static-or-dynamic-factors">This score has been calculated using static factors only.</p>
+          {% elseif ARP.staticOrDynamic | upper === 'DYNAMIC' %}
+            <p data-test-id="arp-static-or-dynamic-factors">
+              This score has been calculated using both dynamic and static factors.
+            </p>
+          {% endif %}
+
+          <p>Static factors are things which cannot be deliberately changed, and include the person's:</p>
+          <ul>
+            <li>age when they enter the community caseload</li>
+            <li>current offence</li>
+            <li>total number of sanctions</li>
+            <li>length of offending history</li>
+          </ul>
+          <p>The person’s current legal gender also counts towards the static score.</p>
+          <p>Dynamic factors are things that can change, and include their:</p>
+          <ul>
+            <li>accommodation status</li>
+            <li>employment status</li>
+            <li>relationship status</li>
+            <li>history of domestic abuse</li>
+            <li>regular activities that encourage offending</li>
+            <li>drug use and motivation to tackle drug use</li>
+            <li>alcohol use</li>
+            <li>impulsivity</li>
+            <li>attitudes that support or excuse criminal behaviour</li>
+          </ul>
+        {% endset %}
+
+        <div class="bottom-border">
+          {{ detailsChevron({
+            html: allReoffendingPredictorContentHtml,
+            ariaContext: "All reoffending predictor"
+          }) }}
+        </div>
+      {% else %}
+        <div class="predictor-header-wrapper">
+          <h3 id="arp-heading">All reoffending predictor</h3>
+        </div>
+        <div class="bottom-border" data-test-id="missingInfoWarningTextARP">
+          <p>{{ missingInfoWarningText }}</p>
+        </div>
+      {% endif %}
+    </section>
+
+    {#  Violent reoffending predictor  #}
+    <section role="region" aria-labelledby="vrp-heading">
+      {% if VRP and VRP.score and VRP.band and VRP.staticOrDynamic %}
+        <div class="predictor-header-wrapper">
+          <h3 id="vrp-heading">Violent reoffending predictor</h3>
+          <div class="staticOrDynamicTag" data-test-id="vrp-staticOrDynamic">
+            {{ govukTag({ text: VRP.staticOrDynamic, classes: "govuk-tag--grey"}) }}
+          </div>
+        </div>
+        <div class="govuk-!-margin-bottom-4">
+      <span data-test-id="vrp-probability-statement">
+        {{ VRP.score | probabilityStatement }} with a similar profile to {{ forename }} will get a sanction for a
+        violent offence they commit within two years. This puts {{ forename }} in the {{ VRP.band | lower }} risk band.
+      </span>
+        </div>
+        <div class="scale-wrapper"
+             role="img"
+             aria-label="A linear gauge chart showing the Violent reoffending predictor score is {{ VRP.score }}%. This is in the {{ VRP.band }} band. Below 30% is low, 30% to below 60% is medium, 60% to below 80% is high, 80% to 100% is very high. This was last updated {{ VRP.completedDate }}.">
+          {{ predictorScaleBar(VRP, 'violentReoffendingPredictor') }}
+        </div>
+
+        {% set violentReoffendingPredictorContentHtml %}
+          <h3>What this score predicts</h3>
+          <p>
+            The Violent reoffending predictor predicts the risk of reoffending for all offences that are classed as violent.
+          </p>
+          <p>
+            However, the <a href="#svrp-heading">Serious violent reoffending predictor</a>
+            is
+            specifically designed to predict the most serious violent offences. Because of this, the Violent reoffending
+            predictor should be used to identify whether someone is likely to commit offences not covered by the Serious
+            violent reoffending predictor, such as:
+          </p>
+          <ul>
+            <li>actual bodily harm, common assault and aggravated assault</li>
+            <li>robbery and assault with intent to rob</li>
+            <li>arson not endangering life</li>
+            <li>criminal damage not endangering life</li>
+            <li>abduction of children</li>
+            <li>intimidation</li>
+            <li>breach of restraining order</li>
+            <li>possessing or use of knives or offensive weapons offences</li>
+            <li>public order and harassment</li>
+            <li>resisting arrest</li>
+            <li>disorderly behaviour</li>
+            <li>drunkenness offences (not including those related to driving)</li>
+          </ul>
+          <p>
+            To check if a specific offence is classed as violent, go to the
+            <a href="https://equip-portal.equip.service.justice.gov.uk/CtrlWebIsapi.dll/app/documents/C025AF635DB44965AC7B629E5538CB5B/master">
+              full list of violent offences (EQUip)
+            </a>.
+          </p>
+          <h3>How we calculate the score</h3>
+          <p>We calculate the score using:</p>
+          <ul>
+            <li>static factors only, when we have limited information (a static score)</li>
+            <li>dynamic and static factors, when we have more detailed information (a dynamic score)</li>
+          </ul>
+          {% if VRP.staticOrDynamic | upper === 'STATIC' %}
+            <p data-test-id="vrp-static-or-dynamic-factors">This score has been calculated using static factors only.</p>
+          {% elseif VRP.staticOrDynamic | upper === 'DYNAMIC' %}
+            <p data-test-id="vrp-static-or-dynamic-factors">
+              This score has been calculated using both dynamic and static factors.
+            </p>
+          {% endif %}
+          <p>Static factors are things which cannot be deliberately changed, and include the person's:</p>
+          <ul>
+            <li>age when they enter the community caseload</li>
+            <li>current offence</li>
+            <li>total number of sanctions</li>
+            <li>number of violent sanctions</li>
+            <li>length of offending history</li>
+          </ul>
+          <p>The person’s current legal gender also counts towards the static score.</p>
+          <p>Dynamic factors are things that can change, and include their:</p>
+          <ul>
+            <li>accommodation status</li>
+            <li>employment status</li>
+            <li>relationship status</li>
+            <li>history of domestic abuse</li>
+            <li>regular activities that encourage offending</li>
+            <li>drug use and motivation to tackle drug use</li>
+            <li>alcohol use</li>
+            <li>impulsivity</li>
+            <li>temper control</li>
+          </ul>
+        {% endset %}
+
+        <div class="bottom-border">
+          {{ detailsChevron({
+            html: violentReoffendingPredictorContentHtml,
+            ariaContext: "Violent reoffending predictor"
+          }) }}
+        </div>
+      {% else %}
+        <div class="predictor-header-wrapper">
+          <h3 id="vrp-heading">Violent reoffending predictor</h3>
+        </div>
+        <div class="bottom-border" data-test-id="missingInfoWarningTextVRP">
+          <p>{{ missingInfoWarningText }}</p>
+        </div>
+      {% endif %}
+    </section>
+
+    {#  Combined serious reoffending predictor  #}
+    <section role="region" aria-labelledby="csrp-heading">
+      {% if CSRP and CSRP.score and CSRP.band and CSRP.staticOrDynamic %}
+        <div class="predictor-header-wrapper">
+          <h3 id="csrp-heading">Combined serious reoffending predictor</h3>
+          <div class="staticOrDynamicTag" data-test-id="csrp-staticOrDynamic">
+            {{ govukTag({ text: CSRP.staticOrDynamic, classes: "govuk-tag--grey"}) }}
+          </div>
+        </div>
+        <div class="govuk-!-margin-bottom-4">
+      <span data-test-id="csrp-probability-statement">
+        {{ CSRP.score | probabilityStatement }} with a similar profile to {{ forename }} will get a sanction for a
+        seriously harmful offence they commit within two years. This puts {{ forename }} in the {{ CSRP.band | lower }} risk band.
+      </span>
+        </div>
+        <div class="scale-wrapper"
+             role="img"
+             aria-label="A linear gauge chart showing the Combined serious reoffending predictor score is {{ CSRP.score }}%. This is in the {{ CSRP.band }} band. Below 1% is low, 1% to below 3% is medium, 3% to below 6.9% is high, 6.9% to 25% or above is very high. This was last updated {{ CSRP.completedDate }}.">
+          {{ predictorScaleBar(CSRP, 'combinedSeriousReoffendingPredictor') }}
+        </div>
+
+        {% set combinedSeriousReoffendingPredictorContentHtml %}
+          <h3>What this score predicts</h3>
+          <p>
+            The Combined serious reoffending predictor predicts seriously harmful offences by combining the scores from other predictors.
+          </p>
+          <p>
+            A seriously harmful offence involves an event that is life-threatening or traumatic.
+            The victim will find it difficult or impossible to recover physically or psychologically.
+          </p>
+          <h3>Risks combined in this score</h3>
+          <p>The Combined serious reoffending predictor combines 3 different scores:</p>
+          <ul>
+            <li>Serious violent reoffending predictor</li>
+            <li>Direct contact – sexual reoffending predictor</li>
+            <li>Images and indirect contact – sexual reoffending predictor</li>
+          </ul>
+          <p>
+            If a person has no history of sexual or sexually motivated offending, we base their score only on their Serious violent reoffending predictor score.
+          </p>
+          <p>
+            Everyone gets a Serious violent reoffending predictor score, even if they have no history of violent offending.
+          </p>
+          <p>
+            Go to the details for the Serious violent reoffending predictor and the two sexual reoffending predictors to find out:
+          </p>
+          <ul>
+            <li>the offences they predict</li>
+            <li>how we calculate the scores</li>
+          </ul>
+        {% endset %}
+
+        <div class="bottom-border">
+          {{ detailsChevron({
+            html: combinedSeriousReoffendingPredictorContentHtml,
+            ariaContext: "Combined serious reoffending predictor"
+          }) }}
+        </div>
+      {% else %}
+        <div class="predictor-header-wrapper">
+          <h3 id="csrp-heading">Combined serious reoffending predictor</h3>
+        </div>
+        <div class="bottom-border" data-test-id="missingInfoWarningTextCSRP">
+          <p>{{ missingInfoWarningText }}</p>
+        </div>
+      {% endif %}
+    </section>
+
+    {#  Serious violent reoffending predictor  #}
+    <section role="region" aria-labelledby="svrp-heading">
+      {% if SVRP and SVRP.score and SVRP.band and SVRP.staticOrDynamic %}
+        <div class="predictor-header-wrapper">
+          <h3 id="svrp-heading">Serious violent reoffending predictor</h3>
+          <div class="staticOrDynamicTag" data-test-id="svrp-staticOrDynamic">
+            {{ govukTag({ text: SVRP.staticOrDynamic, classes: "govuk-tag--grey"}) }}
+          </div>
+        </div>
+        <div class="govuk-!-margin-bottom-4">
+      <span data-test-id="svrp-probability-statement">
+        {{ SVRP.score | probabilityStatement }} with a similar profile to {{ forename }} will get a sanction for a
+        serious violent offence they commit within two years. This puts {{ forename }} in the {{ SVRP.band | lower }} risk band.
+      </span>
+        </div>
+        <div class="scale-wrapper"
+             role="img"
+             aria-label="A linear gauge chart showing the Serious violent reoffending predictor score is {{ SVRP.score }}%. This is in the {{ SVRP.band }} band. Below 1% is low, 1% to below 3% is medium, 3% to below 6.9% is high, 6.9% to 25% or above is very high. This was last updated {{ SVRP.completedDate }}.">
+          {{ predictorScaleBar(SVRP, 'seriousViolentReoffendingPredictor') }}
+        </div>
+
+        {% set seriousViolentReoffendingPredictorContentHtml %}
+          {% if DCSRP.band === 'NOT APPLICABLE' and IICSRP.band === 'NOT APPLICABLE' %}
+            <h3 data-test-id="svrp-no-sexual-history-header">
+              Why this score is the same as Combined serious reoffending predictor
+            </h3>
+            <p>
+              We only calculate sexual reoffending predictor scores for men with a known history of sexual or sexually
+              motivated offending. Because of this, {{ forename }}’s Combined serious reoffending predictor score is just
+              based on their Serious violent reoffending prediction. This is why the two scores are the same.
+            </p>
+          {% endif %}
+          <h3>What this score predicts</h3>
+          <p>The Serious violent reoffending predictor predicts the risk of reoffending for:</p>
+          <ul>
+            <li>murder or attempted murder</li>
+            <li>conspiracy to, soliciting, assisting or encouraging murder</li>
+            <li>manslaughter</li>
+            <li>wounding or inflicting grievous bodily harm (GBH)</li>
+            <li>nonfatal strangulation or suffocation</li>
+            <li>offences related to possessing or use of a firearm or imitation firearm</li>
+            <li>aggravated burglary in a dwelling</li>
+            <li>kidnap or false imprisonment</li>
+            <li>arson endangering life</li>
+            <li>criminal damage endangering life</li>
+            <li>aggravated vehicle taking causing death</li>
+            <li>blackmail</li>
+            <li>other non-motoring offences endangering life</li>
+          </ul>
+          <p>It does not predict the following serious offences:</p>
+          <ul>
+            <li>cruelty to or neglect of children</li>
+            <li>abandoning children under two years</li>
+            <li>abduction of children</li>
+            <li>terrorism offences</li>
+          </ul>
+          <h3>How we calculate the score</h3>
+          <p>We calculate the score using:</p>
+          <ul>
+            <li>static factors only, when we have limited information (a static score)</li>
+            <li>dynamic and static factors, when we have more detailed information (a dynamic score)</li>
+          </ul>
+          {% if SVRP.staticOrDynamic | upper === 'STATIC' %}
+            <p data-test-id="svrp-static-or-dynamic-factors">This score has been calculated using static factors only.</p>
+          {% elseif SVRP.staticOrDynamic | upper === 'DYNAMIC' %}
+            <p data-test-id="svrp-static-or-dynamic-factors">
+              This score has been calculated using both dynamic and static factors.
+            </p>
+          {% endif %}
+          <p>Static factors are things which cannot be deliberately changed, and include the person's:</p>
+          <ul>
+            <li>age when they enter the community caseload</li>
+            <li>current offence</li>
+            <li>total number of sanctions</li>
+            <li>number of violent sanctions</li>
+            <li>length of offending history</li>
+          </ul>
+          <p>The person’s current legal gender also counts towards the static score.</p>
+          <p>Dynamic factors are things that can change, and include their:</p>
+          <ul>
+            <li>previous and current weapons offences</li>
+            <li>accommodation status</li>
+            <li>employment status</li>
+            <li>alcohol use</li>
+            <li>temper control</li>
+            <li>attitudes that support or excuse criminal behaviour</li>
+          </ul>
+        {% endset %}
+
+        <div class="bottom-border">
+          {{ detailsChevron({ html:
+            seriousViolentReoffendingPredictorContentHtml,
+            ariaContext: "Serious violent reoffending predictor"
+          }) }}
+        </div>
+      {% else %}
+        <div class="predictor-header-wrapper">
+          <h3 id="svrp-heading">Serious violent reoffending predictor</h3>
+        </div>
+        <div class="bottom-border" data-test-id="missingInfoWarningTextSVRP">
+          <p>{{ missingInfoWarningText }}</p>
+        </div>
+      {% endif %}
+    </section>
+
+    {#  Direct contact - Sexual reoffending predictor  #}
+    <section role="region" aria-labelledby="dcsrp-heading">
+
+      <div class="predictor-header-wrapper">
+        <h3 id="dcsrp-heading">Direct contact &ndash; sexual reoffending predictor</h3>
+      </div>
+      {% if DCSRP and DCSRP.score and DCSRP.band %}
+        {% if DCSRP.band === 'NOT APPLICABLE' %}
+          <div class="bottom-border">
+            <p data-test-id="dcsrp-not-applicable">
+              We only calculate sexual reoffending predictor scores for men with a known history of sexual or sexually
+              motivated offending. {{ forename }} does not have a score for this predictor.
+            </p>
+          </div>
+        {% else %}
+          <div class="govuk-!-margin-bottom-4">
+        <span data-test-id="dcsrp-probability-statement">
+          {{ DCSRP.score | probabilityStatement }} with a similar profile to {{ forename }} will get a sanction for a
+          direct contact sexual offence they commit within two years. This puts {{ forename }} in the {{ DCSRP.band | lower }} risk band.
+        </span>
+          </div>
+          <div class="scale-wrapper"
+               role="img"
+               aria-label="A linear gauge chart showing the Direct contact sexual reoffending predictor score is {{ DCSRP.score }}%. This is in the {{ DCSRP.band }} band. Below 0.6% is low, 0.6% to below 2.1% is medium, 2.1% to below 5.3% is high, 5.3% to 83.1% is very high. This was last updated {{ DCSRP.completedDate }}.">
+            {{ predictorScaleBar(DCSRP, 'directContactSexualReoffendingPredictor') }}
+          </div>
+
+          {% set directContactSexualReoffendingPredictorContentHtml %}
+            <h3>What this score predicts</h3>
+            <p>
+              The Direct contact – sexual reoffending predictor predicts the risk of the following offences with an adult victim:
+            </p>
+            <ul>
+              <li>rape or attempted rape</li>
+              <li>sexual assault</li>
+              <li>causing a female to engage in sexual activity without consent</li>
+              <li>sex with an adult relative</li>
+              <li>sexual activity with someone with a mental disorder or learning disability, including ‘breach of trust’
+                offences
+              </li>
+              <li>abduction (under the Sexual Offences 1956 Act)</li>
+              <li>trafficking for sexual exploitation</li>
+              <li>administering a substance with intent to engage in a sexual activity</li>
+            </ul>
+            <p>It also predicts the risk of the following offences with a child victim:</p>
+            <ul>
+              <li>rape or attempted rape</li>
+              <li>assault by penetration</li>
+              <li>sexual assault</li>
+              <li>causing a female to engage in sexual activity without consent</li>
+              <li>sexual activity with a child family member</li>
+              <li>inciting a child family member to engage in sexual activity</li>
+              <li>abuse of trust sexual offences</li>
+              <li>abduction (under the Sexual Offences 1956 Act, not the Child Abduction Act 1984)</li>
+            </ul>
+            <p>
+              It does not predict other sexual offences that do not involve actual or attempted physical contact with a live
+              human victim. For example:
+            </p>
+            <ul>
+              <li>possession of extreme pornographic images</li>
+              <li>exposure</li>
+              <li>voyeurism</li>
+              <li>sending a photograph or film of genitals</li>
+              <li>sharing or threatening to share an intimate photograph or film</li>
+            </ul>
+            <p>
+              Further guidance about the offences it does not predict is available as an annex to the
+              <a href="https://equip-portal.equip.service.justice.gov.uk/CtrlWebIsapi.dll/app/documents/091B36B5CE134AC5B45D06A30D09F8B9/master">
+                Understanding risk predictors - actuarial risk assessment instruments (ARAI) user guidance (EQUip)
+              </a>.
+            </p>
+            <h3>How we calculate the score</h3>
+            <p>
+              We only calculate a Direct contact – sexual reoffending predictor score for men with a known history of sexual
+              or sexually motivated offending.
+            </p>
+            <p>We calculate the score using the number of current and previous sanctions a person has for:</p>
+            <ul>
+              <li>sexual or sexually motivated offences involving contact with an adult</li>
+              <li>sexual or sexually motivated offences involving direct contact with a child</li>
+              <li>non-contact sexual offences</li>
+            </ul>
+            <p>It does not count indecent images of children offences.</p>
+            <p>We also look at static factors, which are things which cannot be deliberately changed. These include:</p>
+            <ul>
+              <li>age when they enter the community caseload</li>
+              <li>total number of sanctions</li>
+              <li>if their current offence was a direct contact offence committed against a stranger victim</li>
+            </ul>
+          {% endset %}
+
+          <div class="bottom-border">
+            {{ detailsChevron({
+              html: directContactSexualReoffendingPredictorContentHtml,
+              ariaContext: "Direct contact sexual reoffending predictor"
+            }) }}
+          </div>
+        {% endif %}
+      {% else %}
+        <div class="bottom-border" data-test-id="missingInfoWarningTextDCSRP">
+          <p>{{ missingInfoWarningText }}</p>
+        </div>
+      {% endif %}
+    </section>
+
+    {#  Images and indirect contact - Sexual reoffending predictor  #}
+    <section role="region" aria-labelledby="iicsrp-heading">
+      <div class="predictor-header-wrapper">
+        <h3 id="iicsrp-heading">Images and indirect contact &ndash; sexual reoffending predictor</h3>
+      </div>
+      {% if IICSRP and IICSRP.band %}
+        {% if IICSRP.band === 'NOT APPLICABLE' %}
+          <div class="bottom-border">
+            <p data-test-id="iicsrp-not-applicable">
+              We only calculate sexual reoffending predictor scores for men with a known history of sexual or sexually
+              motivated offending. {{ forename }} does not have a score for this predictor.
+            </p>
+          </div>
+        {% else %}
+
+          {% switch IICSRP.band | upper %}
+          {% case 'LOW' %}
+            {% set numberOfSanctions = '0' %}
+          {% case 'MEDIUM' %}
+            {% set numberOfSanctions = '1' %}
+          {% case 'HIGH' %}
+            {% set numberOfSanctions = 'more than 2' %}
+          {% default %}
+            {% set numberOfSanctions = 'unknown' %}
+          {% endswitch %}
+
+          <div class="govuk-!-margin-bottom-4">
+        <span data-test-id="iicsrp-intro-statement">
+          {{ forename }} is in the {{ IICSRP.band | lower }} risk category for getting a sanction for an indirect sexual contact
+          offence they commit within two years. This is because they have {{ numberOfSanctions }} previous relevant sanctions.
+        </span>
+          </div>
+          <div class="scale-wrapper"
+               role="img"
+               aria-label="A linear gauge chart showing the Images and indirect contact sexual reoffending predictor in the {{ IICSRP.band }} band. There are three bands, low when zero sanctions, medium when one sanction, high when two or more sanctions. This was last updated {{ IICSRP.completedDate }}.">
+            {{ predictorScaleBar(IICSRP, 'indirectImageContactSexualReoffendingPredictor') }}
+          </div>
+
+          {% set imagesAndIndirectContactSexualReoffendingPredictorContentHtml %}
+            <h3>What this score predicts</h3>
+            <p>The Images and indirect contact – sexual reoffending predictor predicts the risk of:</p>
+            <ul>
+              <li>causing or inciting a child to engage in sexual activity</li>
+              <li>engaging in sexual activity in the presence of a child under 13 (offender aged 18 or over)</li>
+              <li>causing a child under 13 to watch a sexual act (offender aged 18 or over)</li>
+              <li>meeting a child following sexual grooming</li>
+              <li>sexual communication with a child</li>
+              <li>taking, permitting to be taken or making indecent photographs or pseudo photographs of children</li>
+              <li>distributing or publishing indecent photographs or pseudo photographs of children</li>
+              <li>possession of an indecent photograph of a child</li>
+              <li>possessing prohibited images of children</li>
+            </ul>
+            <p>
+              It does not predict other sexual offences that do not involve actual or attempted physical contact with a live human victim. For example:
+            </p>
+            <ul>
+              <li>possession of extreme pornographic images</li>
+              <li>exposure</li>
+              <li>voyeurism</li>
+              <li>sending a photograph or film of genitals</li>
+              <li>sharing or threatening to share an intimate photograph or film</li>
+            </ul>
+            <p>
+              Further guidance about the offences it does not predict is available as an annex to the
+              <a href="https://equip-portal.equip.service.justice.gov.uk/CtrlWebIsapi.dll/app/documents/091B36B5CE134AC5B45D06A30D09F8B9/master">
+                Understanding risk predictors - actuarial risk assessment instruments (ARAI) user guidance (EQUip)
+              </a>.
+            </p>
+            <h3>How we calculate the score</h3>
+            <p>
+              We only calculate an Images and indirect contact – sexual reoffending predictor score for men with a known history of sexual or sexually motivated offending.
+            </p>
+            <p>We calculate the score using the number of current and previous sanctions a person has for:</p>
+            <ul>
+              <li>indirect child contact offences</li>
+              <li>indecent images of children offences</li>
+            </ul>
+            <p>Indirect contact offences are:</p>
+            <ul>
+              <li>causing a child to watch a sexual act</li>
+              <li>causing or inciting a child to engage in sexual activity</li>
+              <li>arranging child prostitution or pornography</li>
+              <li>arranging or facilitating child sexual offences</li>
+              <li>sexual communication with a child</li>
+              <li>grooming</li>
+            </ul>
+            <p>The score puts the person into a risk band:</p>
+            <div class="govuk-grid-row">
+              <div class="govuk-grid-column-one-half">
+                {{ govukTable({
+                  firstCellIsHeader: true,
+                  head: [ { text: "Risk band" }, { text: "Number of sanctions" } ],
+                  rows: [
+                    [ { text: "Low" }, { text: "0" } ],
+                    [ { text: "Medium" }, { text: "1" } ],
+                    [ { text: "High" }, { text: "2 or more" } ]
+                  ]
+                }) }}
+              </div>
+            </div>
+          {% endset %}
+
+          <div class="noThresholdScaleBuffer bottom-border">
+            {{ detailsChevron({
+              html: imagesAndIndirectContactSexualReoffendingPredictorContentHtml,
+              ariaContext: "Images and indirect contact sexual reoffending predictor"
+            }) }}
+          </div>
+        {% endif %}
+      {% else %}
+        <div class="bottom-border" data-test-id="missingInfoWarningTextIICSRP">
+          <p>{{ missingInfoWarningText }}</p>
+        </div>
+      {% endif %}
+    </section>
   </div>
-
-  {#  All reoffending predictor  #}
-  <div class="predictor-header-wrapper">
-    <h3>All reoffending predictor</h3>
-    {% if ARP.staticOrDynamic %}
-      <div class="staticOrDynamicTag" data-test-id="arp-staticOrDynamic">{{ govukTag({ text: ARP.staticOrDynamic, classes: "govuk-tag--grey"}) }}</div>
-    {% endif %}
-  </div>
-  <div class="govuk-!-margin-bottom-4">
-    <span>{{ ARP.score }}% of people with a similar profile to {{ forename }} will get a sanction for an offence they commit within two years. This puts {{ forename }} in the {{ ARP.band }} risk band.</span>
-  </div>
-  <div class="scale-wrapper">
-    {{ predictorScaleBar(ARP, 'allReoffendingPredictor') }}
-  </div>
-
-  {% set allReoffendingPredictorContentHtml %}
-    <h3>What this score predicts</h3>
-    <p>The All reoffending predictor predicts the likelihood of someone getting a sanction for any recordable
-      offence.</p>
-    <p>It includes all sexual and all violent offences, but there are other risk predictors that are specifically
-      designed to predict serious, violent and sexual offences.</p>
-    <h3>How we calculate the score</h3>
-    <p>We calculate the score using:</p>
-    <ul>
-      <li>static factors only, when we have limited information (a static score)</li>
-      <li>dynamic and static factors, when we have more detailed information (a dynamic score)</li>
-    </ul>
-    {% if ARP.staticOrDynamic | upper === 'STATIC' %}
-      <p>This score has been calculated using static factors only.</p>
-    {% elseif ARP.staticOrDynamic | upper === 'DYNAMIC' %}
-      <p>This score has been calculated using both dynamic and static factors.</p>
-    {% endif %}
-
-    <p>Static factors are things which cannot be deliberately changed, and include the person's:</p>
-    <ul>
-      <li>age when they enter the community caseload</li>
-      <li>sex at birth</li>
-      <li>current offence</li>
-      <li>total number of sanctions</li>
-      <li>length of offending history</li>
-    </ul>
-    <p>Dynamic factors are things that can change, and include their:</p>
-    <ul>
-      <li>accommodation status</li>
-      <li>employment status</li>
-      <li>relationship status</li>
-      <li>history of domestic abuse</li>
-      <li>regular activities that encourage offending</li>
-      <li>drug use and motivation to tackle drug use</li>
-      <li>alcohol use</li>
-      <li>impulsivity</li>
-      <li>pro-criminal attitudes</li>
-    </ul>
-  {% endset %}
-
-  {{ detailsChevron({ html: allReoffendingPredictorContentHtml }) }}
-
-  {#  Violent reoffending predictor  #}
-  <div class="predictor-header-wrapper">
-    <h3>Violent reoffending predictor</h3>
-    {% if VRP.staticOrDynamic %}
-      <div class="staticOrDynamicTag" data-test-id="vrp-staticOrDynamic">{{ govukTag({ text: VRP.staticOrDynamic, classes: "govuk-tag--grey"}) }}</div>
-    {% endif %}
-  </div>
-  <div class="govuk-!-margin-bottom-4">
-    <span>{{ VRP.score }}% of people with a similar profile to {{ forename }} will get a sanction for an offence they commit within two years. This puts {{ forename }} in the {{ VRP.band }} risk band.</span>
-  </div>
-  <div class="scale-wrapper">
-    {{ predictorScaleBar(VRP, 'violentReoffendingPredictor') }}
-  </div>
-
-  {% set violentReoffendingPredictorContentHtml %}
-    <p>This is the content for the violent reoffending predictor.</p>
-  {% endset %}
-
-  {{ detailsChevron({ html: violentReoffendingPredictorContentHtml }) }}
-
-  {#  Combined serious reoffending predictor  #}
-  <div class="predictor-header-wrapper">
-    <h3>Combined serious reoffending predictor</h3>
-    {% if CSRP.staticOrDynamic %}
-      <div class="staticOrDynamicTag" data-test-id="csrp-staticOrDynamic">{{ govukTag({ text: CSRP.staticOrDynamic, classes: "govuk-tag--grey"}) }}</div>
-    {% endif %}
-  </div>
-  <div class="govuk-!-margin-bottom-4">
-    <span>{{ CSRP.score }}% of people with a similar profile to {{ forename }} will get a sanction for an offence they commit within two years. This puts {{ forename }} in the {{ CSRP.band }} risk band.</span>
-  </div>
-  <div class="scale-wrapper">
-    {{ predictorScaleBar(CSRP, 'combinedSeriousReoffendingPredictor') }}
-  </div>
-
-  {% set combinedSeriousReoffendingPredictorContentHtml %}
-    <p>This is the content for the combined serious reoffending predictor.</p>
-  {% endset %}
-
-  {{ detailsChevron({ html: combinedSeriousReoffendingPredictorContentHtml }) }}
-
-  {#  Serious violent reoffending predictor  #}
-  <div class="predictor-header-wrapper">
-    <h3>Serious violent reoffending predictor</h3>
-    {% if SVRP.staticOrDynamic %}
-      <div class="staticOrDynamicTag" data-test-id="svrp-staticOrDynamic">{{ govukTag({ text: SVRP.staticOrDynamic, classes: "govuk-tag--grey"}) }}</div>
-    {% endif %}
-  </div>
-  <div class="govuk-!-margin-bottom-4">
-    <span>{{ SVRP.score }}% of people with a similar profile to {{ forename }} will get a sanction for an offence they commit within two years. This puts {{ forename }} in the {{ SVRP.band }} risk band.</span>
-  </div>
-  <div class="scale-wrapper">
-    {{ predictorScaleBar(SVRP, 'seriousViolentReoffendingPredictor') }}
-  </div>
-
-  {% set seriousViolentReoffendingPredictorContentHtml %}
-    <p>This is the content for the serious violent reoffending predictor.</p>
-  {% endset %}
-
-  {{ detailsChevron({ html: seriousViolentReoffendingPredictorContentHtml }) }}
-
-  {#  Direct contact - Sexual reoffending predictor  #}
-  <div class="predictor-header-wrapper">
-    <h3>Direct contact - Sexual reoffending predictor</h3>
-    {% if DCSRP.staticOrDynamic %}
-      <div class="staticOrDynamicTag" data-test-id="dcsrp-staticOrDynamic">{{ govukTag({ text: DCSRP.staticOrDynamic, classes: "govuk-tag--grey"}) }}</div>
-    {% endif %}
-  </div>
-  <div class="govuk-!-margin-bottom-4">
-    <span>{{ DCSRP.score }}% of people with a similar profile to {{ forename }} will get a sanction for an offence they commit within two years. This puts {{ forename }} in the {{ DCSRP.band }} risk band.</span>
-  </div>
-  <div class="scale-wrapper">
-    {{ predictorScaleBar(DCSRP, 'directContactSexualReoffendingPredictor') }}
-  </div>
-
-  {% set directContactSexualReoffendingPredictorContentHtml %}
-    <p>This is the content for the direct contact - Sexual reoffending predictor.</p>
-  {% endset %}
-
-  {{ detailsChevron({ html: directContactSexualReoffendingPredictorContentHtml }) }}
-
-  {#  Images and indirect contact - Sexual reoffending predictor  #}
-  <div class="predictor-header-wrapper">
-    <h3>Images and indirect contact - Sexual reoffending predictor</h3>
-    {% if IICSRP.staticOrDynamic %}
-      <div class="staticOrDynamicTag" data-test-id="iicsrp-staticOrDynamic">{{ govukTag({ text: IICSRP.staticOrDynamic, classes: "govuk-tag--grey"}) }}</div>
-    {% endif %}
-  </div>
-  <div class="govuk-!-margin-bottom-4">
-    <span>{{ IICSRP.score }}% of people with a similar profile to {{ forename }} will get a sanction for an offence they commit within two years. This puts {{ forename }} in the {{ IICSRP.band }} risk band.</span>
-  </div>
-  <div class="scale-wrapper">
-    {{ predictorScaleBar(IICSRP, 'indirectImageContactSexualReoffendingPredictor') }}
-  </div>
-
-  {% set imagesAndIndirectContactSexualReoffendingPredictorContentHtml %}
-    <p>This is the content for the images and indirect contact - Sexual reoffending predictor.</p>
-  {% endset %}
-
-  <div class="noThresholdScaleBuffer">
-    {{ detailsChevron({html: imagesAndIndirectContactSexualReoffendingPredictorContentHtml}) }}
-  </div>
-
 {% endif %}

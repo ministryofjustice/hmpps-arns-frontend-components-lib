@@ -104,80 +104,72 @@ export const components: Record<string, ComponentDetail> = {
     directory: 'risk-predictor-scores-content',
     macro: 'riskPredictorScoresContent',
   },
+  PREDICTOR_TIMELINE: {
+    directory: 'predictor-timeline',
+    macro: 'predictorTimeline',
+  },
 }
 
 export type Component = keyof typeof components
 
 export const expectedPredictorNameMappings: Record<string, PredictorNameProperties> = {
   allReoffendingPredictor: {
-    name: 'All Reoffending Predictor',
-    badgeContent: 'ALL REOFFENDING PREDICTOR',
+    name: 'All reoffending predictor',
     showStaticDynamic: true,
     completedDate: '02 January 2024',
   },
   violentReoffendingPredictor: {
-    name: 'Violent Reoffending Predictor',
-    badgeContent: 'VIOLENT REOFFENDING PREDICTOR',
+    name: 'Violent reoffending predictor',
     showStaticDynamic: true,
     completedDate: '02 January 2024',
   },
   seriousViolentReoffendingPredictor: {
-    name: 'Serious Violent Reoffending Predictor',
-    badgeContent: 'SERIOUS VIOLENT REOFFENDING PREDICTOR',
+    name: 'Serious violent reoffending predictor',
     showStaticDynamic: true,
     completedDate: '02 January 2024',
   },
   directContactSexualReoffendingPredictor: {
-    name: 'Direct Contact - Sexual Reoffending Predictor',
-    badgeContent: 'DIRECT CONTACT - SEXUAL REOFFENDING PREDICTOR',
+    name: 'Direct contact \u2013 sexual reoffending predictor',
     showStaticDynamic: false,
     completedDate: '02 January 2024',
   },
   indirectImageContactSexualReoffendingPredictor: {
-    name: 'Images and Indirect Contact – Sexual Reoffending Predictor',
-    badgeContent: 'IMAGES AND INDIRECT CONTACT – SEXUAL REOFFENDING PREDICTOR',
+    name: 'Images and indirect contact \u2013 sexual reoffending predictor',
     showStaticDynamic: false,
     completedDate: '02 January 2024',
   },
   combinedSeriousReoffendingPredictor: {
-    name: 'Combined Serious Reoffending Predictor',
-    badgeContent: 'COMBINED SERIOUS REOFFENDING PREDICTOR',
+    name: 'Combined serious reoffending predictor',
     showStaticDynamic: true,
     completedDate: '02 January 2024',
   },
   ogrs3: {
     name: 'OGRS',
-    badgeContent: 'OGRS',
     showStaticDynamic: false,
     completedDate: '02 January 2024',
   },
   ovp: {
     name: 'OVP',
-    badgeContent: 'OVP',
     showStaticDynamic: false,
     completedDate: '02 January 2024',
   },
   ogp: {
     name: 'OGP',
-    badgeContent: 'OGP',
     showStaticDynamic: false,
     completedDate: '02 January 2024',
   },
   ospdc: {
-    name: 'OSP-DC',
-    badgeContent: 'OSP-DC',
+    name: 'OSP\u2013DC',
     showStaticDynamic: false,
     completedDate: '02 January 2024',
   },
   ospiic: {
-    name: 'OSP-IIC',
-    badgeContent: 'OSP-IIC',
+    name: 'OSP\u2013IIC',
     showStaticDynamic: false,
     completedDate: '02 January 2024',
   },
   rsr: {
     name: 'RSR',
-    badgeContent: 'RSR',
     showStaticDynamic: true,
     completedDate: '02 January 2024',
   },
@@ -187,7 +179,6 @@ export type PredictorOption = keyof AssessmentV1 | keyof AssessmentV2
 
 type PredictorNameProperties = {
   name: string
-  badgeContent: string
   showStaticDynamic: boolean
   completedDate?: string
 }
@@ -231,14 +222,14 @@ export const getRiskTestData = (predictors: RiskTestDataOptions[]): RiskData => 
       completedDate: '02 January 2024',
     },
     ospdc: {
-      name: 'OSP-DC',
+      name: 'OSP\u2013DC',
       band: 'VERY HIGH',
       staticOrDynamic: null,
       score: 1.07,
       completedDate: '02 January 2024',
     },
     ospiic: {
-      name: 'OSP-IIC',
+      name: 'OSP\u2013IIC',
       band: 'HIGH',
       staticOrDynamic: null,
       score: 2.81,
@@ -259,42 +250,42 @@ export const getRiskTestData = (predictors: RiskTestDataOptions[]): RiskData => 
     completedDate: '01 January 2025',
     assessmentType: 'layer 3',
     allReoffendingPredictor: {
-      name: 'All Reoffending Predictor',
+      name: 'All reoffending predictor',
       band: 'LOW',
       staticOrDynamic: 'Static',
       score: 1.23,
       completedDate: '01 January 2025',
     },
     violentReoffendingPredictor: {
-      name: 'Violent Reoffending Predictor',
+      name: 'Violent reoffending predictor',
       band: 'LOW',
       staticOrDynamic: 'Static',
       score: 1.23,
       completedDate: '01 January 2025',
     },
     seriousViolentReoffendingPredictor: {
-      name: 'Serious Violent Reoffending Predictor',
+      name: 'Serious violent reoffending predictor',
       band: 'MEDIUM',
       staticOrDynamic: 'Static',
       score: 1.23,
       completedDate: '01 January 2025',
     },
     directContactSexualReoffendingPredictor: {
-      name: 'Direct Contact - Sexual Reoffending Predictor',
+      name: 'Direct contact \u2013 sexual reoffending predictor',
       band: 'VERY HIGH',
       staticOrDynamic: null,
       score: 2.81,
       completedDate: '01 January 2025',
     },
     indirectImageContactSexualReoffendingPredictor: {
-      name: 'Images and Indirect Contact – Sexual Reoffending Predictor',
+      name: 'Images and indirect contact \u2013 sexual reoffending predictor',
       band: 'HIGH',
       staticOrDynamic: null,
       score: 1.07,
       completedDate: '01 January 2025',
     },
     combinedSeriousReoffendingPredictor: {
-      name: 'Combined Serious Reoffending Predictor',
+      name: 'Combined serious reoffending predictor',
       band: 'HIGH',
       staticOrDynamic: 'Static',
       score: 1.23,
@@ -351,5 +342,44 @@ export function getCombinations<T extends Inputs>(inputs: T): Record<keyof T, an
     [{}] as Record<keyof T, any>[],
   )
 }
+
+export const legacyFallbackTestCases = [
+  // When legacy predictor in assessment and requested, return legacy predictor
+  ['ogrs3', 'ogrs3', 'ogrs3'],
+  ['ovp', 'ovp', 'ovp'],
+  ['ogp', 'ogp', 'ogp'],
+  ['ospdc', 'ospdc', 'ospdc'],
+  ['ospiic', 'ospiic', 'ospiic'],
+  ['rsr', 'rsr', 'rsr'],
+  // When legacy predictor in assessment and new predictor is requested, return legacy predictor, apart from CSRP which has no fallback
+  ['ogrs3', 'allReoffendingPredictor', 'ogrs3'],
+  ['ovp', 'violentReoffendingPredictor', 'ovp'],
+  ['rsr', 'seriousViolentReoffendingPredictor', null],
+  ['ospdc', 'directContactSexualReoffendingPredictor', 'ospdc'],
+  ['ospiic', 'indirectImageContactSexualReoffendingPredictor', 'ospiic'],
+  ['rsr', 'combinedSeriousReoffendingPredictor', 'rsr'],
+  // When new predictor in assessment and requested, return new predictor
+  ['allReoffendingPredictor', 'allReoffendingPredictor', 'allReoffendingPredictor'],
+  ['violentReoffendingPredictor', 'violentReoffendingPredictor', 'violentReoffendingPredictor'],
+  ['seriousViolentReoffendingPredictor', 'seriousViolentReoffendingPredictor', 'seriousViolentReoffendingPredictor'],
+  [
+    'directContactSexualReoffendingPredictor',
+    'directContactSexualReoffendingPredictor',
+    'directContactSexualReoffendingPredictor',
+  ],
+  [
+    'indirectImageContactSexualReoffendingPredictor',
+    'indirectImageContactSexualReoffendingPredictor',
+    'indirectImageContactSexualReoffendingPredictor',
+  ],
+  ['combinedSeriousReoffendingPredictor', 'combinedSeriousReoffendingPredictor', 'combinedSeriousReoffendingPredictor'],
+  // When new predictor in assessment and legacy predictor requested, nothing is displayed
+  ['allReoffendingPredictor', 'ogrs3', null],
+  ['violentReoffendingPredictor', 'ovp', null],
+  ['seriousViolentReoffendingPredictor', 'rsr', null],
+  ['directContactSexualReoffendingPredictor', 'ospdc', null],
+  ['indirectImageContactSexualReoffendingPredictor', 'ospiic', null],
+  ['combinedSeriousReoffendingPredictor', 'rsr', null],
+]
 
 export { predictorConfig }
