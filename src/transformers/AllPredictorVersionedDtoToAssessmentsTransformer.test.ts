@@ -7,6 +7,7 @@ function getRawInputData(): AllPredictorVersionedDto[] {
       completedDate: '2024-01-02T18:23:20',
       status: 'COMPLETE',
       outputVersion: '1',
+      assessmentType: 'LAYER1',
       output: {
         groupReconvictionScore: {
           oneYear: 3,
@@ -48,6 +49,7 @@ function getRawInputData(): AllPredictorVersionedDto[] {
       completedDate: '2025-01-01T15:21:20',
       status: 'COMPLETE',
       outputVersion: '2',
+      assessmentType: 'LAYER3',
       output: {
         allReoffendingPredictor: {
           staticOrDynamic: 'STATIC',
@@ -88,45 +90,47 @@ describe('All Predictor Versioned DTO To Assessments Transformer', () => {
     const result = transformAllPredictorVersionedDtoToAssessments(getRawInputData())
     expect(result).toEqual([
       {
+        completedDate: '01 January 2025',
         completedDateTime: '01 January 2025 at 15:21',
         outputVersion: '2',
+        assessmentType: 'layer 3',
         allReoffendingPredictor: {
-          name: 'All Reoffending Predictor',
+          name: 'All reoffending predictor',
           band: 'LOW',
           staticOrDynamic: 'Static',
           score: 1.23,
           completedDate: '01 January 2025',
         },
         violentReoffendingPredictor: {
-          name: 'Violent Reoffending Predictor',
+          name: 'Violent reoffending predictor',
           band: 'LOW',
           staticOrDynamic: 'Static',
           score: 1.23,
           completedDate: '01 January 2025',
         },
         seriousViolentReoffendingPredictor: {
-          name: 'Serious Violent Reoffending Predictor',
+          name: 'Serious violent reoffending predictor',
           band: 'MEDIUM',
           staticOrDynamic: 'Static',
           score: 1.23,
           completedDate: '01 January 2025',
         },
         directContactSexualReoffendingPredictor: {
-          name: 'Direct Contact - Sexual Reoffending Predictor',
+          name: 'Direct contact \u2013 sexual reoffending predictor',
           band: 'VERY HIGH',
           staticOrDynamic: null,
           score: 2.81,
           completedDate: '01 January 2025',
         },
         indirectImageContactSexualReoffendingPredictor: {
-          name: 'Images and Indirect Contact – Sexual Reoffending Predictor',
+          name: 'Images and indirect contact \u2013 sexual reoffending predictor',
           band: 'HIGH',
           staticOrDynamic: null,
           score: 1.07,
           completedDate: '01 January 2025',
         },
         combinedSeriousReoffendingPredictor: {
-          name: 'Combined Serious Reoffending Predictor',
+          name: 'Combined serious reoffending predictor',
           band: 'HIGH',
           staticOrDynamic: 'Static',
           score: 1.23,
@@ -135,7 +139,9 @@ describe('All Predictor Versioned DTO To Assessments Transformer', () => {
       },
       {
         outputVersion: '1',
+        completedDate: '02 January 2024',
         completedDateTime: '02 January 2024 at 18:23',
+        assessmentType: 'layer 1',
         ogrs3: {
           name: 'OGRS',
           band: 'LOW',
@@ -158,14 +164,14 @@ describe('All Predictor Versioned DTO To Assessments Transformer', () => {
           completedDate: '02 January 2024',
         },
         ospdc: {
-          name: 'OSP-DC',
+          name: 'OSP\u2013DC',
           band: 'VERY HIGH',
           staticOrDynamic: null,
           score: 1.07,
           completedDate: '02 January 2024',
         },
         ospiic: {
-          name: 'OSP-IIC',
+          name: 'OSP\u2013IIC',
           band: 'HIGH',
           staticOrDynamic: null,
           score: 2.81,
@@ -188,6 +194,7 @@ describe('All Predictor Versioned DTO To Assessments Transformer', () => {
         completedDate: '2022-06-10T18:23:20',
         status: 'COMPLETE',
         outputVersion: '3',
+        assessmentType: 'LAYER3',
         output: {},
       },
     ]
@@ -202,6 +209,7 @@ describe('All Predictor Versioned DTO To Assessments Transformer', () => {
         completedDate: '2025-01-01T15:21:20',
         status: 'COMPLETE',
         outputVersion: '2',
+        assessmentType: 'LAYER3',
         output: {
           allReoffendingPredictor: {
             staticOrDynamic: null,
@@ -230,45 +238,47 @@ describe('All Predictor Versioned DTO To Assessments Transformer', () => {
     const result = transformAllPredictorVersionedDtoToAssessments(nullPredictorsData)
     expect(result).toEqual([
       {
+        completedDate: '01 January 2025',
         completedDateTime: '01 January 2025 at 15:21',
         outputVersion: '2',
+        assessmentType: 'layer 3',
         allReoffendingPredictor: {
-          name: 'All Reoffending Predictor',
+          name: 'All reoffending predictor',
           band: undefined,
           staticOrDynamic: null,
           score: null,
           completedDate: '01 January 2025',
         },
         violentReoffendingPredictor: {
-          name: 'Violent Reoffending Predictor',
+          name: 'Violent reoffending predictor',
           band: undefined,
           staticOrDynamic: null,
           score: undefined,
           completedDate: '01 January 2025',
         },
         seriousViolentReoffendingPredictor: {
-          name: 'Serious Violent Reoffending Predictor',
+          name: 'Serious violent reoffending predictor',
           band: undefined,
           staticOrDynamic: null,
           score: undefined,
           completedDate: '01 January 2025',
         },
         directContactSexualReoffendingPredictor: {
-          name: 'Direct Contact - Sexual Reoffending Predictor',
+          name: 'Direct contact \u2013 sexual reoffending predictor',
           band: 'VERY HIGH',
           staticOrDynamic: null,
           score: 2.81,
           completedDate: '01 January 2025',
         },
         indirectImageContactSexualReoffendingPredictor: {
-          name: 'Images and Indirect Contact – Sexual Reoffending Predictor',
+          name: 'Images and indirect contact \u2013 sexual reoffending predictor',
           band: 'HIGH',
           staticOrDynamic: null,
           score: 1.07,
           completedDate: '01 January 2025',
         },
         combinedSeriousReoffendingPredictor: {
-          name: 'Combined Serious Reoffending Predictor',
+          name: 'Combined serious reoffending predictor',
           band: 'HIGH',
           staticOrDynamic: 'Static',
           score: 1.23,
@@ -284,6 +294,7 @@ describe('All Predictor Versioned DTO To Assessments Transformer', () => {
         completedDate: 'NOT_A_DATE',
         status: 'COMPLETE',
         outputVersion: '2',
+        assessmentType: 'LAYER3',
         output: {
           allReoffendingPredictor: {
             staticOrDynamic: 'STATIC',
@@ -320,45 +331,47 @@ describe('All Predictor Versioned DTO To Assessments Transformer', () => {
     const result = transformAllPredictorVersionedDtoToAssessments(nullPredictorsData)
     expect(result).toEqual([
       {
+        completedDate: undefined,
         completedDateTime: undefined,
         outputVersion: '2',
+        assessmentType: 'layer 3',
         allReoffendingPredictor: {
-          name: 'All Reoffending Predictor',
+          name: 'All reoffending predictor',
           band: 'LOW',
           staticOrDynamic: 'Static',
           score: 1.23,
           completedDate: undefined,
         },
         violentReoffendingPredictor: {
-          name: 'Violent Reoffending Predictor',
+          name: 'Violent reoffending predictor',
           band: 'LOW',
           staticOrDynamic: 'Static',
           score: 1.23,
           completedDate: undefined,
         },
         seriousViolentReoffendingPredictor: {
-          name: 'Serious Violent Reoffending Predictor',
+          name: 'Serious violent reoffending predictor',
           band: 'MEDIUM',
           staticOrDynamic: 'Static',
           score: 1.23,
           completedDate: undefined,
         },
         directContactSexualReoffendingPredictor: {
-          name: 'Direct Contact - Sexual Reoffending Predictor',
+          name: 'Direct contact \u2013 sexual reoffending predictor',
           band: 'VERY HIGH',
           staticOrDynamic: null,
           score: 2.81,
           completedDate: undefined,
         },
         indirectImageContactSexualReoffendingPredictor: {
-          name: 'Images and Indirect Contact – Sexual Reoffending Predictor',
+          name: 'Images and indirect contact \u2013 sexual reoffending predictor',
           band: 'HIGH',
           staticOrDynamic: null,
           score: 1.07,
           completedDate: undefined,
         },
         combinedSeriousReoffendingPredictor: {
-          name: 'Combined Serious Reoffending Predictor',
+          name: 'Combined serious reoffending predictor',
           band: 'HIGH',
           staticOrDynamic: 'Static',
           score: 1.23,

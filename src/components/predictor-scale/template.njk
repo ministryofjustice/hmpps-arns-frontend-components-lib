@@ -20,105 +20,53 @@ In template:
 @param {object} params
   @param {RiskData} params.data - Risk data object from ArnsComponents.getRiskData() containing an 'assessments' array
   @param {string} params.predictor - The name of the specific predictor to display
+  @param {boolean} [params.legacyFallback] - Optional (default false) - If true and predictor requested is OGRS4-gen, fallback to showing the OGRS3-gen predictor if the latest assessment is OGRS3-gen.
+  @param {boolean} params.excludeDate - Optional flag for excluding date
+  @param {number} params.headingLevel - Optional heading level, completes the "h" tag where 2 (h2) is the default and the options are 1, 2, 3, 4...
+  @param {string} params.headingClass - Optional heading class, completes "govuk-heading-" class where "m" (govuk-heading-m) is the default and options are xl, l, m, s, xs
 #}
 {%- from "govuk/components/tag/macro.njk" import govukTag -%}
-{% set latestAssessment = params.data.assessments | first if params.data.assessments else null %}
+{%- from "../predictor-scale-bar/macro.njk" import predictorScaleBar -%}
 
-{% macro predictorScaleMarker(predictor, showScore) %}
-  <div class="arns-scale-marker__card" data-test-id="scaleMarkerCard">
-    <div class="arns-scale-marker__card-top">
-      <h3 data-test-id="scaleMarkerCardContent">{{ predictor.band }}</h3>
-    </div>
-    {% if showScore and predictor.score %}
-      <div class="arns-scale-marker__card-bottom" data-test-id="scaleMarkerCardBottom">
-        <p>{{ predictor.score }}%</p>
-      </div>
-      <div class="arns-scale-marker__card-pointer" data-test-id="scaleMarkerCardPointer"></div>
-    {% else %}
-      <div class="arns-scale-marker__card-pointer arns-scale-marker__card-pointer--white" data-test-id="scaleMarkerNoScore"></div>
-    {% endif %}
-  </div>
-{% endmacro %}
+{% set latestAssessment = params.data.assessments | first if params.data.assessments else null %}
+{% set headingLevel = params.headingLevel | default(2) %}
+{% set headingClass = params.headingClass | default('m') %}
 
 {% if latestAssessment %}
+
+  {% set config = predictorConfig[params.predictor] %}
+
+  {% if params.legacyFallback and config.fallbackPredictor and latestAssessment.outputVersion == '1' %}
+      {% set predictorToRender = config.fallbackPredictor %}
+  {% else %}
+      {% set predictorToRender = params.predictor %}
+  {% endif %}
+
   {% for key, predictor in latestAssessment %}
-    {% if key == params.predictor %}
+    {% if key == predictorToRender %}
 
-      {% set config = predictorConfig[key] %}
-
-      {% set scaleMarkerClass = '' %}
-
-      {% switch predictor.band %}
-      {% case 'LOW' %}
-        {% set scaleMarkerClass = 'arns-scale-marker-wrapper--low' %}
-      {% case 'MEDIUM' %}
-        {% set scaleMarkerClass = 'arns-scale-marker-wrapper--medium' %}
-      {% case 'HIGH' %}
-        {% set scaleMarkerClass = 'arns-scale-marker-wrapper--high' %}
-      {% case 'VERY HIGH' %}
-        {% set scaleMarkerClass = 'arns-scale-marker-wrapper--very-high' %}
-      {% endswitch %}
-
-      {% set barTypeClass = '' %}
-      {% if config.hasVeryHighBand !== true and config.showBandThresholdPercentages !== true %}
-        {% set barTypeClass = 'arns-scale-bar--small' %}
-      {% elif config.hasVeryHighBand === true and config.showBandThresholdPercentages !== true %}
-        {% set barTypeClass = 'arns-scale-bar--small arns-scale-bar--small-fourths' %}
-      {% elif config.hasVeryHighBand === true and config.showBandThresholdPercentages === true %}
-        {% set barTypeClass = 'arns-scale-bar arns-scale-bar--fourths' %}
-      {% elif config.hasVeryHighBand !== true and config.showBandThresholdPercentages === true %}
-        {% set barTypeClass = 'arns-scale-bar arns-scale-bar--thirds' %}
-      {% endif %}
-
-      {% set scalePosition = '' %}
-      {% if config.showBandThresholdPercentages == true %}
-        {% set scalePosition = predictor.score | scoreToScaleMarkerPosition(config.bandThresholdPercentages) %}
-      {% else %}
-        {% set scalePosition = predictor.band | bandToScaleMarkerPosition(config.hasVeryHighBand) %}
-      {% endif %}
-
-      {% if predictor.band === 'NOT APPLICABLE' %}
-        <div class="arns-predictor-scale govuk-body" data-predictor-scale="{{ predictor.name }}">
-          <h2 class="govuk-heading-m" data-test-id="name">{{ predictor.name }}</h2>
-          <p class="govuk-body" data-test-id="notApplicable">Not applicable</p>
-        </div>
-      {% else %}
-        <div class="arns-predictor-scale govuk-body" data-predictor-scale="{{ predictor.name }}">
+      <div class="arns-predictor-scale govuk-body" data-predictor-scale="{{ predictor.name }}">
+        {% if predictor.band == null or predictor.score == null %}
+          <h{{ headingLevel }} class="govuk-heading-{{ headingClass }} predictor-scale-header" data-test-id="name">{{ predictor.name }}</h{{ headingLevel }}>
+          <p class="govuk-body" data-test-id="unknownSummary">The score cannot be calculated due to missing information (e.g. no assessment, completed, or required data not present).</p>
+        {% elif predictor.band === 'NOT APPLICABLE' %}
+          <h{{ headingLevel }} class="govuk-heading-{{ headingClass }} predictor-scale-header" data-test-id="name">{{ predictor.name }}</h{{ headingLevel }}>
+          <p class="govuk-body" data-test-id="notApplicableSummary">We only calculate sexual reoffending predictor scores for men with a known history of sexual or sexually motivated offending. This person does not have a score for this predictor.</p>
+        {% else %}
           <div class="arns-predictor-scale-header-wrapper">
             <div>
-              <h2 class="govuk-heading-m" data-test-id="name">{{ predictor.name }}</h2>
-              <p class="govuk-hint" data-test-id="LastUpdatedDate">Last updated: {{ predictor.completedDate }}</p>
+              <h{{ headingLevel }} class="govuk-heading-{{ headingClass }} predictor-scale-header" data-test-id="name">{{ predictor.name }}</h{{ headingLevel }}>
+              {% if not params.excludeDate %}
+              <p class="govuk-hint" data-test-id="LastUpdatedDate">Last updated: {{ predictor.completedDate if predictor.completedDate else 'unknown' }}</p>
+              {% endif %}
             </div>
             {% if predictor.staticOrDynamic %}
-            <div data-test-id="staticOrDynamic">{{ govukTag({ text: predictor.staticOrDynamic, classes: "govuk-tag--grey"}) }}</div>
+              <div data-test-id="staticOrDynamic">{{ govukTag({ text: predictor.staticOrDynamic, classes: "govuk-tag--grey"}) }}</div>
             {%  endif %}
           </div>
-
-          <div class="arns-scale-marker" data-test-id='scaleMarker'>
-            <div class="{{ scaleMarkerClass }} arns-scale-marker-wrapper" data-margin="{{ scalePosition }}" data-test-id='scaleMarkerPosition'>
-              {{ predictorScaleMarker(predictor, config.showScore) }}
-            </div>
-          </div>
-
-          <div class="{{ barTypeClass }}" data-test-id='barType'>
-            <div data-band-percentage-start="{{ config.bandThresholdPercentages[0] }}"
-                 data-band-percentage="{{ config.bandThresholdPercentages[1] }}" data-test-id='lowBand'>
-              <span></span>
-            </div>
-            <div data-band-percentage="{{ config.bandThresholdPercentages[2] }}" data-test-id='mediumBand'>
-              <span></span>
-            </div>
-            <div data-band-percentage="{{ config.bandThresholdPercentages[3] }}" data-test-id='highBand'>
-              <span></span>
-            </div>
-            {% if config.hasVeryHighBand === true %}
-              <div data-band-percentage="{{ config.bandThresholdPercentages[4] }}" data-test-id='veryHighBand'>
-                <span></span>
-              </div>
-            {% endif %}
-          </div>
-        </div>
-      {% endif %}
+          {{ predictorScaleBar(predictor, key) }}
+        {% endif %}
+      </div>
 
     {% endif %}
   {% endfor %}

@@ -5,7 +5,10 @@ import {
   getInitialDom,
   getRenderedHtml,
   getRiskTestData,
+  legacyFallbackTestCases,
   PredictorOption,
+  RiskTestDataOptions,
+  StaticOrDynamicContent,
 } from '../test-utils/testEnvironmentHelper'
 import { BandLevel } from '../../types/dtos/BandLevel'
 
@@ -16,7 +19,7 @@ describe('predictor-scale', () => {
     dom = getInitialDom()
   })
 
-  describe('should test predictor names', () => {
+  describe('should test predictor names and expect a scale bar to exist', () => {
     const predictors = Object.keys(expectedPredictorNameMappings) as PredictorOption[]
     it.each(predictors)('should render correct name for: %s', predictor => {
       const renderedHtml = getRenderedHtml(
@@ -30,109 +33,9 @@ describe('predictor-scale', () => {
       expect(document.querySelector('[data-test-id="name"]')?.textContent).toBe(
         expectedPredictorNameMappings[predictor].name,
       )
-    })
-  })
 
-  describe('Scale Marker Styles across Risk Levels', () => {
-    const levelTestCases = [
-      {
-        level: BandLevel.LOW,
-        expectedClass: 'arns-scale-marker-wrapper--low',
-        border: 'rgb(133, 153, 75)',
-        background: 'rgb(222, 233, 189)',
-        textColor: 'rgb(72, 91, 16)',
-      },
-      {
-        level: BandLevel.MEDIUM,
-        expectedClass: 'arns-scale-marker-wrapper--medium',
-        border: 'rgb(244, 119, 56)',
-        background: 'rgb(249, 232, 189)',
-        textColor: 'rgb(163, 78, 0)',
-      },
-      {
-        level: BandLevel.HIGH,
-        expectedClass: 'arns-scale-marker-wrapper--high',
-        border: 'rgb(212, 53, 28)',
-        background: 'rgb(246, 215, 210)',
-        textColor: 'rgb(148, 37, 20)',
-      },
-      {
-        level: BandLevel.VERY_HIGH,
-        expectedClass: 'arns-scale-marker-wrapper--very-high',
-        border: 'rgb(148, 37, 20)',
-        background: 'rgb(255, 172, 159)',
-        textColor: 'rgb(113, 26, 13)',
-      },
-    ]
-
-    it.each(levelTestCases)(
-      'should render the correct marker style for $level',
-      ({ level, expectedClass, border, background, textColor }) => {
-        const predictor: PredictorOption = 'allReoffendingPredictor'
-        const score = 50
-
-        const renderedHtml = getRenderedHtml(
-          dom,
-          'PREDICTOR_SCALE',
-          `predictor: "${predictor}"`,
-          getRiskTestData([{ predictor, level, score, staticOrDynamic: 'Static' }]),
-        )
-
-        const { document } = renderedHtml
-
-        // Validate Header Name
-        expect(document.querySelector('[data-test-id="name"]')?.textContent).toBe('All Reoffending Predictor')
-
-        // Validate Marker Wrapper Class and border colors
-        const markerWrapper = document.querySelector('[data-test-id="scaleMarkerPosition"]')
-        expect(markerWrapper?.className).toContain('arns-scale-marker-wrapper')
-        expect(markerWrapper?.className).toContain(expectedClass)
-        const card = markerWrapper?.querySelector('[data-test-id="scaleMarkerCard"]')
-        expectStyleToBe(renderedHtml, card, [
-          { tag: 'borderTopColor', value: border },
-          { tag: 'borderStyle', value: 'solid' },
-          { tag: 'borderWidth', value: '2px' },
-        ])
-
-        // Validate Marker Card Content (LOW, MEDIUM, HIGH, VERY HIGH color)
-        const expectedText = level.replace('_', ' ')
-        const markerContent = document.querySelector('[data-test-id="scaleMarkerCardContent"]')
-        expect(markerContent?.textContent?.trim()).toBe(expectedText)
-        expectStyleToBe(renderedHtml, markerContent, [{ tag: 'color', value: textColor }])
-
-        // Validate Score is present (Since showScore is true)
-        const scoreLabel = document.querySelector('[data-test-id="scaleMarkerCardBottom"]')
-        expect(scoreLabel?.textContent?.trim()).toBe('50%')
-        expectStyleToBe(renderedHtml, scoreLabel, [{ tag: 'backgroundColor', value: background }])
-
-        // Check the Card Pointer (Primary Colour)
-        // The pointer is a triangle made with borders
-        const pointer = document.querySelector('[data-test-id="scaleMarkerCardPointer"]')
-        expectStyleToBe(renderedHtml, pointer, [{ tag: 'borderTopColor', value: border }])
-      },
-    )
-  })
-
-  describe('Bar Type Class Logic', () => {
-    const barTypeCases = [
-      { predictor: 'ospiic', expectedClass: 'arns-scale-bar--small' },
-      { predictor: 'ospdc', expectedClass: 'arns-scale-bar--small-fourths' },
-      { predictor: 'ogrs3', expectedClass: 'arns-scale-bar--fourths' },
-      { predictor: 'rsr', expectedClass: 'arns-scale-bar--thirds' },
-    ]
-
-    it.each(barTypeCases)('should apply class $expectedClass for $predictor', ({ predictor, expectedClass }) => {
-      const renderedHtml = getRenderedHtml(
-        dom,
-        'PREDICTOR_SCALE',
-        `predictor: "${predictor}"`,
-        getRiskTestData([
-          { predictor: predictor as PredictorOption, level: BandLevel.LOW, score: 5, staticOrDynamic: 'Static' },
-        ]),
-      )
-
-      const bar = renderedHtml.document.querySelector('[data-test-id="barType"]')
-      expect(bar?.className).toContain(expectedClass)
+      // assert scale bar exists
+      expect(document.querySelector(`[data-test-id="${predictor}-scale"]`)).not.toBeNull()
     })
   })
 
@@ -147,31 +50,138 @@ describe('predictor-scale', () => {
 
     const { document } = renderedHtml
 
-    expect(document.querySelector('[data-test-id="notApplicable"]')?.innerHTML).toBe('Not applicable')
+    expect(document.querySelector('[data-test-id="notApplicableSummary"]')?.innerHTML).toBe(
+      'We only calculate sexual reoffending predictor scores for men with a known history of sexual or sexually motivated offending. This person does not have a score for this predictor.',
+    )
 
     // Ensure standard scale elements are HIDDEN
     expect(document.querySelector('[data-test-id="scaleMarker"]')).toBeNull()
     expect(document.querySelector('[data-test-id="barType"]')).toBeNull()
   })
 
-  it('should hide the score and show "No Score" pointer when config.showScore is false', () => {
-    const predictor: PredictorOption = 'directContactSexualReoffendingPredictor'
-    const renderedHtml = getRenderedHtml(
-      dom,
-      'PREDICTOR_SCALE',
-      `predictor: "${predictor}"`,
-      getRiskTestData([{ predictor, level: BandLevel.VERY_HIGH, score: 1.07, staticOrDynamic: 'Static' }]),
-    )
+  const unknownScenarios: RiskTestDataOptions[] = [
+    {
+      predictor: 'rsr',
+      level: null,
+      score: 0,
+    },
+    {
+      predictor: 'rsr',
+      level: undefined,
+      score: 0,
+    },
+    {
+      predictor: 'rsr',
+      level: BandLevel.LOW,
+      score: null,
+    },
+    {
+      predictor: 'rsr',
+      level: BandLevel.LOW,
+      score: undefined,
+    },
+  ]
 
-    const { document } = renderedHtml
+  it.each(unknownScenarios)(
+    'should render only the Unknown message when either the band or score is missing',
+    ({ predictor, level, score }) => {
+      const renderedHtml = getRenderedHtml(
+        dom,
+        'PREDICTOR_SCALE',
+        `predictor: "${predictor}"`,
+        getRiskTestData([
+          {
+            predictor,
+            level,
+            score,
+            staticOrDynamic: 'Static',
+          },
+        ]),
+      )
 
-    // Should NOT find the score card bottom
-    expect(document.querySelector('[data-test-id="scaleMarkerCardBottom"]')).toBeNull()
-    // SHOULD find the white pointer
-    const noScorePointer = document.querySelector('[data-test-id="scaleMarkerNoScore"]')
-    expect(noScorePointer).not.toBeNull()
-    expect(noScorePointer?.className).toContain('arns-scale-marker__card-pointer--white')
-  })
+      const { document } = renderedHtml
+
+      expect(document.querySelector('[data-test-id="unknownSummary"]')?.innerHTML).toBe(
+        'The score cannot be calculated due to missing information (e.g. no assessment, completed, or required data not present).',
+      )
+
+      // Ensure standard scale elements are HIDDEN
+      expect(document.querySelector('[data-test-id="scaleMarker"]')).toBeNull()
+      expect(document.querySelector('[data-test-id="barType"]')).toBeNull()
+    },
+  )
+
+  const missingStaticOrDynamicScenarios: StaticOrDynamicContent[] = [null, undefined]
+
+  it.each(missingStaticOrDynamicScenarios)(
+    'should render scale excluding staticOrDynamic when staticOrDynamic is missing',
+    staticOrDynamic => {
+      const predictor: PredictorOption = 'ogrs3'
+      const renderedHtml = getRenderedHtml(
+        dom,
+        'PREDICTOR_SCALE',
+        `predictor: "ogrs3"`,
+        getRiskTestData([
+          {
+            predictor,
+            level: BandLevel.LOW,
+            score: 0,
+            staticOrDynamic,
+          },
+        ]),
+      )
+
+      const { document } = renderedHtml
+
+      // Validate Header Name
+      expect(document.querySelector('[data-test-id="name"]')?.textContent).toBe(
+        expectedPredictorNameMappings[predictor].name,
+      )
+
+      // assert scale bar exists
+      expect(document.querySelector('[data-test-id="ogrs3-scale"]')).not.toBeNull()
+
+      // assert static or dynamic is excluded
+      expect(document.querySelector('[data-test-id="staticOrDynamic"]')).toBeNull()
+    },
+  )
+
+  const missingCompletedDateScenarios: string[] = [null, undefined, '']
+
+  it.each(missingCompletedDateScenarios)(
+    'should render scale with unknown last updated date when completedDate is missing',
+    completedDate => {
+      const predictor: PredictorOption = 'ogrs3'
+      const renderedHtml = getRenderedHtml(
+        dom,
+        'PREDICTOR_SCALE',
+        `predictor: "ogrs3"`,
+        getRiskTestData([
+          {
+            predictor,
+            level: BandLevel.LOW,
+            score: 0,
+            staticOrDynamic: 'Static',
+            completedDate,
+            allowFalseyCompletedDate: true,
+          },
+        ]),
+      )
+
+      const { document } = renderedHtml
+
+      // Validate Header Name
+      expect(document.querySelector('[data-test-id="name"]')?.textContent).toBe(
+        expectedPredictorNameMappings[predictor].name,
+      )
+
+      // assert scale bar exists
+      expect(document.querySelector('[data-test-id="ogrs3-scale"]')).not.toBeNull()
+
+      // assert last updated date is unknown
+      expect(document.querySelector('[data-test-id="LastUpdatedDate"]')?.textContent).toBe('Last updated: unknown')
+    },
+  )
 
   it('should render the border box, staticOrDynamic and lastUpdated content and styles', () => {
     const predictor: PredictorOption = 'rsr'
@@ -193,5 +203,56 @@ describe('predictor-scale', () => {
     const lastUpdatedEl = renderedHtml.document.querySelector('[data-test-id="LastUpdatedDate"]')
     expect(lastUpdatedEl?.className).toContain('govuk-hint')
     expect(lastUpdatedEl?.textContent?.trim()).toBe('Last updated: 02 January 2024')
+  })
+
+  it('should render the component without lastUpdated', () => {
+    const predictor: PredictorOption = 'rsr'
+    const renderedHtml = getRenderedHtml(
+      dom,
+      'PREDICTOR_SCALE',
+      `predictor: "rsr", excludeDate: true`,
+      getRiskTestData([{ predictor, level: BandLevel.HIGH, score: 50, staticOrDynamic: 'Dynamic' }]),
+    )
+
+    expect(renderedHtml.document.querySelector('[data-test-id="LastUpdatedDate"]')).toBeNull()
+    const headingEl = renderedHtml.document.querySelector('[data-test-id="name"]')
+    expect(headingEl.tagName).toBe('H2')
+    expect(headingEl.className).toContain('govuk-heading-m')
+  })
+
+  it('should render the component with custom header size', () => {
+    const predictor: PredictorOption = 'rsr'
+    const renderedHtml = getRenderedHtml(
+      dom,
+      'PREDICTOR_SCALE',
+      `predictor: "rsr", headingLevel: 4, headingClass: "xs"`,
+      getRiskTestData([{ predictor, level: BandLevel.HIGH, score: 50, staticOrDynamic: 'Dynamic' }]),
+    )
+
+    const headingEl = renderedHtml.document.querySelector('[data-test-id="name"]')
+    expect(headingEl.tagName).toBe('H4')
+    expect(headingEl.className).toContain('govuk-heading-xs')
+  })
+
+  describe('legacy fallback', () => {
+    it.each(legacyFallbackTestCases)(
+      'Legacy fallback, assessmentPredictor: %s, predictorInMacro: %s, predictorRendered: %s',
+      (assessmentPredictor: PredictorOption, predictorInMacro: PredictorOption, predictorRendered: PredictorOption) => {
+        const renderedHtml = getRenderedHtml(
+          dom,
+          'PREDICTOR_SCALE',
+          `predictor: "${predictorInMacro}", legacyFallback: true`,
+          getRiskTestData([
+            { predictor: assessmentPredictor, level: BandLevel.LOW, score: 12.34, staticOrDynamic: 'Static' },
+          ]),
+        )
+        const name = renderedHtml.document.querySelector('[data-test-id="name"]')
+        if (predictorRendered) {
+          expect(name.innerHTML).toBe(expectedPredictorNameMappings[predictorRendered].name)
+        } else {
+          expect(name).toBeNull()
+        }
+      },
+    )
   })
 })

@@ -7,6 +7,7 @@ import {
   getInitialDom,
   getRenderedHtml,
   getRiskTestData,
+  legacyFallbackTestCases,
   predictorConfig,
   PredictorOption,
   StaticOrDynamicContent,
@@ -56,7 +57,7 @@ describe('predictor-badge', () => {
         getRiskTestData([{ predictor, level: BandLevel.LOW, score: 12.34, staticOrDynamic: 'Static' }]),
       )
       const name = renderedHtml.document.querySelector('[data-test-id="nameAndBand"]')
-      expect(name.innerHTML).toBe(`${expectedPredictorNameMappings[predictor].badgeContent} <strong>LOW</strong>`)
+      expect(name.innerHTML).toBe(`${expectedPredictorNameMappings[predictor].name} <strong>LOW</strong>`)
     })
   })
 
@@ -72,6 +73,28 @@ describe('predictor-badge', () => {
       validateBadge(renderedHtml, predictor, level, score, staticOrDynamic, showScore)
     },
   )
+
+  describe('legacy fallback', () => {
+    it.each(legacyFallbackTestCases)(
+      'Legacy fallback, assessmentPredictor: %s, predictorInMacro: %s, predictorRendered: %s',
+      (assessmentPredictor: PredictorOption, predictorInMacro: PredictorOption, predictorRendered: PredictorOption) => {
+        const renderedHtml = getRenderedHtml(
+          dom,
+          'PREDICTOR_BADGE',
+          `predictor: "${predictorInMacro}", legacyFallback: true`,
+          getRiskTestData([
+            { predictor: assessmentPredictor, level: BandLevel.LOW, score: 12.34, staticOrDynamic: 'Static' },
+          ]),
+        )
+        const name = renderedHtml.document.querySelector('[data-test-id="nameAndBand"]')
+        if (predictorRendered) {
+          expect(name.innerHTML).toBe(`${expectedPredictorNameMappings[predictorRendered].name} <strong>LOW</strong>`)
+        } else {
+          expect(name).toBeNull()
+        }
+      },
+    )
+  })
 })
 
 const validateBadge = (
@@ -120,7 +143,7 @@ const validateBadge = (
       { tag: 'color', value: properties.typeAndLevelColour },
       { tag: 'backgroundColor', value: 'rgba(0, 0, 0, 0)' },
     ],
-    `${expectedPredictorNameMappings[predictor].badgeContent} <strong>${displayBand}</strong>`,
+    `${expectedPredictorNameMappings[predictor].name} <strong>${displayBand}</strong>`,
   )
 
   // Validate Score (Scoped search using data-test-id)
@@ -179,14 +202,14 @@ const expectedBandMappings: Record<BandLevel, PredictorProperties> = {
     scoreBackgroundColour: 'rgb(255, 172, 159)',
   },
   NOT_APPLICABLE: {
-    borderColour: '#b1b4b6',
+    borderColour: '#cecece',
     typeAndLevelColour: 'rgb(11, 12, 12)',
     scoreBackgroundColour: null,
   },
 }
 
 const nullBandMapping: PredictorProperties = {
-  borderColour: '#b1b4b6',
+  borderColour: '#cecece',
   typeAndLevelColour: 'rgb(11, 12, 12)',
   scoreBackgroundColour: null,
 }

@@ -1,0 +1,324 @@
+$very-high-score-colour: #942514;
+$very-high-score-colour-stripe: #c39088;
+$very-high-score-colour--light: #ffac9f;
+$very-high-score-colour__text: #711a0d;
+$high-score-colour: #d4351c;
+$high-score-colour--light: #f6d7d2;
+$high-score-colour__text: #942514;
+$medium-score-colour: #f47738;
+$medium-score-colour-stripe: #f3cab9;
+$medium-score-colour--light: #f9e8bd;
+$medium-score-colour__text: #a34e00;
+$low-score-colour: #85994b;
+$low-score-colour--light: #dee9bd;
+$low-score-colour__text: #485b10;
+
+@mixin striped-medium {
+  background-color: $medium-score-colour;
+  background-image: repeating-linear-gradient(
+                  -45deg,
+                  transparent,
+                  transparent 5px,
+                  $medium-score-colour-stripe 5px,
+                  $medium-score-colour-stripe 10px
+  );
+}
+
+@mixin striped-very-high {
+  background-color: $very-high-score-colour;
+  background-image: repeating-linear-gradient(
+                  45deg,
+                  transparent,
+                  transparent 5px,
+                  $very-high-score-colour-stripe 5px,
+                  $very-high-score-colour-stripe 10px
+  );
+}
+
+@mixin arns-scale-marker-card-colour($primary-colour, $secondary-colour, $text-colour) {
+  & .arns-scale-marker__card {
+    border: 2px solid $primary-colour;
+
+    & .arns-scale-marker__card-top {
+      & h3,
+      & p {
+        color: $text-colour;
+      }
+    }
+
+    & .arns-scale-marker__card-bottom {
+      background-color: $secondary-colour;
+    }
+
+    & .arns-scale-marker__card-pointer {
+      border-top: 16px solid $primary-colour;
+    }
+
+    & .arns-scale-marker__card-pointer::after {
+      border-top: 14px solid $secondary-colour;
+    }
+  }
+}
+
+.arns-scale-marker__card-pointer {
+  width: 0;
+  height: 0;
+  border-right: 16px solid transparent;
+  border-left: 16px solid transparent;
+  border-top: 16px solid govuk-colour("black");
+  position: relative;
+  top: 0;
+  left: 23px;
+  float: left;
+}
+
+.arns-scale-marker__card-pointer--white::after {
+  border-top: 14px solid govuk-colour("white") !important;
+}
+
+.arns-scale-marker__card-pointer::after {
+  width: 0;
+  height: 0;
+  border-right: 14px solid transparent;
+  border-left: 14px solid transparent;
+  border-top: 14px solid govuk-colour("white");
+  position: absolute;
+  top: -17px;
+  left: -14px;
+  content: "";
+}
+
+.arns-scale-marker {
+  margin-bottom: 14px;
+  width: 100%;
+}
+
+.arns-scale-marker__card {
+  width: 78px;
+  bottom: 30px;
+  background-color: govuk-colour("white");
+  border: 2px solid govuk-colour("black");
+}
+
+@for $i from 0 through 100 {
+  .arns-scale-marker-wrapper-position-#{$i} {
+    left: calc(-40px + (#{$i} / 100) * (100% - 1px));
+  }
+}
+
+
+.arns-scale-marker-wrapper {
+  position: relative;
+
+  &.arns-scale-marker-wrapper--very-high {
+    @include arns-scale-marker-card-colour(
+                    $very-high-score-colour,
+                    $very-high-score-colour--light,
+                    $very-high-score-colour__text
+    );
+  }
+
+  &.arns-scale-marker-wrapper--high {
+    @include arns-scale-marker-card-colour(
+                    $high-score-colour,
+                    $high-score-colour--light,
+                    $high-score-colour__text
+    );
+  }
+
+  &.arns-scale-marker-wrapper--medium {
+    @include arns-scale-marker-card-colour(
+                    $medium-score-colour,
+                    $medium-score-colour--light,
+                    $medium-score-colour__text
+    );
+  }
+
+  &.arns-scale-marker-wrapper--low {
+    @include arns-scale-marker-card-colour(
+                    $low-score-colour,
+                    $low-score-colour--light,
+                    $low-score-colour__text
+    );
+  }
+}
+
+.arns-scale-marker__card-top {
+  width: 100%;
+
+  & h3,
+  & p {
+    margin: 0;
+    text-align: center;
+  }
+
+  & h3 {
+    @include govuk-font(16, "bold");
+  }
+
+  & p {
+    @include govuk-font(16, "regular");
+  }
+}
+
+.arns-scale-marker__card-bottom p {
+  @include govuk-font(19, "bold");
+
+  margin: 0;
+}
+
+.arns-scale-marker__card-top,
+.arns-scale-marker__card-bottom {
+  text-align: center;
+  box-sizing: border-box;
+}
+
+.arns-scale-bar--small {
+  @include arns-scale-bar-base;
+  margin-bottom: 30px;
+  display: block;
+  clear: both;
+
+  & > div {
+    width: calc(100% / 3);
+    padding: 0 1px;
+    display: inline;
+    float: left;
+    box-sizing: border-box;
+
+    & > span:first-child {
+      display: block;
+      width: 100%;
+      position: relative;
+
+      &::after {
+        @include govuk-font(16);
+        @include arns-scale-bar-label;
+        position: absolute;
+        bottom: -20px;
+        left: 0;
+        width: 100%;
+        text-align: center;
+        color: $govuk-secondary-text-colour;
+        white-space: pre;
+      }
+    }
+  }
+
+  & > div:nth-child(4n + 1) > span:first-child { background-color: $low-score-colour; }
+  & > div:nth-child(4n + 2) > span:first-child { @include striped-medium; }
+  & > div:nth-child(4n + 3) > span:first-child { background-color: $high-score-colour; }
+
+  &:not(.arns-scale-bar--small-sanctions) {
+    & > div:nth-child(4n + 1) > span:first-child::after { content: "Low"; }
+    & > div:nth-child(4n + 2) > span:first-child::after { content: "Medium"; }
+    & > div:nth-child(4n + 3) > span:first-child::after { content: "High"; }
+  }
+
+  &.arns-scale-bar--small-sanctions {
+    margin-bottom: 50px;
+
+    & > div > span:first-child::after {
+      bottom: -40px;
+      line-height: 1.1;
+    }
+
+    & > div:nth-child(4n + 1) > span:first-child::after { content: "Low \A (0 sanctions)"; }
+    & > div:nth-child(4n + 2) > span:first-child::after { content: "Medium \A (1 sanction)"; }
+    & > div:nth-child(4n + 3) > span:first-child::after { content: "High \A (2+ sanctions)"; }
+  }
+}
+
+.arns-scale-bar--small-fourths {
+  & > div {
+    width: 25%;
+    &:nth-child(4n + 4) > span:first-child {
+      @include striped-very-high;
+      &::after { content: "Very high"; }
+    }
+  }
+}
+
+.arns-scale-bar {
+  @include arns-scale-bar-base;
+  margin-bottom: 50px;
+  display: block;
+  clear: both;
+
+  & > div {
+    width: calc(100%/3);
+    height: 30px;
+    float: left;
+    border-left: 1px solid govuk-colour("black");
+    box-sizing: border-box;
+    position: relative;
+
+    & > span:first-child {
+      display: block;
+      width: 100%;
+      position: relative;
+
+      &::after {
+        @include govuk-font(16);
+        @include arns-scale-bar-label;
+        position: absolute;
+        bottom: -20px;
+        left: 50%;
+        transform: translateX(-50%);
+        white-space: nowrap;
+        color: $govuk-secondary-text-colour;
+      }
+    }
+
+    &::after {
+      @include govuk-font(16);
+      @include arns-scale-bar-label;
+      content: attr(data-band-percentage);
+      position: absolute;
+      bottom: -25px;
+      right: 0;
+      transform: translateX(50%);
+      white-space: nowrap;
+    }
+
+    &:first-child::before {
+      @include govuk-font(16);
+      @include arns-scale-bar-label;
+      content: attr(data-band-percentage-start);
+      position: absolute;
+      bottom: -25px;
+      left: 0;
+      transform: translateX(-50%);
+      white-space: nowrap;
+    }
+  }
+
+  & > div:nth-child(1) {
+    & > span:first-child { background-color: $low-score-colour; &::after { content: "Low"; } }
+  }
+  & > div:nth-child(2) {
+    & > span:first-child { @include striped-medium; &::after { content: "Medium"; } }
+  }
+  & > div:nth-child(3) {
+    & > span:first-child { background-color: $high-score-colour; &::after { content: "High"; } }
+  }
+}
+
+.arns-scale-bar--fourths {
+  & > div {
+    width: calc(100%/4) !important;
+  }
+  & > div:nth-child(4) {
+    border-right: 1px solid govuk-colour("black");
+    & > span:first-child {
+      @include striped-very-high;
+      &::after { content: "Very high"; }
+    }
+  }
+}
+
+.arns-scale-bar--thirds {
+  & > div:nth-child(3) {
+    border-right: 1px solid govuk-colour("black");
+  }
+}

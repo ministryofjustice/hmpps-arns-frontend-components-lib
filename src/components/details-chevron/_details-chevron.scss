@@ -1,0 +1,116 @@
+$gov-link-blue: #1d70b8;
+$gov-link-hover-gray: #f3f2f1;
+$gov-black: #0b0c0c;
+$gov-white: #ffffff;
+$gov-focus-yellow: #ffdd00;
+
+.details--chevron-style {
+  margin-bottom: 0;
+}
+
+.details--chevron-style .govuk-details__summary {
+  display: flex;
+  align-items: center;
+  padding: 5px 2px 5px 0;
+  margin-bottom: 14px;
+  list-style: none;
+  cursor: pointer;
+  position: relative;
+  transition: background-color 0.2s;
+}
+
+.details--chevron-style .govuk-details__summary::-webkit-details-marker { display: none; }
+.details--chevron-style .govuk-details__summary::before { display: none !important; }
+
+.details__chevron {
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.25rem;
+  height: 1.25rem;
+  border: 0.0625rem solid;
+  border-radius: 50%;
+  vertical-align: middle;
+  transition: background-color 0.2s, border-color 0.2s;
+}
+
+.details__chevron::after {
+  content: "";
+  box-sizing: border-box;
+  width: 0.375rem;
+  height: 0.375rem;
+  margin-top: -0.125rem;
+  transform: rotate(-45deg);
+  border-bottom: 0.125rem solid;
+  border-left: 0.125rem solid;
+  transition: border-color 0.2s;
+}
+
+.details__toggle-text {
+  margin-left: 5px;
+  font-family: "GDS Transport", arial, sans-serif;
+  font-weight: 400;
+  color: $gov-link-blue;
+  font-size: 1.1875rem;
+  text-decoration: none;
+}
+
+.details__hide { display: none; }
+
+.details--chevron-style[open] .details__show { display: none; }
+.details--chevron-style[open] .details__hide { display: inline; }
+
+.details--chevron-style .govuk-details__summary:hover,
+.details--chevron-style .govuk-details__summary:focus {
+  background-color: $gov-link-hover-gray;
+  outline: 3px solid transparent;
+}
+
+.details--chevron-style .govuk-details__summary:hover .details__chevron,
+.details--chevron-style .govuk-details__summary:focus .details__chevron {
+  background-color: $gov-black;
+  border-color: $gov-black;
+}
+
+.details--chevron-style .govuk-details__summary:hover .details__chevron::after,
+.details--chevron-style .govuk-details__summary:focus .details__chevron::after {
+  border-color: $gov-white;
+}
+
+.details--chevron-style .govuk-details__summary:hover .details__toggle-text,
+.details--chevron-style .govuk-details__summary:focus .details__toggle-text {
+  color: $gov-black;
+}
+
+.details--chevron-style .govuk-details__summary:focus {
+  background-color: $gov-focus-yellow;
+  box-shadow: 0 4px $gov-black;
+  outline: none;
+}
+
+.details--chevron-style[open] .details__chevron::after {
+  margin-top: 0.125rem;
+  transform: rotate(135deg);
+}
+
+.details--chevron-style .govuk-details__text {
+  border-left: none;
+  padding: 15px 0;
+  overflow: hidden;
+}
+
+@media (max-width: 40.0625em) {
+  .details__toggle-text {
+    font-size: 1rem !important;
+  }
+}
+
+@media screen and (-ms-high-contrast: active), (forced-colors: active) {
+  .details__chevron {
+    border-color: CanvasText;
+  }
+  .details__chevron::after {
+    border-color: CanvasText;
+  }
+}

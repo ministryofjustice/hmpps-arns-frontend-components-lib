@@ -1,5 +1,11 @@
 import { Environment } from 'nunjucks'
-import { convertScoreToScaleMarkerPosition, convertBandToScaleMarkerPosition } from './utils/predictorUtils'
+import {
+  convertScoreToScaleMarkerPosition,
+  convertBandToScaleMarkerPosition,
+  containsCompletedAssessment,
+  isBefore,
+  probabilityStatement,
+} from './utils/predictorUtils'
 
 export const predictorConfig = {
   ogrs3: {
@@ -41,12 +47,14 @@ export const predictorConfig = {
     hasVeryHighBand: true,
     showBandThresholdPercentages: true,
     bandThresholdPercentages: ['0%', '50%', '75%', '90%', '100%'],
+    fallbackPredictor: 'ogrs3',
   },
   violentReoffendingPredictor: {
     showScore: true,
     hasVeryHighBand: true,
     showBandThresholdPercentages: true,
     bandThresholdPercentages: ['0%', '30%', '60%', '80%', '100%'],
+    fallbackPredictor: 'ovp',
   },
   seriousViolentReoffendingPredictor: {
     showScore: true,
@@ -55,20 +63,24 @@ export const predictorConfig = {
     bandThresholdPercentages: ['0%', '1%', '3%', '6.9%', '25%+'],
   },
   directContactSexualReoffendingPredictor: {
-    showScore: false,
+    showScore: true,
     hasVeryHighBand: true,
-    showBandThresholdPercentages: false,
+    showBandThresholdPercentages: true,
+    bandThresholdPercentages: ['0%', '0.6%', '2.1%', '5.3%', '83.1%'],
+    fallbackPredictor: 'ospdc',
   },
   indirectImageContactSexualReoffendingPredictor: {
     showScore: false,
     hasVeryHighBand: false,
     showBandThresholdPercentages: false,
+    fallbackPredictor: 'ospiic',
   },
   combinedSeriousReoffendingPredictor: {
     showScore: true,
     hasVeryHighBand: true,
     showBandThresholdPercentages: true,
     bandThresholdPercentages: ['0%', '1%', '3%', '6.9%', '25%+'],
+    fallbackPredictor: 'rsr',
   },
 }
 
@@ -77,4 +89,7 @@ export const arnsNunjucksSetup = (env: Environment) => {
 
   env.addFilter('scoreToScaleMarkerPosition', convertScoreToScaleMarkerPosition)
   env.addFilter('bandToScaleMarkerPosition', convertBandToScaleMarkerPosition)
+  env.addFilter('containsCompletedAssessment', containsCompletedAssessment)
+  env.addFilter('isBefore', isBefore)
+  env.addFilter('probabilityStatement', probabilityStatement)
 }

@@ -1,0 +1,95 @@
+{#
+ARNS Predictor Scale Bar Component
+
+@name predictorScaleBar
+
+@description Displays a specified risk predictor scale bar.
+
+@example
+In template:
+  {% from "components/predictor-scale-bar/macro.njk" import predictorScaleBar %}
+  {{ predictorScaleBar({
+    predictor: Predictor,
+    key: param.predictor
+  }) }}
+
+  @param {Predictor} predictor - Predictor object from ArnsComponents.getRiskData().assessment.key as a 'Predictor' object
+  @param {string} key - The name of the specific predictor to display
+#}
+{%- from "govuk/components/tag/macro.njk" import govukTag -%}
+
+{% set config = predictorConfig[key] %}
+
+{% macro predictorScaleMarker(predictor, showScore) %}
+  <div class="arns-scale-marker__card" data-test-id="scaleMarkerCard">
+    <div class="arns-scale-marker__card-top">
+      <h3 data-test-id="scaleMarkerCardContent">{{ predictor.band | capitalize }}</h3>
+    </div>
+    {% if showScore and predictor.score %}
+      <div class="arns-scale-marker__card-bottom" data-test-id="scaleMarkerCardBottom">
+        <p>{{ predictor.score }}%</p>
+      </div>
+      <div class="arns-scale-marker__card-pointer" data-test-id="scaleMarkerCardPointer"></div>
+    {% else %}
+      <div class="arns-scale-marker__card-pointer arns-scale-marker__card-pointer--white" data-test-id="scaleMarkerNoScore"></div>
+    {% endif %}
+  </div>
+{% endmacro %}
+
+{% set scaleMarkerClass = '' %}
+
+{% switch predictor.band %}
+{% case 'LOW' %}
+  {% set scaleMarkerClass = 'arns-scale-marker-wrapper--low' %}
+{% case 'MEDIUM' %}
+  {% set scaleMarkerClass = 'arns-scale-marker-wrapper--medium' %}
+{% case 'HIGH' %}
+  {% set scaleMarkerClass = 'arns-scale-marker-wrapper--high' %}
+{% case 'VERY HIGH' %}
+  {% set scaleMarkerClass = 'arns-scale-marker-wrapper--very-high' %}
+{% endswitch %}
+
+{% set barTypeClass = '' %}
+{% if config.hasVeryHighBand !== true and config.showBandThresholdPercentages !== true %}
+  {% set barTypeClass = 'arns-scale-bar--small' %}
+  {% if key === 'indirectImageContactSexualReoffendingPredictor' %}
+    {% set barTypeClass = 'arns-scale-bar--small arns-scale-bar--small-sanctions' %}
+  {% endif %}
+{% elif config.hasVeryHighBand === true and config.showBandThresholdPercentages !== true %}
+  {% set barTypeClass = 'arns-scale-bar--small arns-scale-bar--small-fourths' %}
+{% elif config.hasVeryHighBand === true and config.showBandThresholdPercentages === true %}
+  {% set barTypeClass = 'arns-scale-bar arns-scale-bar--fourths' %}
+{% elif config.hasVeryHighBand !== true and config.showBandThresholdPercentages === true %}
+  {% set barTypeClass = 'arns-scale-bar arns-scale-bar--thirds' %}
+{% endif %}
+
+{% set scalePosition = '' %}
+{% if config.showBandThresholdPercentages == true %}
+  {% set scalePosition = predictor.score | scoreToScaleMarkerPosition(config.bandThresholdPercentages) %}
+{% else %}
+  {% set scalePosition = predictor.band | bandToScaleMarkerPosition(config.hasVeryHighBand) %}
+{% endif %}
+
+<div class="arns-scale-marker" data-test-id='scaleMarker'>
+  <div class="{{ scaleMarkerClass }} arns-scale-marker-wrapper arns-scale-marker-wrapper-position-{{ scalePosition | round }}" data-test-id='scaleMarkerPosition'>
+    {{ predictorScaleMarker(predictor, config.showScore) }}
+  </div>
+</div>
+
+<div class="{{ barTypeClass }}" data-test-id="{{key}}-scale">
+  <div data-band-percentage-start="{{ config.bandThresholdPercentages[0] }}"
+       data-band-percentage="{{ config.bandThresholdPercentages[1] }}" data-test-id='lowBand'>
+    <span></span>
+  </div>
+  <div data-band-percentage="{{ config.bandThresholdPercentages[2] }}" data-test-id='mediumBand'>
+    <span></span>
+  </div>
+  <div data-band-percentage="{{ config.bandThresholdPercentages[3] }}" data-test-id='highBand'>
+    <span></span>
+  </div>
+  {% if config.hasVeryHighBand === true %}
+    <div data-band-percentage="{{ config.bandThresholdPercentages[4] }}" data-test-id='veryHighBand'>
+      <span></span>
+    </div>
+  {% endif %}
+</div>

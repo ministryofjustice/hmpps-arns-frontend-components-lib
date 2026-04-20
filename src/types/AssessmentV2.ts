@@ -2,7 +2,9 @@ import { Predictor } from './Predictor'
 
 export interface AssessmentV2 {
   outputVersion: '2'
+  completedDate: string
   completedDateTime: string
+  assessmentType: string
   allReoffendingPredictor?: Predictor
   violentReoffendingPredictor?: Predictor
   seriousViolentReoffendingPredictor?: Predictor

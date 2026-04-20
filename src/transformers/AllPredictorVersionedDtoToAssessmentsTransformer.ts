@@ -1,6 +1,7 @@
 import { AllPredictorVersionedDto } from '../types/dtos/AllPredictorVersionedDto'
 import { Assessments } from '../types/Assessments'
 import { Predictor } from '../types/Predictor'
+import { AssessmentType } from '../types/dtos/AssessmentType'
 
 export function transformAllPredictorVersionedDtoToAssessments(dtos: AllPredictorVersionedDto[]): Assessments[] {
   // Sort DTOs by datetime (newest first)
@@ -35,7 +36,9 @@ export function transformAllPredictorVersionedDtoToAssessments(dtos: AllPredicto
     if (dto.outputVersion === '1') {
       return {
         outputVersion: '1',
+        completedDate: dateFormatDayMonthYear,
         completedDateTime: dateFormatDayMonthYearTime,
+        assessmentType: convertAssessmentType(dto.assessmentType),
         ogrs3: mapPredictor(
           'OGRS',
           output.groupReconvictionScore?.scoreLevel,
@@ -65,14 +68,14 @@ export function transformAllPredictorVersionedDtoToAssessments(dtos: AllPredicto
           dateFormatDayMonthYear,
         ),
         ospdc: mapPredictor(
-          'OSP-DC',
+          'OSP\u2013DC',
           output.sexualPredictorScore?.ospContactScoreLevel,
           null,
           output.sexualPredictorScore?.ospContactPercentageScore,
           dateFormatDayMonthYear,
         ),
         ospiic: mapPredictor(
-          'OSP-IIC',
+          'OSP\u2013IIC',
           output.sexualPredictorScore?.ospIndecentScoreLevel,
           null,
           output.sexualPredictorScore?.ospIndecentPercentageScore,
@@ -84,44 +87,46 @@ export function transformAllPredictorVersionedDtoToAssessments(dtos: AllPredicto
     if (dto.outputVersion === '2') {
       return {
         outputVersion: '2',
+        completedDate: dateFormatDayMonthYear,
         completedDateTime: dateFormatDayMonthYearTime,
+        assessmentType: convertAssessmentType(dto.assessmentType),
         allReoffendingPredictor: mapPredictor(
-          'All Reoffending Predictor',
+          'All reoffending predictor',
           output.allReoffendingPredictor?.band,
           output.allReoffendingPredictor?.staticOrDynamic,
           output.allReoffendingPredictor?.score,
           dateFormatDayMonthYear,
         ),
         violentReoffendingPredictor: mapPredictor(
-          'Violent Reoffending Predictor',
+          'Violent reoffending predictor',
           output.violentReoffendingPredictor?.band,
           output.violentReoffendingPredictor?.staticOrDynamic,
           output.violentReoffendingPredictor?.score,
           dateFormatDayMonthYear,
         ),
         seriousViolentReoffendingPredictor: mapPredictor(
-          'Serious Violent Reoffending Predictor',
+          'Serious violent reoffending predictor',
           output.seriousViolentReoffendingPredictor?.band,
           output.seriousViolentReoffendingPredictor?.staticOrDynamic,
           output.seriousViolentReoffendingPredictor?.score,
           dateFormatDayMonthYear,
         ),
         directContactSexualReoffendingPredictor: mapPredictor(
-          'Direct Contact - Sexual Reoffending Predictor',
+          'Direct contact \u2013 sexual reoffending predictor',
           output.directContactSexualReoffendingPredictor?.band,
           null,
           output.directContactSexualReoffendingPredictor?.score,
           dateFormatDayMonthYear,
         ),
         indirectImageContactSexualReoffendingPredictor: mapPredictor(
-          'Images and Indirect Contact – Sexual Reoffending Predictor',
+          'Images and indirect contact \u2013 sexual reoffending predictor',
           output.indirectImageContactSexualReoffendingPredictor?.band,
           null,
           output.indirectImageContactSexualReoffendingPredictor?.score,
           dateFormatDayMonthYear,
         ),
         combinedSeriousReoffendingPredictor: mapPredictor(
-          'Combined Serious Reoffending Predictor',
+          'Combined serious reoffending predictor',
           output.combinedSeriousReoffendingPredictor?.band,
           output.combinedSeriousReoffendingPredictor?.staticOrDynamic,
           output.combinedSeriousReoffendingPredictor?.score,
@@ -143,5 +148,16 @@ function mapPredictor(name: string, band: string, staticOrDynamic: string, score
       : null,
     score,
     completedDate: date,
+  }
+}
+
+function convertAssessmentType(assessmentType: `${AssessmentType}`): string {
+  switch (assessmentType) {
+    case 'LAYER1':
+      return 'layer 1'
+    case 'LAYER3':
+      return 'layer 3'
+    default:
+      return assessmentType
   }
 }

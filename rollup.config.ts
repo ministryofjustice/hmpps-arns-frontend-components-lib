@@ -34,6 +34,15 @@ export default [
         ],
         flatten: true,
       }),
+      copy({
+        targets: [
+          {
+            src: 'src/assets/js/*.js',
+            dest: 'dist/js',
+          },
+        ],
+        flatten: true,
+      }),
     ],
     external: [...Object.keys(pkg.dependencies || {}), ...Object.keys(pkg.peerDependencies || {})],
   },

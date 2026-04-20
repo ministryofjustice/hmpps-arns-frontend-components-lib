@@ -1,38 +1,48 @@
 {#
-ARNS Expanded Predictor Badge Component
+  ARNS Expanded Predictor Badge Component
 
-@name expandedPredictorBadge
+  @name expandedPredictorBadge
 
-@description Displays a specified risk predictor score badge in an expanded format.
-It uses the latest assessment from the provided data set.
+  @description Displays a specified risk predictor score badge in an expanded format.
+  It uses the latest assessment from the provided data set.
 
-@example
-In route handler:
-  const riskData = await arnsComponents.getRiskData(token, 'crn', 'X123456')
-  res.render('page', { riskData })
+  @example
+  In route handler:
+    const riskData = await arnsComponents.getRiskData(token, 'crn', 'X123456')
+    res.render('page', { riskData })
 
-In template:
-  {% from "components/expanded-predictor-badge/macro.njk" import expandedPredictorBadge %}
-  {{ expandedPredictorBadge({
-    data: riskData,
-    predictor: "allReoffendingPredictor",
-    showScore: true,
-    fixedWidth: true
-  }) }}
+  In template:
+    {% from "components/expanded-predictor-badge/macro.njk" import expandedPredictorBadge %}
+    {{ expandedPredictorBadge({
+      data: riskData,
+      predictor: "allReoffendingPredictor",
+      showScore: true,
+      fixedWidth: true
+    }) }}
 
-@param {object} params
-  @param {RiskData} params.data - Risk data object from ArnsComponents.getRiskData() containing an 'assessments' array
-  @param {string} params.predictor - The name of the specific predictor to display
-  @param {boolean} [params.showScore] - Optional config override - If true, displays the percentage score
-  @param {boolean} [params.fixedWidth] - Optional - If true or undefined, displays the expanded predictor badge in a fixed width format
+  @param {object} params
+    @param {RiskData} params.data - Risk data object from ArnsComponents.getRiskData() containing an 'assessments' array
+    @param {string} params.predictor - The name of the specific predictor to display
+    @param {boolean} [params.showScore] - Optional config override - If true, displays the percentage score
+    @param {boolean} [params.fixedWidth] - Optional - If true or undefined, displays the expanded predictor badge in a fixed width format
+    @param {boolean} [params.legacyFallback] - Optional (default false) - If true and predictor requested is OGRS4-gen, fallback to showing the OGRS3-gen predictor if the latest assessment is OGRS3-gen.
+    @param {boolean} params.excludeDate - Optional flag for excluding date
 #}
 {% set latestAssessment = params.data.assessments | first if params.data.assessments else null %}
 
 {% if latestAssessment %}
-  {% for key, predictor in latestAssessment %}
-    {% if key == params.predictor %}
 
-      {% set config = predictorConfig[key] %}
+  {% set config = predictorConfig[params.predictor] %}
+
+  {% if params.legacyFallback and config.fallbackPredictor and latestAssessment.outputVersion == '1' %}
+    {% set predictorToRender = config.fallbackPredictor %}
+  {% else %}
+    {% set predictorToRender = params.predictor %}
+  {% endif %}
+
+  {% for key, predictor in latestAssessment %}
+    {% if key == predictorToRender %}
+
       {% set shouldShowScore = params.showScore if params.showScore is defined else config.showScore %}
 
       {% set badgeClass = '' %}
@@ -60,7 +70,7 @@ In template:
         {% set badgeWidthClass = 'arns-expanded-predictor-badge__dynamic' %}
       {% endif %}
 
-      {% if predictor.band is undefined or (shouldShowScore == true and predictor.score is undefined) %}
+      {% if predictor.band == null or (shouldShowScore == true and predictor.score == null) %}
         {% set band = 'UNKNOWN' %}
         {% set badgeClass = 'arns-expanded-predictor-badge--default' %}
       {% else %}
@@ -73,7 +83,7 @@ In template:
         <span
           class="arns-predictor-badge__type" data-test-id="name">{{ predictor.name }}</span>
 
-        <div class="arns-predictor-badge__stats">
+        <div class="{% if params.excludeDate == true %}arns-excluded-date {% endif %}arns-predictor-badge__stats" data-test-id="badgeStats">
           <span class="arns-predictor-badge__level" data-test-id="band">{{ band }}</span>
 
           {% if shouldShowScore and badgeClass != 'arns-expanded-predictor-badge--default' %}
@@ -85,8 +95,9 @@ In template:
           {% endif %}
 
         </div>
-
-        <span class="arns-predictor-badge__last_updated" data-test-id="completedDate">Last updated: {{ predictor.completedDate }}</span>
+        {% if not params.excludeDate %}
+          <span class="arns-predictor-badge__last_updated" data-test-id="completedDate">Last updated: {{ predictor.completedDate }}</span>
+        {% endif %}
 
       </div>
     {% endif %}
