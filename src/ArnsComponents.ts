@@ -6,6 +6,9 @@ import type { ArnsComponentsConfig } from './types/ArnsComponentsConfig'
 import type { RiskData } from './types/RiskData'
 import type { AllPredictorVersionedDto } from './types/dtos/AllPredictorVersionedDto'
 import { transformAllPredictorVersionedDtoToAssessments } from './transformers/AllPredictorVersionedDtoToAssessmentsTransformer'
+import { RoshData } from './types/RoshData'
+import { AllRoshRiskDto } from './types/dtos/AllRoshRiskDto'
+import { transformAllRoshRiskDtoToRoshData } from './transformers/AllRoshRiskDtoToRoshDataTransformer'
 
 export default class ArnsComponents {
   private readonly restClient: RestClient
@@ -36,6 +39,22 @@ export default class ArnsComponents {
     } catch (error) {
       return {
         assessments: [],
+        httpStatus: error.status ?? 500,
+      }
+    }
+  }
+
+  async getRoshData(authOptions: AuthOptions | string, identifierValue: string): Promise<RoshData> {
+    try {
+      const response = await this.restClient.get<AllRoshRiskDto>({ path: `/risks/crn/${identifierValue}` }, authOptions)
+
+      return {
+        assessment: transformAllRoshRiskDtoToRoshData(response),
+        httpStatus: 200,
+      }
+    } catch (error) {
+      return {
+        assessment: null,
         httpStatus: error.status ?? 500,
       }
     }
