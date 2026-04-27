@@ -1,7 +1,7 @@
 export interface Predictor {
   name: string
-  band: string
-  staticOrDynamic?: string
-  score?: number
-  completedDate: string
+  band?: string | null
+  staticOrDynamic?: string | null
+  score?: number | null
+  completedDate?: string | null
 }

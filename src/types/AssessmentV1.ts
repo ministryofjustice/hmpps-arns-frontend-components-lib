@@ -2,8 +2,8 @@ import { Predictor } from './Predictor'
 
 export interface AssessmentV1 {
   outputVersion: '1'
-  completedDate: string
-  completedDateTime: string
+  completedDate: string | null
+  completedDateTime: string | null
   assessmentType: string
   ogrs3?: Predictor
   ovp?: Predictor

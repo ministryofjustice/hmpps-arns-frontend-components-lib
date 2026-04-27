@@ -34,9 +34,10 @@ export default class ArnsComponents {
         httpStatus: 200,
       }
     } catch (error) {
+      const status = error && typeof error === 'object' && 'status' in error ? (error as any).status : 500
       return {
         assessments: [],
-        httpStatus: error.status ?? 500,
+        httpStatus: status ?? 500,
       }
     }
   }
