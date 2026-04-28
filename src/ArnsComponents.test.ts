@@ -1,15 +1,20 @@
 import { AgentConfig, RestClient } from '@ministryofjustice/hmpps-rest-client'
 import ArnsComponents from './ArnsComponents'
 import { transformAllPredictorVersionedDtoToAssessments } from './transformers/AllPredictorVersionedDtoToAssessmentsTransformer'
+import { transformAllRoshRiskDtoToRoshData } from './transformers/AllRoshRiskDtoToRoshDataTransformer'
 
 jest.mock('@ministryofjustice/hmpps-rest-client')
 jest.mock('./transformers/AllPredictorVersionedDtoToAssessmentsTransformer')
+jest.mock('./transformers/AllRoshRiskDtoToRoshDataTransformer')
 
 describe('ArnsComponents', () => {
   let arnsComponents: ArnsComponents
   const mockedRestClient = RestClient as jest.MockedClass<typeof RestClient>
-  const mockedTransformer = transformAllPredictorVersionedDtoToAssessments as jest.MockedFunction<
+  const mockedPredictorTransformer = transformAllPredictorVersionedDtoToAssessments as jest.MockedFunction<
     typeof transformAllPredictorVersionedDtoToAssessments
+  >
+  const mockedRoshTransformer = transformAllRoshRiskDtoToRoshData as jest.MockedFunction<
+    typeof transformAllRoshRiskDtoToRoshData
   >
 
   const config = {
@@ -27,43 +32,90 @@ describe('ArnsComponents', () => {
     arnsComponents = new ArnsComponents(null, config, null)
   })
 
-  it('should return assessments and status 200 on success', async () => {
-    const mockApiResponse = [{ status: 'COMPLETE', outputVersion: '1' }]
-    const mockTransformedData = [{ outputVersion: '1' }] as any
+  describe('getRiskData', () => {
+    it('should return assessments and status 200 on success', async () => {
+      const mockApiResponse = [{ status: 'COMPLETE', outputVersion: '1' }]
+      const mockTransformedData = [{ outputVersion: '1' }] as any
 
-    mockedRestClient.prototype.get.mockResolvedValue(mockApiResponse)
-    mockedTransformer.mockReturnValue(mockTransformedData)
+      mockedRestClient.prototype.get.mockResolvedValue(mockApiResponse)
+      mockedPredictorTransformer.mockReturnValue(mockTransformedData)
 
-    const result = await arnsComponents.getRiskData(null, 'CRN', 'X123456')
+      const result = await arnsComponents.getRiskData(null, 'CRN', 'X123456')
 
-    expect(result).toEqual({
-      assessments: mockTransformedData,
-      httpStatus: 200,
+      expect(result).toEqual({
+        assessments: mockTransformedData,
+        httpStatus: 200,
+      })
+      expect(mockedRestClient.prototype.get).toHaveBeenCalledWith({ path: '/risks/predictors/all/CRN/X123456' }, null)
     })
-    expect(mockedRestClient.prototype.get).toHaveBeenCalledWith({ path: '/risks/predictors/all/CRN/X123456' }, null)
+
+    it('should return status from error object when the API fails', async () => {
+      const error = { status: 404, message: 'Not Found' }
+      mockedRestClient.prototype.get.mockRejectedValue(error)
+
+      const result = await arnsComponents.getRiskData(null, 'CRN', 'X123456')
+
+      expect(result).toEqual({
+        assessments: [],
+        httpStatus: 404,
+      })
+    })
+
+    it('should return status 500 if the error object has no status', async () => {
+      const error = { message: 'Network Failure' }
+      mockedRestClient.prototype.get.mockRejectedValue(error)
+
+      const result = await arnsComponents.getRiskData(null, 'CRN', 'X123456')
+
+      expect(result).toEqual({
+        assessments: [],
+        httpStatus: 500,
+      })
+    })
   })
 
-  it('should return status from error object when the API fails', async () => {
-    const error = { status: 404, message: 'Not Found' }
-    mockedRestClient.prototype.get.mockRejectedValue(error)
+  describe('getRoshData', () => {
+    it('should return a transformed ROSH assessment and status 200 on success', async () => {
+      const mockApiResponse = { summary: { overallRiskLevel: 'High' } }
+      const mockTransformedData = { overallRisk: 'HIGH', risks: [] } as any
 
-    const result = await arnsComponents.getRiskData(null, 'CRN', 'X123456')
+      mockedRestClient.prototype.get.mockResolvedValue(mockApiResponse)
+      mockedRoshTransformer.mockReturnValue(mockTransformedData)
 
-    expect(result).toEqual({
-      assessments: [],
-      httpStatus: 404,
+      const result = await arnsComponents.getRoshData(null, 'X123456')
+
+      expect(result).toEqual({
+        assessment: mockTransformedData,
+        httpStatus: 200,
+      })
+      expect(mockedRestClient.prototype.get).toHaveBeenCalledWith({ path: '/risks/crn/X123456' }, null)
+      expect(mockedRoshTransformer).toHaveBeenCalledWith(mockApiResponse)
     })
-  })
 
-  it('should return status 500 if the error object has no status', async () => {
-    const error = { message: 'Network Failure' }
-    mockedRestClient.prototype.get.mockRejectedValue(error)
+    it('should return status from error object when the API fails', async () => {
+      const error = { status: 404, message: 'Not Found' }
+      mockedRestClient.prototype.get.mockRejectedValue(error)
 
-    const result = await arnsComponents.getRiskData(null, 'CRN', 'X123456')
+      const result = await arnsComponents.getRoshData(null, 'X123456')
 
-    expect(result).toEqual({
-      assessments: [],
-      httpStatus: 500,
+      expect(result).toEqual({
+        assessment: null,
+        httpStatus: 404,
+      })
+      expect(mockedRoshTransformer).not.toHaveBeenCalled()
+    })
+
+    it('should return status 500 if the error object has no status', async () => {
+      const error = { message: 'Network Failure' }
+      mockedRestClient.prototype.get.mockRejectedValue(error)
+
+      const result = await arnsComponents.getRoshData(null, 'X123456')
+
+      expect(result).toEqual({
+        assessment: null,
+        httpStatus: 500,
+      })
+      expect(mockedRoshTransformer).not.toHaveBeenCalled()
     })
   })
 })
