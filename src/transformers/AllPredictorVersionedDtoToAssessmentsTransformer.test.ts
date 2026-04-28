@@ -216,8 +216,8 @@ describe('All Predictor Versioned DTO To Assessments Transformer', () => {
             score: null,
             band: null,
           },
-          violentReoffendingPredictor: undefined,
-          seriousViolentReoffendingPredictor: undefined,
+          violentReoffendingPredictor: null,
+          seriousViolentReoffendingPredictor: null,
           directContactSexualReoffendingPredictor: {
             score: 2.81,
             band: 'VERY_HIGH',

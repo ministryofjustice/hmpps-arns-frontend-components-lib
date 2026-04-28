@@ -16,8 +16,8 @@ describe('transformAllRoshRiskDtoToRoshData', () => {
     const result = transformAllRoshRiskDtoToRoshData(dto)
 
     expect(result).toEqual({
-      completedDate: undefined,
-      overallRisk: undefined,
+      completedDate: null,
+      overallRisk: null,
       risks: [],
     })
     expect(mockedToMap).not.toHaveBeenCalled()
