@@ -64,7 +64,7 @@ export const containsCompletedAssessment = (data: RiskData): boolean => {
   return data?.httpStatus === 200 && (data?.assessments?.length ?? 0) > 0
 }
 
-export const isBefore = (dateStr: string, targetDateStr: string = null): boolean => {
+export const isBefore = (dateStr: string, targetDateStr: string): boolean => {
   const formattedDate = dateStr.replace(' at ', ' ')
   const date = new Date(formattedDate)
   const target = targetDateStr ? new Date(targetDateStr.replace(' at ', ' ')) : new Date()

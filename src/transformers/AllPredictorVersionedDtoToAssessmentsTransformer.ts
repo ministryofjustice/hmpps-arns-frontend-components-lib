@@ -12,28 +12,29 @@ export function transformAllPredictorVersionedDtoToAssessments(dtos: AllPredicto
   )
 
   return sortedDtos.map(dto => {
-    let dateFormatDayMonthYearTime: string
-    let dateFormatDayMonthYear: string
-    if (dto.completedDate) {
-      const date = new Date(dto.completedDate)
-      if (!Number.isNaN(date.getTime())) {
-        dateFormatDayMonthYear = new Intl.DateTimeFormat('en-GB', {
-          day: '2-digit',
-          month: 'long',
-          year: 'numeric',
-        }).format(date)
-        const time: string = date.toLocaleTimeString('en-GB', {
-          hour: '2-digit',
-          minute: '2-digit',
-          hour12: false,
-        })
-        dateFormatDayMonthYearTime = `${dateFormatDayMonthYear} at ${time}`
-      }
+    let dateFormatDayMonthYearTime: string | null
+    let dateFormatDayMonthYear: string | null
+    const date = new Date(dto.completedDate)
+    if (!Number.isNaN(date.getTime())) {
+      dateFormatDayMonthYear = new Intl.DateTimeFormat('en-GB', {
+        day: '2-digit',
+        month: 'long',
+        year: 'numeric',
+      }).format(date)
+      const time: string = date.toLocaleTimeString('en-GB', {
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: false,
+      })
+      dateFormatDayMonthYearTime = `${dateFormatDayMonthYear} at ${time}`
+    } else {
+      dateFormatDayMonthYear = null
+      dateFormatDayMonthYearTime = null
     }
 
     const { output } = dto
 
-    if (dto.outputVersion === '1') {
+    if (output && dto.outputVersion === '1') {
       return {
         outputVersion: '1',
         completedDate: dateFormatDayMonthYear,
@@ -84,7 +85,7 @@ export function transformAllPredictorVersionedDtoToAssessments(dtos: AllPredicto
       }
     }
 
-    if (dto.outputVersion === '2') {
+    if (output && dto.outputVersion === '2') {
       return {
         outputVersion: '2',
         completedDate: dateFormatDayMonthYear,
@@ -139,15 +140,22 @@ export function transformAllPredictorVersionedDtoToAssessments(dtos: AllPredicto
   })
 }
 
-function mapPredictor(name: string, band: string, staticOrDynamic: string, score: number, date: string): Predictor {
+function mapPredictor(
+  name: string,
+  band: string | null | undefined,
+  staticOrDynamic: string | null | undefined,
+  score: number | null | undefined,
+  date: string | null | undefined,
+): Predictor {
   return {
     name,
-    band: band?.replace(/_/g, ' ').toUpperCase(),
+    // Use optional chaining and fallback to null
+    band: band ? band.replace(/_/g, ' ').toUpperCase() : null,
     staticOrDynamic: staticOrDynamic
       ? staticOrDynamic.charAt(0).toUpperCase() + staticOrDynamic.slice(1).toLowerCase()
       : null,
-    score,
-    completedDate: date,
+    score: score ?? null, // Fallback to null if score is missing
+    completedDate: date ?? null,
   }
 }
 

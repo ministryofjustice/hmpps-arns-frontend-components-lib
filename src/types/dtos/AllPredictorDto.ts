@@ -8,15 +8,15 @@ import { RsrScoreDto } from './RsrScoreDto'
 import { OspScoreDto } from './OspScoreDto'
 
 export interface AllPredictorDto {
-  allReoffendingPredictor?: StaticOrDynamicPredictorDto
-  violentReoffendingPredictor?: StaticOrDynamicPredictorDto
-  seriousViolentReoffendingPredictor?: StaticOrDynamicPredictorDto
-  directContactSexualReoffendingPredictor?: BasePredictorDto
-  indirectImageContactSexualReoffendingPredictor?: BasePredictorDto
-  combinedSeriousReoffendingPredictor?: VersionedStaticOrDynamicPredictorDto
-  groupReconvictionScore?: OgrScoreDto
-  violencePredictorScore?: OvpScoreDto
-  generalPredictorScore?: OgpScoreDto
-  riskOfSeriousRecidivismScore?: RsrScoreDto
-  sexualPredictorScore?: OspScoreDto
+  allReoffendingPredictor?: StaticOrDynamicPredictorDto | null
+  violentReoffendingPredictor?: StaticOrDynamicPredictorDto | null
+  seriousViolentReoffendingPredictor?: StaticOrDynamicPredictorDto | null
+  directContactSexualReoffendingPredictor?: BasePredictorDto | null
+  indirectImageContactSexualReoffendingPredictor?: BasePredictorDto | null
+  combinedSeriousReoffendingPredictor?: VersionedStaticOrDynamicPredictorDto | null
+  groupReconvictionScore?: OgrScoreDto | null
+  violencePredictorScore?: OvpScoreDto | null
+  generalPredictorScore?: OgpScoreDto | null
+  riskOfSeriousRecidivismScore?: RsrScoreDto | null
+  sexualPredictorScore?: OspScoreDto | null
 }

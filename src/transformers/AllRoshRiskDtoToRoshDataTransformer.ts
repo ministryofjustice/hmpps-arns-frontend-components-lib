@@ -3,16 +3,18 @@ import { RoshAssessment } from '../types/RoshAssessment'
 import { toMap } from '../utils/toMap'
 
 export function transformAllRoshRiskDtoToRoshData(dto: AllRoshRiskDto): RoshAssessment {
-  let dateFormatDayMonthYear: string
+  let dateFormatDayMonthYear: string | null
   if (dto.summary?.assessedOn) {
     const date = new Date(dto.summary?.assessedOn)
-    if (!Number.isNaN(date.getTime())) {
-      dateFormatDayMonthYear = new Intl.DateTimeFormat('en-GB', {
-        day: '2-digit',
-        month: 'long',
-        year: 'numeric',
-      }).format(date)
-    }
+    dateFormatDayMonthYear = !Number.isNaN(date.getTime())
+      ? new Intl.DateTimeFormat('en-GB', {
+          day: '2-digit',
+          month: 'long',
+          year: 'numeric',
+        }).format(date)
+      : null
+  } else {
+    dateFormatDayMonthYear = null
   }
 
   const riskInCommunity = dto.summary?.riskInCommunity ? toMap(dto.summary.riskInCommunity) : {}
@@ -26,5 +28,11 @@ export function transformAllRoshRiskDtoToRoshData(dto: AllRoshRiskDto): RoshAsse
     }
   })
 
-  return { completedDate: dateFormatDayMonthYear, overallRisk: dto.summary?.overallRiskLevel.toUpperCase(), risks }
+  const getOverallRisk = dto.summary?.overallRiskLevel ? dto.summary?.overallRiskLevel.toUpperCase() : null
+
+  return {
+    completedDate: dateFormatDayMonthYear,
+    overallRisk: getOverallRisk,
+    risks,
+  }
 }
