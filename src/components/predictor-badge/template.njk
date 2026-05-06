@@ -26,6 +26,8 @@
     @param {boolean} [params.showScore] - Optional config override - If true, displays the percentage score
     @param {boolean} [params.legacyFallback] - Optional (default false) - If true and predictor requested is OGRS4-gen, fallback to showing the OGRS3-gen predictor if the latest assessment is OGRS3-gen.
 #}
+{%- from "govuk/components/tag/macro.njk" import govukTag -%}
+
 {% set latestAssessment = params.data.assessments | first if params.data.assessments else null %}
 
 {% if latestAssessment %}
@@ -74,7 +76,9 @@
         {% endif %}
 
         {% if predictor.staticOrDynamic and badgeClass !== 'arns-predictor-badge--default' %}
-          <span class="arns-predictor-badge__static_or_dynamic" data-test-id="staticOrDynamic">{{ predictor.staticOrDynamic }}</span>
+          <span class="arns-predictor-badge__static_or_dynamic" data-test-id="staticOrDynamic">
+            {{ govukTag({ text: predictor.staticOrDynamic, classes: "govuk-tag--grey arns-predictor-badge__govuk-tag-sizing"}) }}
+          </span>
         {% endif %}
       </div>
     {% endif %}

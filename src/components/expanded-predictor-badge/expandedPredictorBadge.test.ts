@@ -208,8 +208,6 @@ const validateBadge = (
       renderedHtml,
       sdEl,
       [
-        { tag: 'color', value: 'rgb(40, 45, 48)' },
-        { tag: 'backgroundColor', value: 'rgb(229, 230, 231)' },
         { tag: 'display', value: displayCss },
         { tag: 'marginTop', value: marginTopCss },
       ],
