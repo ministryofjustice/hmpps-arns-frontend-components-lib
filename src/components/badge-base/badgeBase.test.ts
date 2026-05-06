@@ -111,10 +111,11 @@ const validateBadge = (
 
   // Resolve 'shouldShowScore' logic (mirroring the .njk template)
   const config = (predictorConfig as any)[predictor]
-  const expectedShouldShowScore = hideScoreAndStaticOrDynamic == true ? false : showScore ?? config.showScore
-  
+  const expectedShouldShowScore = hideScoreAndStaticOrDynamic === true ? false : showScore ?? config.showScore
+
   // Resolve 'shouldShowStaticOrDynamic' logic (mirroring the .njk template)
-  const expectedShouldShowStaticOrDynamic = expectedPredictorNameMappings[predictor].showStaticDynamic && !hideScoreAndStaticOrDynamic && staticOrDynamic
+  const expectedShouldShowStaticOrDynamic =
+   expectedPredictorNameMappings[predictor].showStaticDynamic && !hideScoreAndStaticOrDynamic && staticOrDynamic
 
   // Resolve unknown band logic (mirroring the .njk template)
   const shouldBeUnkownBand = !band || (expectedShouldShowScore === true && !score)
@@ -230,6 +231,6 @@ interface badgeRootTestCase {
   level: BandLevel
   score: number
   staticOrDynamic: StaticOrDynamicContent
-  showScore: boolean,
-  hideScoreAndStaticOrDynamic: boolean,
+  showScore: boolean
+  hideScoreAndStaticOrDynamic: boolean
 }
