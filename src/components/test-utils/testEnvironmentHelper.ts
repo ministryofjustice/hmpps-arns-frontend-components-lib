@@ -92,7 +92,7 @@ export const components: Record<string, ComponentDetail> = {
     directory: 'rosh-badge',
     macro: 'roshBadge',
   },
-  PREDICTOR_BADGE_ROOT: {
+  BADGE_BASE: {
     directory: 'badge-base',
     macro: 'badgeBase',
   },

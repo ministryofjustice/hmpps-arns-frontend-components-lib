@@ -39,7 +39,7 @@ describe('badge-base', () => {
         const predictor = 'allReoffendingPredictor'
         const renderedHtml = getRenderedHtml(
           dom,
-          'PREDICTOR_BADGE_ROOT',
+          'BADGE_BASE',
           `predictor: "${predictor}"`,
           getRiskTestData([{ predictor, level, score: 12.34, staticOrDynamic: 'Static' }]),
         )
@@ -53,7 +53,7 @@ describe('badge-base', () => {
     it.each(predictors)('should render correct name for: %s', predictor => {
       const renderedHtml = getRenderedHtml(
         dom,
-        'PREDICTOR_BADGE_ROOT',
+        'BADGE_BASE',
         `predictor: "${predictor}"`,
         getRiskTestData([{ predictor, level: BandLevel.LOW, score: 12.34, staticOrDynamic: 'Static' }]),
       )
@@ -67,7 +67,7 @@ describe('badge-base', () => {
     ({ predictor, level, score, staticOrDynamic, showScore, hideScoreAndStaticOrDynamic }) => {
       const renderedHtml = getRenderedHtml(
         dom,
-        'PREDICTOR_BADGE_ROOT',
+        'BADGE_BASE',
         `predictor: "${predictor}", showScore: ${showScore}, hideScoreAndStaticOrDynamic: ${hideScoreAndStaticOrDynamic}`,
         getRiskTestData([{ predictor, level, score, staticOrDynamic }]),
       )
@@ -81,7 +81,7 @@ describe('badge-base', () => {
       (assessmentPredictor: PredictorOption, predictorInMacro: PredictorOption, predictorRendered: PredictorOption) => {
         const renderedHtml = getRenderedHtml(
           dom,
-          'PREDICTOR_BADGE_ROOT',
+          'BADGE_BASE',
           `predictor: "${predictorInMacro}", legacyFallback: true`,
           getRiskTestData([
             { predictor: assessmentPredictor, level: BandLevel.LOW, score: 12.34, staticOrDynamic: 'Static' },

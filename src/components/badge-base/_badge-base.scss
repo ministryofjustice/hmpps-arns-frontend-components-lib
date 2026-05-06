@@ -18,14 +18,14 @@ $default-colour__text: govuk-colour("black");
   display: inline-flex;
   outline: 2px solid $primary-colour;
 
-  & .arns-badge-root__type_and_level {
+  & .arns-badge-base__type_and_level {
     @include govuk-font(19, "regular");
     color: $text-colour;
 
     padding: 2px 10px;
   }
 
-  & .arns-badge-root__score {
+  & .arns-badge-base__score {
     @include govuk-font(19, "bold");
     color: govuk-colour("black");
 
@@ -36,7 +36,7 @@ $default-colour__text: govuk-colour("black");
     align-content: center;
   }
 
-  & .arns-badge-root__static_or_dynamic {
+  & .arns-badge-base__static_or_dynamic {
     @include govuk-font(19, "regular");
     color: #282D30;
 
