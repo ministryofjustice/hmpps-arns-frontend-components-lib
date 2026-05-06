@@ -15,7 +15,7 @@ import {
 import { BandLevel } from '../../types/dtos/BandLevel'
 
 // allReoffendingPredictor, directContactSexualReoffendingPredictor showScore from config
-const inputCombinationsTemplateLogic: Record<keyof badgeRootTestCase, any[]> = {
+const inputCombinationsTemplateLogic: Record<keyof BadgeRootTestCase, any[]> = {
   predictor: ['allReoffendingPredictor', 'directContactSexualReoffendingPredictor'],
   level: [BandLevel.VERY_HIGH, BandLevel.NOT_APPLICABLE, null],
   score: ['12.34', undefined],
@@ -226,7 +226,7 @@ type PredictorProperties = {
   scoreBackgroundColour: string
 }
 
-interface badgeRootTestCase {
+interface BadgeRootTestCase {
   predictor: PredictorOption
   level: BandLevel
   score: number
