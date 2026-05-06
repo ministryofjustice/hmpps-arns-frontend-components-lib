@@ -15,18 +15,19 @@ import {
 import { BandLevel } from '../../types/dtos/BandLevel'
 
 // allReoffendingPredictor, directContactSexualReoffendingPredictor showScore from config
-const inputCombinationsTemplateLogic: Record<keyof PredictorBadgeTestCase, any[]> = {
+const inputCombinationsTemplateLogic: Record<keyof badgeRootTestCase, any[]> = {
   predictor: ['allReoffendingPredictor', 'directContactSexualReoffendingPredictor'],
   level: [BandLevel.VERY_HIGH, BandLevel.NOT_APPLICABLE, null],
   score: ['12.34', undefined],
   staticOrDynamic: ['Static', 'Dynamic'],
   showScore: [true, false, undefined],
+  hideScoreAndStaticOrDynamic: [true, false],
 }
 
 // Reuse same JSDOM object to improve performance
 let dom: JSDOM = null
 
-describe('predictor-badge', () => {
+describe('badge-base', () => {
   beforeAll(() => {
     dom = getInitialDom()
   })
@@ -38,11 +39,11 @@ describe('predictor-badge', () => {
         const predictor = 'allReoffendingPredictor'
         const renderedHtml = getRenderedHtml(
           dom,
-          'PREDICTOR_BADGE',
+          'PREDICTOR_BADGE_ROOT',
           `predictor: "${predictor}"`,
           getRiskTestData([{ predictor, level, score: 12.34, staticOrDynamic: 'Static' }]),
         )
-        validateBadge(renderedHtml, predictor, level, 12.34, 'Static', undefined)
+        validateBadge(renderedHtml, predictor, level, 12.34, 'Static', undefined, false)
       },
     )
   })
@@ -52,7 +53,7 @@ describe('predictor-badge', () => {
     it.each(predictors)('should render correct name for: %s', predictor => {
       const renderedHtml = getRenderedHtml(
         dom,
-        'PREDICTOR_BADGE',
+        'PREDICTOR_BADGE_ROOT',
         `predictor: "${predictor}"`,
         getRiskTestData([{ predictor, level: BandLevel.LOW, score: 12.34, staticOrDynamic: 'Static' }]),
       )
@@ -62,15 +63,15 @@ describe('predictor-badge', () => {
   })
 
   it.each(getCombinations(inputCombinationsTemplateLogic))(
-    'should render correct html/css - {predictor: $predictor, level: $level, score: $score, staticOrDynamic: $staticOrDynamic, showScore: $showScore}',
-    ({ predictor, level, score, staticOrDynamic, showScore }) => {
+    'should render correct html/css - {predictor: $predictor, level: $level, score: $score, staticOrDynamic: $staticOrDynamic, showScore: $showScore, hideScoreAndStaticOrDynamic: $hideScoreAndStaticOrDynamic}',
+    ({ predictor, level, score, staticOrDynamic, showScore, hideScoreAndStaticOrDynamic }) => {
       const renderedHtml = getRenderedHtml(
         dom,
-        'PREDICTOR_BADGE',
-        `predictor: "${predictor}", showScore: ${showScore}`,
+        'PREDICTOR_BADGE_ROOT',
+        `predictor: "${predictor}", showScore: ${showScore}, hideScoreAndStaticOrDynamic: ${hideScoreAndStaticOrDynamic}`,
         getRiskTestData([{ predictor, level, score, staticOrDynamic }]),
       )
-      validateBadge(renderedHtml, predictor, level, score, staticOrDynamic, showScore)
+      validateBadge(renderedHtml, predictor, level, score, staticOrDynamic, showScore, hideScoreAndStaticOrDynamic)
     },
   )
 
@@ -80,7 +81,7 @@ describe('predictor-badge', () => {
       (assessmentPredictor: PredictorOption, predictorInMacro: PredictorOption, predictorRendered: PredictorOption) => {
         const renderedHtml = getRenderedHtml(
           dom,
-          'PREDICTOR_BADGE',
+          'PREDICTOR_BADGE_ROOT',
           `predictor: "${predictorInMacro}", legacyFallback: true`,
           getRiskTestData([
             { predictor: assessmentPredictor, level: BandLevel.LOW, score: 12.34, staticOrDynamic: 'Static' },
@@ -104,12 +105,16 @@ const validateBadge = (
   score: number | undefined,
   staticOrDynamic: StaticOrDynamicContent,
   showScore: boolean | undefined,
+  hideScoreAndStaticOrDynamic: boolean,
 ) => {
   const { document } = renderedHtml
 
   // Resolve 'shouldShowScore' logic (mirroring the .njk template)
   const config = (predictorConfig as any)[predictor]
-  const expectedShouldShowScore = showScore ?? config.showScore
+  const expectedShouldShowScore = hideScoreAndStaticOrDynamic == true ? false : showScore ?? config.showScore
+  
+  // Resolve 'shouldShowStaticOrDynamic' logic (mirroring the .njk template)
+  const expectedShouldShowStaticOrDynamic = expectedPredictorNameMappings[predictor].showStaticDynamic && !hideScoreAndStaticOrDynamic && staticOrDynamic
 
   // Resolve unknown band logic (mirroring the .njk template)
   const shouldBeUnkownBand = !band || (expectedShouldShowScore === true && !score)
@@ -118,7 +123,7 @@ const validateBadge = (
   // Reconstruct the dynamic attribute used .njk template
   const displayBand = shouldBeUnkownBand ? 'UNKNOWN' : band?.replace('_', ' ')
   const predictorName = expectedPredictorNameMappings[predictor].name
-  const badgeSelector = `[data-predictor-badge="${predictorName} ${displayBand}"]`
+  const badgeSelector = `[data-badge-base="${predictorName} ${displayBand}"]`
 
   const badgeContainer = document.querySelector(badgeSelector)
   if (!badgeContainer) {
@@ -165,7 +170,7 @@ const validateBadge = (
 
   // Validate Static/Dynamic (Scoped search using data-test-id)
   const sdEl = badgeContainer.querySelector('[data-test-id="staticOrDynamic"]')
-  if (expectedPredictorNameMappings[predictor].showStaticDynamic && staticOrDynamic && !isDefaultBadge) {
+  if (expectedShouldShowStaticOrDynamic && !isDefaultBadge) {
     expectStyleToBe(
       renderedHtml,
       sdEl,
@@ -220,10 +225,11 @@ type PredictorProperties = {
   scoreBackgroundColour: string
 }
 
-interface PredictorBadgeTestCase {
+interface badgeRootTestCase {
   predictor: PredictorOption
   level: BandLevel
   score: number
   staticOrDynamic: StaticOrDynamicContent
-  showScore: boolean
+  showScore: boolean,
+  hideScoreAndStaticOrDynamic: boolean,
 }

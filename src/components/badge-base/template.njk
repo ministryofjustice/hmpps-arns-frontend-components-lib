@@ -1,0 +1,84 @@
+{#
+  ARNS Badge Root Component
+
+  @name badgeBase
+
+  @description Displays a specified risk predictor score badge.
+  It uses the latest assessment from the provided data set.
+
+  @example
+  In route handler:
+    const riskData = await arnsComponents.getRiskData(token, 'crn', 'X123456')
+    res.render('page', { riskData })
+
+  In template:
+    {% from "components/badge-base/macro.njk" import badgeBase %}
+    {{ badgeBase({
+      data: riskData,
+      predictor: "allReoffendingPredictor",
+      showScore: true,
+      legacyFallback: false,
+      hideScoreAndStaticOrDynamic: false,
+    }) }}
+
+  @param {object} params
+    @param {RiskData} params.data - Risk data object from ArnsComponents.getRiskData() containing an 'assessments' array
+    @param {string} params.predictor - The name of the specific predictor to display
+    @param {boolean} [params.showScore] - Optional config override - If true, displays the percentage score
+    @param {boolean} [params.legacyFallback] - Optional (default false) - If true and predictor requested is OGRS4-gen, fallback to showing the OGRS3-gen predictor if the latest assessment is OGRS3-gen.
+    @param {boolean} [params.hideScoreAndStaticOrDynamic] - Optional config override - If true, hides the percentage score and static or dynamic spans
+#}
+{% set latestAssessment = params.data.assessments | first if params.data.assessments else null %}
+
+{% if latestAssessment %}
+
+  {% set config = predictorConfig[params.predictor] %}
+
+  {% if params.legacyFallback and config.fallbackPredictor and latestAssessment.outputVersion == '1' %}
+    {% set predictorToRender = config.fallbackPredictor %}
+  {% else %}
+    {% set predictorToRender = params.predictor %}
+  {% endif %}
+
+  {% for key, predictor in latestAssessment %}
+    {% if key == predictorToRender %}
+
+      {% set shouldShowScore = false if(params.hideScoreAndStaticOrDynamic == true) else ( params.showScore if (params.showScore is defined) else config.showScore ) %}
+      {% set shouldShowStaticOrDynamic = false if(params.hideScoreAndStaticOrDynamic == true) else ( predictor.staticOrDynamic if predictor.staticOrDynamic) %}
+
+      {% set badgeClass = '' %}
+      {% switch predictor.band %}
+      {% case 'VERY HIGH' %}
+        {% set badgeClass = 'arns-badge-base--very-high' %}
+      {% case 'HIGH' %}
+        {% set badgeClass = 'arns-badge-base--high' %}
+      {% case 'MEDIUM' %}
+        {% set badgeClass = 'arns-badge-base--medium' %}
+      {% case 'LOW' %}
+        {% set badgeClass = 'arns-badge-base--low' %}
+      {% default %}
+          {% set badgeClass = 'arns-badge-base--default' %}
+      {% endswitch %}
+
+      {% if predictor.band == null or (shouldShowScore == true and predictor.score == null) %}
+        {% set band = 'UNKNOWN' %}
+        {% set badgeClass = 'arns-badge-base--default' %}
+      {% else %}
+        {% set band = predictor.band | replace('_', ' ') %}
+      {% endif %}
+
+      <div class="{{ badgeClass }}"
+           data-badge-base="{{ predictor.name }} {{ band }}">
+        <span class="arns-badge-root__type_and_level" data-test-id="nameAndBand">{{ predictor.name }} <strong>{{ band }}</strong></span>
+
+        {% if shouldShowScore and badgeClass != 'arns-badge-base--default' %}
+          <span class="arns-badge-root__score" data-test-id="score">{{ predictor.score }}%</span>
+        {% endif %}
+
+        {% if shouldShowStaticOrDynamic and badgeClass !== 'arns-badge-base--default' %}
+          <span class="arns-badge-root__static_or_dynamic" data-test-id="staticOrDynamic">{{ predictor.staticOrDynamic }}</span>
+        {% endif %}
+      </div>
+    {% endif %}
+  {% endfor %}
+{% endif %}

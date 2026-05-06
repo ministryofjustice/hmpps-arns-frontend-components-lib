@@ -88,6 +88,14 @@ export const components: Record<string, ComponentDetail> = {
     directory: 'predictor-badge',
     macro: 'predictorBadge',
   },
+  ROSH_BADGE: {
+    directory: 'rosh-badge',
+    macro: 'roshBadge',
+  },
+  PREDICTOR_BADGE_ROOT: {
+    directory: 'badge-base',
+    macro: 'badgeBase',
+  },
   EXPANDED_PREDICTOR_BADGE: {
     directory: 'expanded-predictor-badge',
     macro: 'expandedPredictorBadge',

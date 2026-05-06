@@ -1,9 +1,9 @@
 {#
-  ARNS Predictor Badge Component
+  ARNS Rosh Badge Component
 
-  @name predictorBadge
+  @name roshBadge
 
-  @description Displays a specified risk predictor score badge.
+  @description Displays a specified risk predictor rosh badge.
   It uses the latest assessment from the provided data set.
 
   @example
@@ -12,18 +12,16 @@
     res.render('page', { riskData })
 
   In template:
-    {% from "components/predictor-badge/macro.njk" import predictorBadge %}
-    {{ predictorBadge({
+    {% from "components/rosh-badge/macro.njk" import roshBadge %}
+    {{ roshBadge({
       data: riskData,
       predictor: "allReoffendingPredictor",
-      showScore: true,
       legacyFallback: false
     }) }}
 
   @param {object} params
     @param {RiskData} params.data - Risk data object from ArnsComponents.getRiskData() containing an 'assessments' array
     @param {string} params.predictor - The name of the specific predictor to display
-    @param {boolean} [params.showScore] - Optional config override - If true, displays the percentage score
     @param {boolean} [params.legacyFallback] - Optional (default false) - If true and predictor requested is OGRS4-gen, fallback to showing the OGRS3-gen predictor if the latest assessment is OGRS3-gen.
 #}
 {%- from "../badge-base/macro.njk" import badgeBase -%}
