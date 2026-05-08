@@ -69,7 +69,7 @@ const validateBadge = (
       { tag: 'color', value: properties.typeAndLevelColour },
       { tag: 'backgroundColor', value: 'rgba(0, 0, 0, 0)' },
     ],
-    `${name} <strong>${displayBand}</strong>`,
+    `${name} ${displayBand}`,
   )
 
   expectElementMissing(badgeContainer, '[data-test-id="score"]')

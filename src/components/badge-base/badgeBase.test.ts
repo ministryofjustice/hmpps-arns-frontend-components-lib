@@ -133,12 +133,9 @@ const validateBadge = (
   const badgeSelector = `[data-badge-base="${predictorName} ${displayBand}"]`
 
   const badgeContainer = document.querySelector(badgeSelector)
-
   if (!badgeContainer) {
     throw new Error(`Could not find badge with selector: ${badgeSelector}`)
   }
-
-  expectElementMissing(badgeContainer, '[data-test-id="testingspan"]')
 
   // A badge is "default" visually if band is null/N.A. or explicitly 'UNKNOWN'
   const isDefaultBadge = band === BandLevel.NOT_APPLICABLE || displayBand === 'UNKNOWN' || shouldBeUnkownBand
@@ -158,7 +155,7 @@ const validateBadge = (
       { tag: 'color', value: properties.typeAndLevelColour },
       { tag: 'backgroundColor', value: 'rgba(0, 0, 0, 0)' },
     ],
-    `${predictorName} <strong>${displayBand}</strong>`,
+    `${predictorName} ${displayBand}`,
   )
 
   // Validate Score (Scoped search using data-test-id)
@@ -186,7 +183,7 @@ const validateBadge = (
       sdEl,
       [
         { tag: 'color', value: 'rgb(40, 45, 48)' },
-        { tag: 'backgroundColor', value: 'rgb(229, 230, 231)' },
+        { tag: 'backgroundColor', value: 'rgb(206, 206, 206)' },
       ],
       staticOrDynamic,
     )

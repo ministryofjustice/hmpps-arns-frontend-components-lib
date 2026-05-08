@@ -24,6 +24,8 @@
     @param {StaticOrDynamicContent} staticOrDynamic: Static or Dynamic,
     @param {boolean | undefined} shouldShowScore: Optional config override - If true, displays the percentage score
 #}
+{%- from "govuk/components/tag/macro.njk" import govukTag -%}
+
 {% set badgeClass = '' %}
 {% switch band %}
   {% case 'VERY HIGH' %}
@@ -43,13 +45,18 @@
 {% else %}
   {% set band = band | replace('_', ' ') %}
 {% endif %}
-<div class="{{ badgeClass }}" data-badge-base="{{ name }} {{ band }}">
-  <span class="arns-badge-base__type_and_level" data-test-id="nameAndBand">{{ name }} <strong>{{ band }}</strong></span>
-  </span>
-  {% if shouldShowScore and badgeClass != 'arns-badge-base--default' %}
-    <span class="arns-badge-base__score" data-test-id="score">{{ score }}%</span>
-  {% endif %}
-  {% if staticOrDynamic and badgeClass !== 'arns-badge-base--default' %}
-    <span class="arns-badge-base__static_or_dynamic" data-test-id="staticOrDynamic">{{ staticOrDynamic }}</span>
-  {% endif %}
-</div>
+<div class="{{ badgeClass }}"
+           data-badge-base="{{ name }} {{ band }}">
+
+        <span class="arns-badge-base__type_and_level" data-test-id="nameAndBand">{{ name }} <strong>{{ band }}</strong></span>
+
+        {% if shouldShowScore and badgeClass != 'arns-badge-base--default' %}
+          <span class="arns-badge-base__score" data-test-id="score">{{ score }}%</span>
+        {% endif %}
+
+        {% if staticOrDynamic and badgeClass !== 'arns-badge-base--default' %}
+          <span class="arns-badge-base__static_or_dynamic" data-test-id="staticOrDynamic">
+            {{ govukTag({ text: staticOrDynamic, classes: "govuk-tag--grey arns-badge-base__govuk-tag-sizing"}) }}
+          </span>
+        {% endif %}
+      </div>
