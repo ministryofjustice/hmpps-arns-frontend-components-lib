@@ -48,12 +48,7 @@ $default-colour__text: govuk-colour("black");
   }
 
   & .arns-predictor-badge__static_or_dynamic {
-    @include govuk-font(19, "regular");
-    color: #282D30;
-
-    background-color: #E5E6E7;
-
-    padding: 2px 4px;
+    padding: 1px 4px;
   }
 
   & .arns-predictor-badge__wrapped_static_or_dynamic {

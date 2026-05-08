@@ -28,6 +28,8 @@
     @param {boolean} [params.legacyFallback] - Optional (default false) - If true and predictor requested is OGRS4-gen, fallback to showing the OGRS3-gen predictor if the latest assessment is OGRS3-gen.
     @param {boolean} params.excludeDate - Optional flag for excluding date
 #}
+{%- from "govuk/components/tag/macro.njk" import govukTag -%}
+
 {% set latestAssessment = params.data.assessments | first if params.data.assessments else null %}
 
 {% if latestAssessment %}
@@ -59,9 +61,9 @@
           {% set badgeClass = 'arns-expanded-predictor-badge--default' %}
       {% endswitch %}
 
-      {% set staticOrDynamicClass = 'arns-predictor-badge__static_or_dynamic' %}
+      {% set staticOrDynamicWrapperClass = '' %}
       {% if shouldShowScore and predictor.band in ['VERY HIGH', 'MEDIUM'] and predictor.staticOrDynamic | upper === 'DYNAMIC' %}
-        {% set staticOrDynamicClass = staticOrDynamicClass + ' arns-predictor-badge__wrapped_static_or_dynamic' %}
+        {% set staticOrDynamicWrapperClass = 'class=arns-predictor-badge__wrapped_static_or_dynamic' %}
       {% endif %}
 
       {% if params.fixedWidth or params.fixedWidth is undefined %}
@@ -91,7 +93,12 @@
           {% endif %}
 
           {% if predictor.staticOrDynamic and badgeClass != 'arns-expanded-predictor-badge--default' %}
-            <span class="{{ staticOrDynamicClass }}" data-test-id="staticOrDynamic">{{ predictor.staticOrDynamic }}</span>
+            <span {{ staticOrDynamicWrapperClass }} data-test-id="staticOrDynamic">
+              {{ govukTag({
+                text: predictor.staticOrDynamic,
+                classes: "govuk-tag--grey arns-predictor-badge__static_or_dynamic"
+              }) }}
+            </span>
           {% endif %}
 
         </div>
