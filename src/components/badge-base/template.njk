@@ -1,0 +1,55 @@
+{#
+  ARNS Badge Base Component
+
+  @name badgeBase
+
+  @description Common component for displaying a specified risk predictor score badge.
+  It uses the latest assessment from the provided data set.
+
+  @example
+  In template:
+    {% from "components/badge-base/macro.njk" import badgeBase %}
+    {{ badgeBase({
+      name: string,
+      band: "LOW",
+      score: "12.84",
+      staticOrDynamic: "Static",
+      shouldShowScore: true,
+    }) }}
+
+  @param {object} params
+    @param {string} name: Predictor name or Risk of Serious Harm text
+    @param {BandLevel} band: Risk level,
+    @param {number | undefined} score: Percentage score,
+    @param {StaticOrDynamicContent} staticOrDynamic: Static or Dynamic,
+    @param {boolean | undefined} shouldShowScore: Optional config override - If true, displays the percentage score
+#}
+{% set badgeClass = '' %}
+{% switch band %}
+  {% case 'VERY HIGH' %}
+    {% set badgeClass = 'arns-badge-base--very-high' %}
+  {% case 'HIGH' %}
+    {% set badgeClass = 'arns-badge-base--high' %}
+  {% case 'MEDIUM' %}
+    {% set badgeClass = 'arns-badge-base--medium' %}
+  {% case 'LOW' %}
+    {% set badgeClass = 'arns-badge-base--low' %}
+  {% default %}
+    {% set badgeClass = 'arns-badge-base--default' %}
+{% endswitch %}
+{% if band == null or (shouldShowScore == true and score == null) %}
+  {% set band = 'UNKNOWN' %}
+  {% set badgeClass = 'arns-badge-base--default' %}
+{% else %}
+  {% set band = band | replace('_', ' ') %}
+{% endif %}
+<div class="{{ badgeClass }}" data-badge-base="{{ name }} {{ band }}">
+  <span class="arns-badge-base__type_and_level" data-test-id="nameAndBand">{{ name }} <strong>{{ band }}</strong></span>
+  </span>
+  {% if shouldShowScore and badgeClass != 'arns-badge-base--default' %}
+    <span class="arns-badge-base__score" data-test-id="score">{{ score }}%</span>
+  {% endif %}
+  {% if staticOrDynamic and badgeClass !== 'arns-badge-base--default' %}
+    <span class="arns-badge-base__static_or_dynamic" data-test-id="staticOrDynamic">{{ staticOrDynamic }}</span>
+  {% endif %}
+</div>

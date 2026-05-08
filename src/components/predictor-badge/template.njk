@@ -26,8 +26,12 @@
     @param {boolean} [params.showScore] - Optional config override - If true, displays the percentage score
     @param {boolean} [params.legacyFallback] - Optional (default false) - If true and predictor requested is OGRS4-gen, fallback to showing the OGRS3-gen predictor if the latest assessment is OGRS3-gen.
 #}
+<<<<<<< HEAD
 {%- from "govuk/components/tag/macro.njk" import govukTag -%}
 
+=======
+{%- from "../badge-base/macro.njk" import badgeBase -%}
+>>>>>>> 4fb1a2a (Added rosh badge. Created badge base as common component for predictor badge and rosh badge. Updated tests)
 {% set latestAssessment = params.data.assessments | first if params.data.assessments else null %}
 
 {% if latestAssessment %}
@@ -45,6 +49,7 @@
 
       {% set shouldShowScore = params.showScore if params.showScore is defined else config.showScore %}
 
+<<<<<<< HEAD
       {% set badgeClass = '' %}
       {% switch predictor.band %}
       {% case 'VERY HIGH' %}
@@ -81,6 +86,9 @@
           </span>
         {% endif %}
       </div>
+=======
+      {{ badgeBase(predictor.name, predictor.band, predictor.score, predictor.staticOrDynamic, shouldShowScore) }}
+>>>>>>> 4fb1a2a (Added rosh badge. Created badge base as common component for predictor badge and rosh badge. Updated tests)
     {% endif %}
   {% endfor %}
 {% endif %}
