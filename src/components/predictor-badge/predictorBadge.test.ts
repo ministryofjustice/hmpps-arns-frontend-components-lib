@@ -143,7 +143,7 @@ const validateBadge = (
       { tag: 'color', value: properties.typeAndLevelColour },
       { tag: 'backgroundColor', value: 'rgba(0, 0, 0, 0)' },
     ],
-    `${expectedPredictorNameMappings[predictor].name} <strong>${displayBand}</strong>`,
+    `${expectedPredictorNameMappings[predictor].name} ${displayBand}`,
   )
 
   // Validate Score (Scoped search using data-test-id)
@@ -171,7 +171,7 @@ const validateBadge = (
       sdEl,
       [
         { tag: 'color', value: 'rgb(40, 45, 48)' },
-        { tag: 'backgroundColor', value: 'rgb(229, 230, 231)' },
+        { tag: 'backgroundColor', value: 'rgb(206, 206, 206)' },
       ],
       staticOrDynamic,
     )

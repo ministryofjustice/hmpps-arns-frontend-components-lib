@@ -131,7 +131,7 @@ describe('predictor-timeline', () => {
         expect(legacyElement).not.toBeNull()
         expect(legacyElement.querySelector('[data-test-id="nameAndBand"]').textContent).toBe('RSR HIGH')
         expect(legacyElement.querySelector('[data-test-id="score"]').textContent).toBe('50.1234%')
-        expect(legacyElement.querySelector('[data-test-id="staticOrDynamic"]').textContent).toBe('Dynamic')
+        expect(legacyElement.querySelector('[data-test-id="staticOrDynamic"]').textContent.trim()).toBe('Dynamic')
       })
 
       it('should render All Reoffending Predictor using the expanded badge and title case name', () => {
@@ -144,7 +144,7 @@ describe('predictor-timeline', () => {
         expect(newItem.querySelector('[data-test-id="name"]').textContent).toBe('All reoffending predictor')
         expect(newItem.querySelector('[data-test-id="band"]').textContent).toBe('LOW')
         expect(newItem.querySelector('[data-test-id="score"]').textContent).toBe('1.23%')
-        expect(newItem.querySelector('[data-test-id="staticOrDynamic"]').textContent).toBe('Static')
+        expect(newItem.querySelector('[data-test-id="staticOrDynamic"]').textContent.trim()).toBe('Static')
       })
     })
   })

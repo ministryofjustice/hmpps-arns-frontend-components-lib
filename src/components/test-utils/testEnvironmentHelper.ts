@@ -63,7 +63,7 @@ export const expectStyleToBe = (
   }
 
   if (innerHtml) {
-    expect(element.innerHTML).toBe(innerHtml)
+    expect(element.textContent.trim()).toBe(innerHtml)
   }
 
   if (styles) {

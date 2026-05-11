@@ -109,12 +109,7 @@ $default-colour__text: govuk-colour("black");
   }
 
   & .arns-predictor-timeline-item__static_or_dynamic {
-    @include govuk-font(19, "regular");
-    color: #282D30;
-
-    background-color: #E5E6E7;
-
-    padding: 2px 5px;
+    padding: 1px 4px;
   }
 
   & .arns-predictor-timeline-item__wrapped_static_or_dynamic {
@@ -208,12 +203,13 @@ $default-colour__text: govuk-colour("black");
   & .arns-legacy-predictor-timeline-item__static_or_dynamic {
     @include govuk-font(19, "regular");
     color: #282D30;
-
-    background-color: #E5E6E7;
+    background-color: #cecece;
     border-left: 2px solid $primary-colour;
-
-    padding: 2px 2px;
     align-content: center;
+  }
+
+  & .arns-legacy-predictor-timeline-item__govuk-tag-sizing {
+    padding: 2px
   }
 }
 
