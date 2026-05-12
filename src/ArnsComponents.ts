@@ -29,8 +29,7 @@ export default class ArnsComponents {
       {
         path,
         errorHandler: (requestPath, method, error) => {
-          const status = error.responseStatus || (error as any).status
-          if (status === 404) {
+          if (error.responseStatus === 404) {
             this.logger.debug(`ARNS API returned 404 (Not Found) for ${method}: ${requestPath}`)
             return null
           }
