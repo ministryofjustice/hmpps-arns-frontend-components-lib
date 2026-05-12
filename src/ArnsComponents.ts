@@ -13,12 +13,32 @@ import { transformAllRoshRiskDtoToRoshData } from './transformers/AllRoshRiskDto
 export default class ArnsComponents {
   private readonly restClient: RestClient
 
+  private readonly logger: Logger | Console
+
   constructor(
     authenticationClient: AuthenticationClient,
     config: ArnsComponentsConfig,
     logger: Logger | Console = console,
   ) {
+    this.logger = logger
     this.restClient = new RestClient('ARNS API', config, logger, authenticationClient)
+  }
+
+  private async getSuppressing404<T>(path: string, authOptions: AuthOptions | string): Promise<T | null> {
+    return this.restClient.get<T | null>(
+      {
+        path,
+        errorHandler: (requestPath, method, error) => {
+          const status = error.responseStatus || (error as any).status
+          if (status === 404) {
+            this.logger.debug(`ARNS API returned 404 (Not Found) for ${method}: ${requestPath}`)
+            return null
+          }
+          throw error
+        },
+      },
+      authOptions,
+    )
   }
 
   async getRiskData(
@@ -27,10 +47,14 @@ export default class ArnsComponents {
     identifierValue: string,
   ): Promise<RiskData> {
     try {
-      const response = await this.restClient.get<AllPredictorVersionedDto[]>(
-        { path: `/risks/predictors/all/${identifierType}/${identifierValue}` },
+      const response: AllPredictorVersionedDto[] | null = await this.getSuppressing404<AllPredictorVersionedDto[]>(
+        `/risks/predictors/all/${identifierType}/${identifierValue}`,
         authOptions,
       )
+
+      if (!response) {
+        return { assessments: [], httpStatus: 404 }
+      }
 
       return {
         assessments: transformAllPredictorVersionedDtoToAssessments(response),
@@ -47,7 +71,14 @@ export default class ArnsComponents {
 
   async getRoshData(authOptions: AuthOptions | string, identifierValue: string): Promise<RoshData> {
     try {
-      const response = await this.restClient.get<AllRoshRiskDto>({ path: `/risks/crn/${identifierValue}` }, authOptions)
+      const response: AllRoshRiskDto | null = await this.getSuppressing404<AllRoshRiskDto>(
+        `/risks/crn/${identifierValue}`,
+        authOptions,
+      )
+
+      if (!response) {
+        return { assessment: null, httpStatus: 404 }
+      }
 
       return {
         assessment: transformAllRoshRiskDtoToRoshData(response),

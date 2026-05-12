@@ -46,10 +46,13 @@ describe('ArnsComponents', () => {
         assessments: mockTransformedData,
         httpStatus: 200,
       })
-      expect(mockedRestClient.prototype.get).toHaveBeenCalledWith({ path: '/risks/predictors/all/CRN/X123456' }, null)
+      expect(mockedRestClient.prototype.get).toHaveBeenCalledWith(
+        { path: '/risks/predictors/all/CRN/X123456', errorHandler: expect.any(Function) },
+        null,
+      )
     })
 
-    it('should return status from error object when the API fails', async () => {
+    it('should return empty assessments list with 404 httpStatus when the API responds with 404', async () => {
       const error = { status: 404, message: 'Not Found' }
       mockedRestClient.prototype.get.mockRejectedValue(error)
 
@@ -58,6 +61,18 @@ describe('ArnsComponents', () => {
       expect(result).toEqual({
         assessments: [],
         httpStatus: 404,
+      })
+    })
+
+    it('should return status from error object when the API fails', async () => {
+      const error = { status: 401, message: 'Unauthorized' }
+      mockedRestClient.prototype.get.mockRejectedValue(error)
+
+      const result = await arnsComponents.getRiskData(null, 'CRN', 'X123456')
+
+      expect(result).toEqual({
+        assessments: [],
+        httpStatus: 401,
       })
     })
 
@@ -88,11 +103,14 @@ describe('ArnsComponents', () => {
         assessment: mockTransformedData,
         httpStatus: 200,
       })
-      expect(mockedRestClient.prototype.get).toHaveBeenCalledWith({ path: '/risks/crn/X123456' }, null)
+      expect(mockedRestClient.prototype.get).toHaveBeenCalledWith(
+        { path: '/risks/crn/X123456', errorHandler: expect.any(Function) },
+        null,
+      )
       expect(mockedRoshTransformer).toHaveBeenCalledWith(mockApiResponse)
     })
 
-    it('should return status from error object when the API fails', async () => {
+    it('should return null assessment with 404 httpStatus when the API responds with 404', async () => {
       const error = { status: 404, message: 'Not Found' }
       mockedRestClient.prototype.get.mockRejectedValue(error)
 
@@ -101,6 +119,19 @@ describe('ArnsComponents', () => {
       expect(result).toEqual({
         assessment: null,
         httpStatus: 404,
+      })
+      expect(mockedRoshTransformer).not.toHaveBeenCalled()
+    })
+
+    it('should return status from error object when the API fails', async () => {
+      const error = { status: 401, message: 'Unauthorized' }
+      mockedRestClient.prototype.get.mockRejectedValue(error)
+
+      const result = await arnsComponents.getRoshData(null, 'X123456')
+
+      expect(result).toEqual({
+        assessment: null,
+        httpStatus: 401,
       })
       expect(mockedRoshTransformer).not.toHaveBeenCalled()
     })
