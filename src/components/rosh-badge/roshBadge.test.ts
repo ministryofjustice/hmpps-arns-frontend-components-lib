@@ -1,9 +1,5 @@
-import { DOMWindow, JSDOM } from 'jsdom'
-import {
-  getInitialDom,
-  getRenderedHtml,
-  roshAssessmentTestData,
-} from '../test-utils/testEnvironmentHelper'
+import { JSDOM } from 'jsdom'
+import { getInitialDom, getRenderedHtml, roshAssessmentTestData } from '../test-utils/testEnvironmentHelper'
 import { BandLevel } from '../../types/dtos/BandLevel'
 
 // Reuse same JSDOM object to improve performance
@@ -23,13 +19,12 @@ describe('rosh-badge', () => {
         const displayBand = !level ? 'UNKNOWN' : level?.replace('_', ' ')
         const badgeSelector = `[data-badge-base="${name} ${displayBand}"]`
         const badgeContainer = document.querySelector(badgeSelector)
-        
+
         if (!badgeContainer) {
           throw new Error(`Could not find badge with selector: ${badgeSelector}`)
         }
 
         const nameAndBand = badgeContainer.querySelector('[data-test-id="nameAndBand"]')
-
 
         expect(nameAndBand?.textContent.trim()).toBe(`${name} ${displayBand}`)
       },
