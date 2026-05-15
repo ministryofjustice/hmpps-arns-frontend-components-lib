@@ -3,11 +3,11 @@ import {
   expectedPredictorNameMappings,
   expectElementMissing,
   expectStyleToBe,
+  getBadgeContainer,
   getCombinations,
   getDomFromNjks,
   getInitialDom,
   getRiskTestData,
-  predictorConfig,
   PredictorOption,
   StaticOrDynamicContent,
 } from '../test-utils/testEnvironmentHelper'
@@ -119,23 +119,14 @@ const validateBadge = (
   showScore: boolean | undefined,
 ) => {
   const { document } = renderedHtml
-  // Resolve 'shouldShowScore' logic (mirroring the .njk template)
-  const config = (predictorConfig as any)[predictor]
-  const expectedShouldShowScore = showScore ?? config.showScore
-
   // Resolve unknown band logic (mirroring the .njk template)
-  const shouldBeUnkownBand = !band || (expectedShouldShowScore === true && !score)
+  const shouldBeUnkownBand = !band || (showScore && !score)
   const properties = shouldBeUnkownBand ? nullBandMapping : expectedBandMappings[band]
 
   // Reconstruct the dynamic attribute used .njk template
   const displayBand = shouldBeUnkownBand ? 'UNKNOWN' : band?.replace('_', ' ')
   const predictorName = expectedPredictorNameMappings[predictor].name
-  const badgeSelector = `[data-badge-base="${predictorName} ${displayBand}"]`
-
-  const badgeContainer = document.querySelector(badgeSelector)
-  if (!badgeContainer) {
-    throw new Error(`Could not find badge with selector: ${badgeSelector}`)
-  }
+  const badgeContainer = getBadgeContainer(document, `[data-badge-base="${predictorName} ${displayBand}"]`)
 
   // A badge is "default" visually if band is null/N.A. or explicitly 'UNKNOWN'
   const isDefaultBadge = band === BandLevel.NOT_APPLICABLE || displayBand === 'UNKNOWN' || shouldBeUnkownBand
@@ -160,7 +151,7 @@ const validateBadge = (
 
   // Validate Score (Scoped search using data-test-id)
   const scoreEl = badgeContainer.querySelector('[data-test-id="score"]')
-  if (expectedShouldShowScore && !isDefaultBadge) {
+  if (showScore && !isDefaultBadge) {
     expectStyleToBe(
       renderedHtml,
       scoreEl,

@@ -380,6 +380,16 @@ export function getCombinations<T extends Inputs>(inputs: T): Record<keyof T, an
   )
 }
 
+export function getBadgeContainer(document: Document, badgeSelector: string): Element {
+  const badgeContainer = document.querySelector(badgeSelector)
+
+  if (!badgeContainer) {
+    throw new Error(`Could not find badge with selector: ${badgeSelector}`)
+  }
+
+  return badgeContainer
+}
+
 export const legacyFallbackTestCases = [
   // When legacy predictor in assessment and requested, return legacy predictor
   ['ogrs3', 'ogrs3', 'ogrs3'],
