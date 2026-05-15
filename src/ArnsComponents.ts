@@ -14,14 +14,11 @@ import { SuppressingRestClient } from './SuppressingRestClient'
 export default class ArnsComponents {
   private readonly arnsApiRestClient: SuppressingRestClient
 
-  private readonly logger: Logger | Console
-
   constructor(
     authenticationClient: AuthenticationClient,
     config: ArnsComponentsConfig,
     logger: Logger | Console = console,
   ) {
-    this.logger = logger
     this.arnsApiRestClient = new SuppressingRestClient(
       new RestClient('ARNS API', config, logger, authenticationClient),
       logger,
