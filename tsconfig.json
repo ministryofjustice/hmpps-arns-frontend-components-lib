@@ -17,6 +17,7 @@
     "noImplicitAny": true,
     "experimentalDecorators": true,
     "typeRoots": ["./src/@types", "./node_modules/@types"],
+    "types": ["jest"],
     "declaration": true
   },
   "exclude": [

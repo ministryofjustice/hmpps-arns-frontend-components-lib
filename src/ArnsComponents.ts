@@ -9,9 +9,10 @@ import { transformAllPredictorVersionedDtoToAssessments } from './transformers/A
 import { RoshData } from './types/RoshData'
 import { AllRoshRiskDto } from './types/dtos/AllRoshRiskDto'
 import { transformAllRoshRiskDtoToRoshData } from './transformers/AllRoshRiskDtoToRoshDataTransformer'
+import { SuppressingRestClient } from './SuppressingRestClient'
 
 export default class ArnsComponents {
-  private readonly restClient: RestClient
+  private readonly arnsApiRestClient: SuppressingRestClient
 
   private readonly logger: Logger | Console
 
@@ -21,22 +22,9 @@ export default class ArnsComponents {
     logger: Logger | Console = console,
   ) {
     this.logger = logger
-    this.restClient = new RestClient('ARNS API', config, logger, authenticationClient)
-  }
-
-  private async getSuppressing404<T>(path: string, authOptions: AuthOptions | string): Promise<T | null> {
-    return this.restClient.get<T | null>(
-      {
-        path,
-        errorHandler: (requestPath, method, error) => {
-          if (error.responseStatus === 404) {
-            this.logger.debug(`ARNS API returned 404 (Not Found) for ${method}: ${requestPath}`)
-            return null
-          }
-          throw error
-        },
-      },
-      authOptions,
+    this.arnsApiRestClient = new SuppressingRestClient(
+      new RestClient('ARNS API', config, logger, authenticationClient),
+      logger,
     )
   }
 
@@ -46,7 +34,7 @@ export default class ArnsComponents {
     identifierValue: string,
   ): Promise<RiskData> {
     try {
-      const response: AllPredictorVersionedDto[] | null = await this.getSuppressing404<AllPredictorVersionedDto[]>(
+      const response: AllPredictorVersionedDto[] | null = await this.arnsApiRestClient.get<AllPredictorVersionedDto[]>(
         `/risks/predictors/all/${identifierType}/${identifierValue}`,
         authOptions,
       )
@@ -70,7 +58,7 @@ export default class ArnsComponents {
 
   async getRoshData(authOptions: AuthOptions | string, identifierValue: string): Promise<RoshData> {
     try {
-      const response: AllRoshRiskDto | null = await this.getSuppressing404<AllRoshRiskDto>(
+      const response: AllRoshRiskDto | null = await this.arnsApiRestClient.get<AllRoshRiskDto>(
         `/risks/crn/${identifierValue}`,
         authOptions,
       )
