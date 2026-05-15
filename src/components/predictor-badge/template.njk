@@ -26,8 +26,7 @@
     @param {boolean} [params.showScore] - Optional config override - If true, displays the percentage score
     @param {boolean} [params.legacyFallback] - Optional (default false) - If true and predictor requested is OGRS4-gen, fallback to showing the OGRS3-gen predictor if the latest assessment is OGRS3-gen.
 #}
-{%- from "govuk/components/tag/macro.njk" import govukTag -%}
-
+{%- from "../badge-base/macro.njk" import badgeBase -%}
 {% set latestAssessment = params.data.assessments | first if params.data.assessments else null %}
 
 {% if latestAssessment %}
@@ -44,43 +43,7 @@
     {% if key == predictorToRender %}
 
       {% set shouldShowScore = params.showScore if params.showScore is defined else config.showScore %}
-
-      {% set badgeClass = '' %}
-      {% switch predictor.band %}
-      {% case 'VERY HIGH' %}
-        {% set badgeClass = 'arns-predictor-badge--very-high' %}
-      {% case 'HIGH' %}
-        {% set badgeClass = 'arns-predictor-badge--high' %}
-      {% case 'MEDIUM' %}
-        {% set badgeClass = 'arns-predictor-badge--medium' %}
-      {% case 'LOW' %}
-        {% set badgeClass = 'arns-predictor-badge--low' %}
-      {% default %}
-          {% set badgeClass = 'arns-predictor-badge--default' %}
-      {% endswitch %}
-
-      {% if predictor.band == null or (shouldShowScore == true and predictor.score == null) %}
-        {% set band = 'UNKNOWN' %}
-        {% set badgeClass = 'arns-predictor-badge--default' %}
-      {% else %}
-        {% set band = predictor.band | replace('_', ' ') %}
-      {% endif %}
-
-      <div class="{{ badgeClass }}"
-           data-predictor-badge="{{ predictor.name }} {{ band }}">
-
-        <span class="arns-predictor-badge__type_and_level" data-test-id="nameAndBand">{{ predictor.name }} <strong>{{ band }}</strong></span>
-
-        {% if shouldShowScore and badgeClass != 'arns-predictor-badge--default' %}
-          <span class="arns-predictor-badge__score" data-test-id="score">{{ predictor.score }}%</span>
-        {% endif %}
-
-        {% if predictor.staticOrDynamic and badgeClass !== 'arns-predictor-badge--default' %}
-          <span class="arns-predictor-badge__static_or_dynamic" data-test-id="staticOrDynamic">
-            {{ govukTag({ text: predictor.staticOrDynamic, classes: "govuk-tag--grey arns-predictor-badge__govuk-tag-sizing"}) }}
-          </span>
-        {% endif %}
-      </div>
+      {{ badgeBase(predictor.name, predictor.band, predictor.score, predictor.staticOrDynamic, shouldShowScore) }}
     {% endif %}
   {% endfor %}
 {% endif %}

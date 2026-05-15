@@ -14,18 +14,18 @@ $default-colour: govuk-colour("mid-grey");
 $default-colour--light: govuk-colour("light-grey");
 $default-colour__text: govuk-colour("black");
 
-@mixin arns-predictor-badge-base($primary-colour, $secondary-colour, $text-colour) {
+@mixin arns-badge-base-base($primary-colour, $secondary-colour, $text-colour) {
   display: inline-flex;
   outline: 2px solid $primary-colour;
 
-  & .arns-predictor-badge__type_and_level {
+  & .arns-badge-base__type_and_level {
     @include govuk-font(19, "regular");
     color: $text-colour;
 
     padding: 2px 10px;
   }
 
-  & .arns-predictor-badge__score {
+  & .arns-badge-base__score {
     @include govuk-font(19, "bold");
     color: govuk-colour("black");
 
@@ -36,7 +36,7 @@ $default-colour__text: govuk-colour("black");
     align-content: center;
   }
 
-  & .arns-predictor-badge__static_or_dynamic {
+  & .arns-badge-base__static_or_dynamic {
     @include govuk-font(19, "regular");
     color: #282D30;
     background-color: #cecece;
@@ -49,26 +49,26 @@ $default-colour__text: govuk-colour("black");
   }
 }
 
-.arns-predictor-badge--very-high {
-  @include arns-predictor-badge-base(
+.arns-badge-base--very-high {
+  @include arns-badge-base-base(
       $very-high-score-colour,
       $very-high-score-colour--light,
       $very-high-score-colour__text
   );
 }
 
-.arns-predictor-badge--high {
-  @include arns-predictor-badge-base($high-score-colour, $high-score-colour--light, $high-score-colour__text);
+.arns-badge-base--high {
+  @include arns-badge-base-base($high-score-colour, $high-score-colour--light, $high-score-colour__text);
 }
 
-.arns-predictor-badge--medium {
-  @include arns-predictor-badge-base($medium-score-colour, $medium-score-colour--light, $medium-score-colour__text);
+.arns-badge-base--medium {
+  @include arns-badge-base-base($medium-score-colour, $medium-score-colour--light, $medium-score-colour__text);
 }
 
-.arns-predictor-badge--low {
-  @include arns-predictor-badge-base($low-score-colour, $low-score-colour--light, $low-score-colour__text);
+.arns-badge-base--low {
+  @include arns-badge-base-base($low-score-colour, $low-score-colour--light, $low-score-colour__text);
 }
 
-.arns-predictor-badge--default {
-  @include arns-predictor-badge-base($default-colour, $default-colour--light, $default-colour__text);
+.arns-badge-base--default {
+  @include arns-badge-base-base($default-colour, $default-colour--light, $default-colour__text);
 }

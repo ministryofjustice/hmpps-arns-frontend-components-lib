@@ -5,6 +5,8 @@ import nunjucks from 'nunjucks'
 import { RiskData } from '../../types/RiskData'
 import { AssessmentV1 } from '../../types/AssessmentV1'
 import { AssessmentV2 } from '../../types/AssessmentV2'
+import { RoshData } from '../../types/RoshData'
+import { RoshAssessment } from '../../types/RoshAssessment'
 import { Predictor } from '../../types/Predictor'
 import { BandLevel } from '../../types/dtos/BandLevel'
 import { arnsNunjucksSetup, predictorConfig } from '../../NunjucksSetup'
@@ -46,10 +48,10 @@ export const getDomFromNjks = (dom: JSDOM, njks: string, context: object) => {
   return dom.window
 }
 
-export const getRenderedHtml = (dom: JSDOM, component: Component, options: string, riskData: RiskData) => {
+export const getRenderedHtml = (dom: JSDOM, component: Component, options: string, data: RiskData | RoshData) => {
   const optionsString = options ? `, ${options}` : ''
-  const njks = `{% from "${components[component].directory}/macro.njk" import ${components[component].macro} as macro %}{{ macro({data: riskData${optionsString}}) }}`
-  return getDomFromNjks(dom, njks, { riskData })
+  const njks = `{% from "${components[component].directory}/macro.njk" import ${components[component].macro} as macro %}{{ macro({data: data${optionsString}}) }}`
+  return getDomFromNjks(dom, njks, { data })
 }
 
 export const expectStyleToBe = (
@@ -87,6 +89,14 @@ export const components: Record<string, ComponentDetail> = {
   PREDICTOR_BADGE: {
     directory: 'predictor-badge',
     macro: 'predictorBadge',
+  },
+  ROSH_BADGE: {
+    directory: 'rosh-badge',
+    macro: 'roshBadge',
+  },
+  BADGE_BASE: {
+    directory: 'badge-base',
+    macro: 'badgeBase',
   },
   EXPANDED_PREDICTOR_BADGE: {
     directory: 'expanded-predictor-badge',
@@ -318,6 +328,33 @@ export const getRiskTestData = (predictors: RiskTestDataOptions[]): RiskData => 
   return { assessments: [assessmentToUpdate, v1assessment, v2assessment], httpStatus: 200 }
 }
 
+export const roshAssessmentTestData = (level: string): RoshData => {
+  const assessments: Record<string, RoshAssessment> = {
+    LOW: {
+      overallRisk: 'LOW',
+      completedDate: null,
+      risks: [],
+    },
+    MEDIUM: {
+      overallRisk: 'MEDIUM',
+      completedDate: null,
+      risks: [],
+    },
+    HIGH: {
+      overallRisk: 'HIGH',
+      completedDate: null,
+      risks: [],
+    },
+    VERY_HIGH: {
+      overallRisk: 'VERY HIGH',
+      completedDate: null,
+      risks: [],
+    },
+  }
+
+  return { assessment: assessments[level], httpStatus: 200 }
+}
+
 type Inputs = Record<string, any[]>
 
 export function getCombinations<T extends Inputs>(inputs: T): Record<keyof T, any>[] {
@@ -341,6 +378,16 @@ export function getCombinations<T extends Inputs>(inputs: T): Record<keyof T, an
     },
     [{}] as Record<keyof T, any>[],
   )
+}
+
+export function getBadgeContainer(document: Document, badgeSelector: string): Element {
+  const badgeContainer = document.querySelector(badgeSelector)
+
+  if (!badgeContainer) {
+    throw new Error(`Could not find badge with selector: ${badgeSelector}`)
+  }
+
+  return badgeContainer
 }
 
 export const legacyFallbackTestCases = [
