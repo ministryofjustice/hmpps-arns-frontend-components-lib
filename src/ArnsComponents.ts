@@ -9,16 +9,20 @@ import { transformAllPredictorVersionedDtoToAssessments } from './transformers/A
 import { RoshData } from './types/RoshData'
 import { AllRoshRiskDto } from './types/dtos/AllRoshRiskDto'
 import { transformAllRoshRiskDtoToRoshData } from './transformers/AllRoshRiskDtoToRoshDataTransformer'
+import { SuppressingRestClient } from './SuppressingRestClient'
 
 export default class ArnsComponents {
-  private readonly restClient: RestClient
+  private readonly arnsApiRestClient: SuppressingRestClient
 
   constructor(
     authenticationClient: AuthenticationClient,
     config: ArnsComponentsConfig,
     logger: Logger | Console = console,
   ) {
-    this.restClient = new RestClient('ARNS API', config, logger, authenticationClient)
+    this.arnsApiRestClient = new SuppressingRestClient(
+      new RestClient('ARNS API', config, logger, authenticationClient),
+      logger,
+    )
   }
 
   async getRiskData(
@@ -27,10 +31,14 @@ export default class ArnsComponents {
     identifierValue: string,
   ): Promise<RiskData> {
     try {
-      const response = await this.restClient.get<AllPredictorVersionedDto[]>(
-        { path: `/risks/predictors/all/${identifierType}/${identifierValue}` },
+      const response: AllPredictorVersionedDto[] | null = await this.arnsApiRestClient.get<AllPredictorVersionedDto[]>(
+        `/risks/predictors/all/${identifierType}/${identifierValue}`,
         authOptions,
       )
+
+      if (!response) {
+        return { assessments: [], httpStatus: 404 }
+      }
 
       return {
         assessments: transformAllPredictorVersionedDtoToAssessments(response),
@@ -47,7 +55,14 @@ export default class ArnsComponents {
 
   async getRoshData(authOptions: AuthOptions | string, identifierValue: string): Promise<RoshData> {
     try {
-      const response = await this.restClient.get<AllRoshRiskDto>({ path: `/risks/crn/${identifierValue}` }, authOptions)
+      const response: AllRoshRiskDto | null = await this.arnsApiRestClient.get<AllRoshRiskDto>(
+        `/risks/crn/${identifierValue}`,
+        authOptions,
+      )
+
+      if (!response) {
+        return { assessment: null, httpStatus: 404 }
+      }
 
       return {
         assessment: transformAllRoshRiskDtoToRoshData(response),
