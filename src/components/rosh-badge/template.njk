@@ -1,0 +1,27 @@
+{#
+  ARNS Rosh Badge Component
+
+  @name roshBadge
+
+  @description Displays a specified rosh badge.
+  It uses the latest assessment from the provided data set.
+
+  @example
+  In route handler:
+    const riskData = await arnsComponents.getRoshData(token, 'crn', 'X123456')
+    res.render('page', { riskData })
+
+  In template:
+    {% from "components/rosh-badge/macro.njk" import roshBadge %}
+    {{ roshBadge({
+      data: roshData
+    }) }}
+
+  @param {object} params
+    @param {RoshData} params.data - Rosh data object from ArnsComponents.getRoshData() containing an 'assessment' object
+#}
+{%- from "../badge-base/macro.njk" import badgeBase -%}
+{% set assessment = params.data.assessment if params.data.assessment else "null" %}
+{% if assessment %}
+  {{ badgeBase("Risk of serious harm", assessment.overallRisk, null, null, false) }}
+{% endif %}
