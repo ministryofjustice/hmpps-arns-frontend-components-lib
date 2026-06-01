@@ -116,7 +116,7 @@
     "typescript": "^6.0.3"
   },
   "dependencies": {
-    "@ministryofjustice/hmpps-auth-clients": "^1.0.1",
+    "@ministryofjustice/hmpps-auth-clients": "^2.0.0",
     "@ministryofjustice/hmpps-rest-client": "^1.0.0",
     "@types/jsdom": "28.0.1",
     "@types/nunjucks": "^3.2.6",
