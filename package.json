@@ -93,7 +93,7 @@
     "@types/superagent": "^8.1.9",
     "@types/supertest": "^7.2.0",
     "@typescript-eslint/eslint-plugin": "^8.54.0",
-    "babel-jest": "30.3.0",
+    "babel-jest": "^30.3.0",
     "cheerio": "^1.2.0",
     "eslint-import-resolver-typescript": "^4.4.4",
     "eslint-plugin-no-only-tests": "^3.3.0",
