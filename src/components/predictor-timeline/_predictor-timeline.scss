@@ -1,3 +1,5 @@
+@use "govuk-frontend/dist/govuk/index" as *;
+
 $very-high-score-colour: #942514;
 $very-high-score-colour--light: #ffac9f;
 $very-high-score-colour__text: #711a0d;
@@ -10,8 +12,8 @@ $medium-score-colour__text: #a34e00;
 $low-score-colour: #85994b;
 $low-score-colour--light: #dee9bd;
 $low-score-colour__text: #485b10;
-$default-colour: govuk-colour("mid-grey");
-$default-colour--light: govuk-colour("light-grey");
+$default-colour: govuk-colour("black", $variant: "tint-80");
+$default-colour--light: govuk-colour("black", $variant: "tint-80");
 $default-colour__text: govuk-colour("black");
 
 .js-enabled .arns-predictor-timeline-section--hidden {

@@ -1,3 +1,5 @@
+@use "govuk-frontend/dist/govuk/index" as *;
+
 $border-colour: #B1B4B6;
 
 @mixin arns-scale-bar-label {

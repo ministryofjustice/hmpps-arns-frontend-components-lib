@@ -13,8 +13,7 @@ import { arnsNunjucksSetup, predictorConfig } from '../../NunjucksSetup'
 
 const cachedCss = sass.compileString(
   `
-    @import "govuk-frontend/dist/govuk/index";
-    @import "_all.scss";
+    @use "_all.scss";
     `,
   {
     loadPaths: [path.resolve(__dirname, '../../../node_modules'), path.resolve(__dirname, '../../assets/scss')],

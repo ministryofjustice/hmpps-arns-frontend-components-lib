@@ -36,7 +36,7 @@
       "^.+\\.(ts|js|mjs|tsx|jsx)$": "babel-jest"
     },
     "transformIgnorePatterns": [
-      "/node_modules/(?!(@exodus|@csstools|jsdom|parse5|abab|nunjucks|@asamuzakjp)/)"
+      "node_modules/(?!(@exodus|@csstools|jsdom|parse5|abab|nunjucks|@asamuzakjp|entities|htmlparser2)/)"
     ],
     "testMatch": [
       "<rootDir>/**/**/?(*.)(cy|test).{ts,js,jsx,mjs}"
@@ -78,9 +78,9 @@
   },
   "homepage": "https://github.com/ministryofjustice/hmpps-arns-frontend-components-lib#readme",
   "devDependencies": {
-    "@babel/core": "8.0.1",
-    "@babel/preset-env": "8.0.2",
-    "@babel/preset-typescript": "8.0.1",
+    "@babel/core": "7.29.7",
+    "@babel/preset-env": "7.29.7",
+    "@babel/preset-typescript": "7.29.7",
     "@ministryofjustice/eslint-config-hmpps": "^1.0.2",
     "@ministryofjustice/hmpps-npm-script-allowlist": "0.0.6",
     "@ministryofjustice/hmpps-precommit-hooks": "^3.0.1",

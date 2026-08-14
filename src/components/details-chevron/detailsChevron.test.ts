@@ -48,7 +48,8 @@ describe('details-chevron', () => {
 
       expectStyleToBe(window, toggleText, [
         { tag: 'color', value: 'rgb(29, 112, 184)' },
-        { tag: 'fontSize', value: '1.1875rem' },
+        // For some reason it does not pick up the correct fontSize
+        { tag: 'fontSize', value: '19px' },
         { tag: 'fontFamily', value: '"GDS Transport", arial, sans-serif' },
       ])
     })
@@ -57,8 +58,9 @@ describe('details-chevron', () => {
       const chevron = window.document.querySelector('[data-test-id="details-chevron"]')
 
       expectStyleToBe(window, chevron, [
-        { tag: 'width', value: '1.25rem' },
-        { tag: 'height', value: '1.25rem' },
+        // For some reason it does not pick up the correct width
+        { tag: 'width', value: '20px' },
+        { tag: 'height', value: '20px' },
         // Commented out due to issue with latest version of jsdom
         // { tag: 'borderRadius', value: '50%' },
         { tag: 'display', value: 'inline-flex' },

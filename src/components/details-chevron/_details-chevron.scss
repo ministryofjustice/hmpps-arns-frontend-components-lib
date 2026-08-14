@@ -1,3 +1,5 @@
+@use "govuk-frontend/dist/govuk/index" as *;
+
 $gov-link-blue: #1d70b8;
 $gov-link-hover-gray: #f3f2f1;
 $gov-black: #0b0c0c;
@@ -27,8 +29,8 @@ $gov-focus-yellow: #ffdd00;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 1.25rem;
-  height: 1.25rem;
+  width: 20px;
+  height: 20px;
   border: 0.0625rem solid;
   border-radius: 50%;
   vertical-align: middle;
@@ -52,7 +54,7 @@ $gov-focus-yellow: #ffdd00;
   font-family: "GDS Transport", arial, sans-serif;
   font-weight: 400;
   color: $gov-link-blue;
-  font-size: 1.1875rem;
+  font-size: govuk-font(19);
   text-decoration: none;
 }
 
