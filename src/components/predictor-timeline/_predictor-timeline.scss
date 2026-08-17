@@ -10,8 +10,8 @@ $medium-score-colour__text: #a34e00;
 $low-score-colour: #85994b;
 $low-score-colour--light: #dee9bd;
 $low-score-colour__text: #485b10;
-$default-colour: govuk-colour("mid-grey");
-$default-colour--light: govuk-colour("light-grey");
+$default-colour: govuk-colour("black", $variant: "tint-80");
+$default-colour--light: govuk-colour("black", $variant: "tint-95");
 $default-colour__text: govuk-colour("black");
 
 .js-enabled .arns-predictor-timeline-section--hidden {
@@ -52,7 +52,7 @@ $default-colour__text: govuk-colour("black");
 
 .arns-predictor-timeline__byline {
   @include govuk-font($size: 19);
-  color: $govuk-text-colour;
+  color: govuk-colour("black");
   display: inline;
   margin: 0;
 }

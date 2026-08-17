@@ -1,6 +1,7 @@
 // ARNS Frontend Components Library
 // Import this file into your project's main SCSS file
 // Requires govuk-frontend to be imported first
+@use "govuk-frontend/dist/govuk/index" as *;
 
 @import "../../components/badge-base/badge-base";
 @import "../../components/expanded-predictor-badge/expanded-predictor-badge";

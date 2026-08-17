@@ -44,7 +44,7 @@ describe('predictor-timeline', () => {
 
       const byline = renderedHtml.document.querySelector('[data-test-id="timeline-byline"]')
       expectStyleToBe(renderedHtml, byline, [
-        { tag: 'fontSize', value: '1.1875rem' },
+        { tag: 'fontSize', value: '19px' },
         { tag: 'margin', value: '0px' },
         { tag: 'display', value: 'inline' },
       ])
@@ -68,7 +68,7 @@ describe('predictor-timeline', () => {
         )
 
         expectStyleToBe(renderedHtml, toggleBtn, [
-          { tag: 'fontSize', value: '1.1875rem' },
+          { tag: 'fontSize', value: '19px' },
           { tag: 'background', value: 'rgba(0, 0, 0, 0)' },
           { tag: 'padding', value: '0px' },
           { tag: 'textDecoration', value: 'underline' },
