@@ -1,5 +1,3 @@
-@use "govuk-frontend/dist/govuk/index" as *;
-
 $very-high-score-colour: #942514;
 $very-high-score-colour--light: #ffac9f;
 $very-high-score-colour__text: #711a0d;
@@ -54,7 +52,7 @@ $default-colour__text: govuk-colour("black");
 
 .arns-predictor-timeline__byline {
   @include govuk-font($size: 19);
-  color: $govuk-text-colour;
+  color: govuk-colour("black");
   display: inline;
   margin: 0;
 }
