@@ -118,7 +118,7 @@
   "dependencies": {
     "@ministryofjustice/hmpps-auth-clients": "^3.0.0",
     "@ministryofjustice/hmpps-rest-client": "^2.2.0",
-    "@types/jsdom": "28.0.1",
+    "@types/jsdom": "30.0.0",
     "@types/nunjucks": "^3.2.6",
     "sass": "1.102.0"
   }
