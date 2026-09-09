@@ -87,7 +87,7 @@ describe('predictor-scale-bar', () => {
         const markerWrapper = document.querySelector('[data-test-id="scaleMarkerPosition"]')
         expect(markerWrapper?.className).toContain('arns-scale-marker-wrapper')
         expect(markerWrapper?.className).toContain(expectedClass)
-        const card = markerWrapper?.querySelector('[data-test-id="scaleMarkerCard"]')
+        const card = markerWrapper?.querySelector('[data-test-id="scaleMarkerCard"]') || null
         expectStyleToBe(renderedHtml, card, [
           { tag: 'borderTopColor', value: border },
           { tag: 'borderStyle', value: 'solid' },
@@ -122,41 +122,104 @@ describe('predictor-scale-bar', () => {
 
   describe('Bar Type Class Logic', () => {
     const barTypeCases = [
-      { predictor: 'ogrs3', expectedClass: 'arns-scale-bar arns-scale-bar--fourths' },
-      { predictor: 'ovp', expectedClass: 'arns-scale-bar arns-scale-bar--fourths' },
-      { predictor: 'ogp', expectedClass: 'arns-scale-bar arns-scale-bar--fourths' },
-      { predictor: 'ospdc', expectedClass: 'arns-scale-bar--small arns-scale-bar--small-fourths' },
-      { predictor: 'ospiic', expectedClass: 'arns-scale-bar--small' },
-      { predictor: 'rsr', expectedClass: 'arns-scale-bar arns-scale-bar--thirds' },
-      { predictor: 'allReoffendingPredictor', expectedClass: 'arns-scale-bar arns-scale-bar--fourths' },
-      { predictor: 'violentReoffendingPredictor', expectedClass: 'arns-scale-bar arns-scale-bar--fourths' },
-      { predictor: 'seriousViolentReoffendingPredictor', expectedClass: 'arns-scale-bar arns-scale-bar--fourths' },
-      { predictor: 'directContactSexualReoffendingPredictor', expectedClass: 'arns-scale-bar arns-scale-bar--fourths' },
+      {
+        predictor: 'ogrs3',
+        expectedClass: 'arns-scale-bar arns-scale-bar--fourths',
+        expectedAriaLabel:
+          'A linear gauge chart showing the OGRS score is 5%. This is in the LOW band. Below 50% is low, 50% to below 75% is medium, 75% to below 90% is high, 90% to 100% is very high. This was last updated 02 January 2024.',
+      },
+      {
+        predictor: 'ovp',
+        expectedClass: 'arns-scale-bar arns-scale-bar--fourths',
+        expectedAriaLabel:
+          'A linear gauge chart showing the OVP score is 5%. This is in the LOW band. Below 30% is low, 30% to below 60% is medium, 60% to below 80% is high, 80% to 100% is very high. This was last updated 02 January 2024.',
+      },
+      {
+        predictor: 'ogp',
+        expectedClass: 'arns-scale-bar arns-scale-bar--fourths',
+        expectedAriaLabel:
+          'A linear gauge chart showing the OGP score is 5%. This is in the LOW band. Below 34% is low, 34% to below 67% is medium, 67% to below 85% is high, 85% to 100% is very high. This was last updated 02 January 2024.',
+      },
+      {
+        predictor: 'ospdc',
+        expectedClass: 'arns-scale-bar--small arns-scale-bar--small-fourths',
+        expectedAriaLabel:
+          'A linear gauge chart showing the OSP–DC in the LOW band. There are four bands, low, medium, high, very high. This was last updated 02 January 2024.',
+      },
+      {
+        predictor: 'ospiic',
+        expectedClass: 'arns-scale-bar--small',
+        expectedAriaLabel:
+          'A linear gauge chart showing the OSP–IIC in the LOW band. There are three bands, low, medium, high. This was last updated 02 January 2024.',
+      },
+      {
+        predictor: 'rsr',
+        expectedClass: 'arns-scale-bar arns-scale-bar--thirds',
+        expectedAriaLabel:
+          'A linear gauge chart showing the RSR score is 5%. This is in the LOW band. Below 3% is low, 3% to below 6.9% is medium, 6.9% to 25%+ is high. This was last updated 02 January 2024.',
+      },
+      {
+        predictor: 'allReoffendingPredictor',
+        expectedClass: 'arns-scale-bar arns-scale-bar--fourths',
+        expectedAriaLabel:
+          'A linear gauge chart showing the All reoffending predictor score is 5%. This is in the LOW band. Below 50% is low, 50% to below 75% is medium, 75% to below 90% is high, 90% to 100% is very high. This was last updated 02 January 2024.',
+      },
+      {
+        predictor: 'violentReoffendingPredictor',
+        expectedClass: 'arns-scale-bar arns-scale-bar--fourths',
+        expectedAriaLabel:
+          'A linear gauge chart showing the Violent reoffending predictor score is 5%. This is in the LOW band. Below 30% is low, 30% to below 60% is medium, 60% to below 80% is high, 80% to 100% is very high. This was last updated 02 January 2024.',
+      },
+      {
+        predictor: 'seriousViolentReoffendingPredictor',
+        expectedClass: 'arns-scale-bar arns-scale-bar--fourths',
+        expectedAriaLabel:
+          'A linear gauge chart showing the Serious violent reoffending predictor score is 5%. This is in the LOW band. Below 1% is low, 1% to below 3% is medium, 3% to below 6.9% is high, 6.9% to 25%+ is very high. This was last updated 02 January 2024.',
+      },
+      {
+        predictor: 'directContactSexualReoffendingPredictor',
+        expectedClass: 'arns-scale-bar arns-scale-bar--fourths',
+        expectedAriaLabel:
+          'A linear gauge chart showing the Direct contact – sexual reoffending predictor score is 5%. This is in the LOW band. Below 0.6% is low, 0.6% to below 2.1% is medium, 2.1% to below 5.3% is high, 5.3% to 83.1% is very high. This was last updated 02 January 2024.',
+      },
       {
         predictor: 'indirectImageContactSexualReoffendingPredictor',
         expectedClass: 'arns-scale-bar--small arns-scale-bar--small-sanctions',
+        expectedAriaLabel:
+          'A linear gauge chart showing the Images and indirect contact – sexual reoffending predictor in the LOW band. There are three bands, low when zero sanctions, medium when one sanction, high when two or more sanctions. This was last updated 02 January 2024.',
       },
-      { predictor: 'combinedSeriousReoffendingPredictor', expectedClass: 'arns-scale-bar arns-scale-bar--fourths' },
+      {
+        predictor: 'combinedSeriousReoffendingPredictor',
+        expectedClass: 'arns-scale-bar arns-scale-bar--fourths',
+        expectedAriaLabel:
+          'A linear gauge chart showing the Combined serious reoffending predictor score is 5%. This is in the LOW band. Below 1% is low, 1% to below 3% is medium, 3% to below 6.9% is high, 6.9% to 25%+ is very high. This was last updated 02 January 2024.',
+      },
     ]
 
-    it.each(barTypeCases)('should apply class $expectedClass for $predictor', ({ predictor, expectedClass }) => {
-      const predictorType = predictor as PredictorOption
-      const riskData = getRiskTestData([
-        { predictor: predictorType, level: BandLevel.LOW, score: 5, staticOrDynamic: 'Static' },
-      ])
+    it.each(barTypeCases)(
+      'should apply class $expectedClass for $predictor',
+      ({ predictor, expectedClass, expectedAriaLabel }) => {
+        const predictorType = predictor as PredictorOption
+        const riskData = getRiskTestData([
+          { predictor: predictorType, level: BandLevel.LOW, score: 5, staticOrDynamic: 'Static' },
+        ])
 
-      const predictorObj = (riskData.assessments[0] as any)[predictorType]
+        const predictorObj = (riskData.assessments[0] as any)[predictorType]
 
-      const renderedHtml = getDomFromNjks(
-        dom,
-        `{% from "predictor-scale-bar/macro.njk" import predictorScaleBar as macro %}
+        const renderedHtml = getDomFromNjks(
+          dom,
+          `{% from "predictor-scale-bar/macro.njk" import predictorScaleBar as macro %}
        {{ macro(predictor, key) }}`,
-        { predictor: predictorObj, key: predictorType },
-      )
+          { predictor: predictorObj, key: predictorType },
+        )
 
-      const bar = renderedHtml.document.querySelector(`[data-test-id="${predictor}-scale"]`)
-      expect(bar?.className).toBe(expectedClass)
-    })
+        const bar = renderedHtml.document.querySelector(`[data-test-id="${predictor}-scale"]`)
+        expect(bar?.className).toBe(expectedClass)
+
+        const ariaLabel = renderedHtml.document.querySelector(`[data-test-id="scaleBarContainer"]`)
+        expect(ariaLabel?.ariaLabel).toBe(expectedAriaLabel)
+      },
+    )
   })
 
   it('should hide the score and show "No Score" pointer when config.showScore is false', () => {
