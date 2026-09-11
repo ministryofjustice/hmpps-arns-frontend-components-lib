@@ -70,26 +70,42 @@ In template:
   {% set scalePosition = predictor.band | bandToScaleMarkerPosition(config.hasVeryHighBand) %}
 {% endif %}
 
-<div class="arns-scale-marker" data-test-id='scaleMarker'>
-  <div class="{{ scaleMarkerClass }} arns-scale-marker-wrapper arns-scale-marker-wrapper-position-{{ scalePosition | round }}" data-test-id='scaleMarkerPosition'>
-    {{ predictorScaleMarker(predictor, config.showScore) }}
-  </div>
-</div>
+{% set scaleAriaLabel -%}
+  {%- if key === 'indirectImageContactSexualReoffendingPredictor' -%}
+    A linear gauge chart showing the {{ predictor.name }} in the {{ predictor.band }} band. There are three bands, low when zero sanctions, medium when one sanction, high when two or more sanctions. This was last updated {{ predictor.completedDate }}.
+  {%- elif key === 'ospdc' -%}
+    A linear gauge chart showing the {{ predictor.name }} in the {{ predictor.band }} band. There are four bands, low, medium, high, very high. This was last updated {{ predictor.completedDate }}.
+  {%- elif key === 'ospiic' -%}
+    A linear gauge chart showing the {{ predictor.name }} in the {{ predictor.band }} band. There are three bands, low, medium, high. This was last updated {{ predictor.completedDate }}.
+  {%- elif config.hasVeryHighBand -%}
+    A linear gauge chart showing the {{ predictor.name }} score is {{ predictor.score }}%. This is in the {{ predictor.band }} band. Below {{ config.bandThresholdPercentages[1] }} is low, {{ config.bandThresholdPercentages[1] }} to below {{ config.bandThresholdPercentages[2] }} is medium, {{ config.bandThresholdPercentages[2] }} to below {{ config.bandThresholdPercentages[3] }} is high, {{ config.bandThresholdPercentages[3] }} to {{ config.bandThresholdPercentages[4] }} is very high. This was last updated {{ predictor.completedDate }}.
+  {%- else -%}
+    A linear gauge chart showing the {{ predictor.name }} score is {{ predictor.score }}%. This is in the {{ predictor.band }} band. Below {{ config.bandThresholdPercentages[1] }} is low, {{ config.bandThresholdPercentages[1] }} to below {{ config.bandThresholdPercentages[2] }} is medium, {{ config.bandThresholdPercentages[2] }} to {{ config.bandThresholdPercentages[3] }} is high. This was last updated {{ predictor.completedDate }}.
+  {%- endif -%}
+{%- endset %}
 
-<div class="{{ barTypeClass }}" data-test-id="{{key}}-scale">
-  <div data-band-percentage-start="{{ config.bandThresholdPercentages[0] }}"
-       data-band-percentage="{{ config.bandThresholdPercentages[1] }}" data-test-id='lowBand'>
-    <span></span>
+<div aria-label="{{ scaleAriaLabel }}" data-test-id='scaleBarContainer'>
+  <div class="arns-scale-marker" data-test-id='scaleMarker'>
+    <div class="{{ scaleMarkerClass }} arns-scale-marker-wrapper arns-scale-marker-wrapper-position-{{ scalePosition | round }}" data-test-id='scaleMarkerPosition'>
+      {{ predictorScaleMarker(predictor, config.showScore) }}
+    </div>
   </div>
-  <div data-band-percentage="{{ config.bandThresholdPercentages[2] }}" data-test-id='mediumBand'>
-    <span></span>
-  </div>
-  <div data-band-percentage="{{ config.bandThresholdPercentages[3] }}" data-test-id='highBand'>
-    <span></span>
-  </div>
-  {% if config.hasVeryHighBand === true %}
-    <div data-band-percentage="{{ config.bandThresholdPercentages[4] }}" data-test-id='veryHighBand'>
+
+  <div class="{{ barTypeClass }}" data-test-id="{{key}}-scale">
+    <div data-band-percentage-start="{{ config.bandThresholdPercentages[0] }}"
+         data-band-percentage="{{ config.bandThresholdPercentages[1] }}" data-test-id='lowBand'>
       <span></span>
     </div>
-  {% endif %}
+    <div data-band-percentage="{{ config.bandThresholdPercentages[2] }}" data-test-id='mediumBand'>
+      <span></span>
+    </div>
+    <div data-band-percentage="{{ config.bandThresholdPercentages[3] }}" data-test-id='highBand'>
+      <span></span>
+    </div>
+    {% if config.hasVeryHighBand === true %}
+      <div data-band-percentage="{{ config.bandThresholdPercentages[4] }}" data-test-id='veryHighBand'>
+        <span></span>
+      </div>
+    {% endif %}
+  </div>
 </div>
