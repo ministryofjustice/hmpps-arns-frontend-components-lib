@@ -84,7 +84,7 @@ In template:
   {%- endif -%}
 {%- endset %}
 
-<div aria-label="{{ scaleAriaLabel }}" data-test-id='scaleBarContainer'>
+<div aria-label="{{ scaleAriaLabel }}" role="img" data-test-id='scaleBarContainer'>
   <div class="arns-scale-marker" data-test-id='scaleMarker'>
     <div class="{{ scaleMarkerClass }} arns-scale-marker-wrapper arns-scale-marker-wrapper-position-{{ scalePosition | round }}" data-test-id='scaleMarkerPosition'>
       {{ predictorScaleMarker(predictor, config.showScore) }}
