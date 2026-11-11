@@ -78,7 +78,7 @@
   },
   "homepage": "https://github.com/ministryofjustice/hmpps-arns-frontend-components-lib#readme",
   "devDependencies": {
-    "@babel/core": "8.0.10",
+    "@babel/core": "8.1.0",
     "@babel/preset-env": "8.0.7",
     "@babel/preset-typescript": "8.0.7",
     "@ministryofjustice/eslint-config-hmpps": "^1.0.2",
