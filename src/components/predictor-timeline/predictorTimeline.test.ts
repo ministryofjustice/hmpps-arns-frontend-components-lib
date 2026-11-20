@@ -69,7 +69,7 @@ describe('predictor-timeline', () => {
 
         expectStyleToBe(renderedHtml, toggleBtn, [
           { tag: 'fontSize', value: '19px' },
-          { tag: 'background', value: 'rgba(0, 0, 0, 0)' },
+          { tag: 'backgroundColor', value: 'rgba(0, 0, 0, 0)' },
           { tag: 'padding', value: '0px' },
           { tag: 'textDecoration', value: 'underline' },
           { tag: 'marginBottom', value: '10px' },
